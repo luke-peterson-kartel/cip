@@ -1,0 +1,102 @@
+{
+  "items": [
+    {
+      "id": "upload-001",
+      "filename": "summer-hero-image.jpg",
+      "mimeType": "image/jpeg",
+      "uri": "s3://cip-assets/org-001/ws-001/summer-hero-image.jpg",
+      "workspaceId": "ws-001",
+      "organizationId": "org-001",
+      "jobId": "job-001",
+      "metadata": {
+        "width": 1920,
+        "height": 1080,
+        "fileSize": 2458624
+      },
+      "createdAt": "2024-03-20T10:00:00Z",
+      "updatedAt": "2024-03-20T10:00:00Z"
+    },
+    {
+      "id": "upload-002",
+      "filename": "instagram-post-1.png",
+      "mimeType": "image/png",
+      "uri": "s3://cip-assets/org-001/ws-001/instagram-post-1.png",
+      "workspaceId": "ws-001",
+      "organizationId": "org-001",
+      "jobId": "job-001",
+      "metadata": {
+        "width": 1080,
+        "height": 1080,
+        "fileSize": 1245184
+      },
+      "createdAt": "2024-03-22T14:30:00Z",
+      "updatedAt": "2024-03-22T14:30:00Z"
+    },
+    {
+      "id": "upload-003",
+      "filename": "billboard-draft-v1.pdf",
+      "mimeType": "application/pdf",
+      "uri": "s3://cip-assets/org-001/ws-001/billboard-draft-v1.pdf",
+      "workspaceId": "ws-001",
+      "organizationId": "org-001",
+      "jobId": "job-002",
+      "metadata": {
+        "pageCount": 3,
+        "fileSize": 5242880
+      },
+      "createdAt": "2024-04-05T11:00:00Z",
+      "updatedAt": "2024-04-05T11:00:00Z"
+    },
+    {
+      "id": "upload-004",
+      "filename": "ev-hero-video.mp4",
+      "mimeType": "video/mp4",
+      "uri": "s3://cip-assets/org-001/ws-002/ev-hero-video.mp4",
+      "workspaceId": "ws-002",
+      "organizationId": "org-001",
+      "jobId": "job-003",
+      "metadata": {
+        "width": 3840,
+        "height": 2160,
+        "duration": 62.5,
+        "fileSize": 125829120
+      },
+      "createdAt": "2024-05-15T16:00:00Z",
+      "updatedAt": "2024-05-15T16:00:00Z"
+    },
+    {
+      "id": "upload-005",
+      "filename": "ev-exterior-front.jpg",
+      "mimeType": "image/jpeg",
+      "uri": "s3://cip-assets/org-001/ws-002/ev-exterior-front.jpg",
+      "workspaceId": "ws-002",
+      "organizationId": "org-001",
+      "jobId": "job-004",
+      "metadata": {
+        "width": 4000,
+        "height": 3000,
+        "fileSize": 8388608
+      },
+      "createdAt": "2024-05-20T10:30:00Z",
+      "updatedAt": "2024-05-20T10:30:00Z"
+    },
+    {
+      "id": "upload-006",
+      "filename": "brand-colors-reference.png",
+      "mimeType": "image/png",
+      "uri": "s3://cip-assets/org-001/ws-003/brand-colors-reference.png",
+      "workspaceId": "ws-003",
+      "organizationId": "org-001",
+      "metadata": {
+        "width": 2400,
+        "height": 1600,
+        "fileSize": 524288
+      },
+      "createdAt": "2024-05-12T09:00:00Z",
+      "updatedAt": "2024-05-12T09:00:00Z"
+    }
+  ],
+  "pagination": {
+    "nextToken": null
+  }
+}

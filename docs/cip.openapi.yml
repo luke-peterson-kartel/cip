@@ -1,0 +1,1408 @@
+openapi: 3.1.1
+info:
+  title: Creative Intelligence Platform API
+  description: |
+    API for managing creative workspaces, assets, and AI-powered job intake.
+    Connects client organizations with Kartel's production capabilities.
+  version: 1.0.0
+  contact:
+    name: Kartel AI Platform Team
+
+servers:
+  - url: https://cip-api-dev.kartel.ai/v1
+    description: Development server
+  - url: https://cip-api-stage.kartel.ai/v1
+    description: Staging server
+  - url: https://cip-api.kartel.ai/v1
+    description: Production server
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Admin
+    description: Admin operations
+  - name: Organizations
+    description: Client organization management
+  - name: Workspaces
+    description: Creative workspace management
+  - name: Jobs
+    description: Creative project management
+  - name: Uploads
+    description: Asset management
+  - name: Request Agent Conversations
+    description: AI-powered job intake
+  - name: Users
+    description: User account management
+
+paths:
+  # Admin
+  /admin/users:
+    get:
+      tags: [Admin]
+      summary: List all users (Admin only)
+      description: Returns all users (Admin only)
+      operationId: adminListUsers
+      parameters:
+        - $ref: "#/components/parameters/nextToken"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationInfo"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /admin/organizations:
+    get:
+      tags: [Admin]
+      summary: List all organizations (Admin only)
+      description: Returns all organizations (Admin only)
+      operationId: adminListOrganizations
+      parameters:
+        - $ref: "#/components/parameters/nextToken"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: List of organizations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Organization"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationInfo"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    post:
+      tags: [Admin]
+      summary: Create organization (Admin only)
+      description: Creates a new client organization (Admin only)
+      operationId: adminCreateOrganization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrganizationCreate"
+      responses:
+        "201":
+          description: Organization created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /admin/jobs:
+    get:
+      tags: [Admin]
+      summary: List all jobs (Admin only)
+      description: Returns all jobs across all organizations (Admin only)
+      operationId: adminListJobs
+      parameters:
+        - $ref: "#/components/parameters/nextToken"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: List of jobs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Job"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationInfo"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /admin/audit-events:
+    get:
+      tags: [Admin]
+      summary: List all audit events (Admin only)
+      description: Returns all audit events (Admin only)
+      operationId: adminListAuditEvents
+      parameters:
+        - $ref: "#/components/parameters/nextToken"
+        - $ref: "#/components/parameters/limit"
+        - name: organizationId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: userId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: resourceType
+          in: query
+          schema:
+            type: string
+        - name: resourceId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: startTime
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: endTime
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: List of audit events filtered by the given parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/AuditEvent"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationInfo"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  # Organizations
+  /organizations:
+    get:
+      tags: [Organizations]
+      summary: List current user's organizations
+      description: Returns all organizations accessible to the authenticated user
+      operationId: listOrganizations
+      parameters:
+        - $ref: "#/components/parameters/nextToken"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: List of organizations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Organization"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationInfo"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /organizations/{organizationId}:
+    parameters:
+      - $ref: "#/components/parameters/organizationId"
+    get:
+      tags: [Organizations]
+      summary: Get organization
+      description: Returns the organization details for the given organization ID
+      operationId: getOrganization
+      responses:
+        "200":
+          description: Organization details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags: [Organizations]
+      summary: Update organization
+      description: Updates the organization details for the given organization ID
+      operationId: updateOrganization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrganizationUpdate"
+      responses:
+        "200":
+          description: Organization updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /organizations/{organizationId}/users:
+    parameters:
+      - $ref: "#/components/parameters/organizationId"
+    get:
+      tags: [Organizations]
+      summary: List users for the given organization
+      description: Returns all users of the given organization
+      operationId: listOrganizationUsers
+      parameters:
+        - $ref: "#/components/parameters/nextToken"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationInfo"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      tags: [Organizations]
+      summary: Invite user to the given organization
+      description: Invites a new user to the organization via email
+      operationId: inviteOrganizationUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInvite"
+      responses:
+        "201":
+          description: User invited
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /organizations/{organizationId}/users/{userId}:
+    parameters:
+      - $ref: "#/components/parameters/organizationId"
+      - $ref: "#/components/parameters/userId"
+    delete:
+      tags: [Organizations]
+      summary: Remove user from the given organization
+      description: Removes a user from the organization
+      operationId: deleteOrganizationUser
+      responses:
+        "204":
+          description: User removed
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /organizations/{organizationId}/workspaces:
+    parameters:
+      - $ref: "#/components/parameters/organizationId"
+    get:
+      tags: [Organizations]
+      summary: List workspaces for the given organization
+      description: Returns all workspaces for the given organization
+      operationId: listOrganizationWorkspaces
+      parameters:
+        - $ref: "#/components/parameters/nextToken"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: List of workspaces
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Workspace"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationInfo"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      tags: [Organizations]
+      summary: Create workspace for the given organization
+      description: Creates a new workspace for the given organization
+      operationId: createOrganizationWorkspace
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkspaceCreate"
+      responses:
+        "201":
+          description: Workspace created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workspace"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # Users
+  /users/{userId}:
+    parameters:
+      - $ref: "#/components/parameters/userId"
+    get:
+      tags: [Users]
+      summary: Get user
+      description: Returns the user details for the given user ID
+      operationId: getUser
+      responses:
+        "200":
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags: [Users]
+      summary: Update user
+      description: Update user details or role
+      operationId: updateUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [Users]
+      summary: Delete user
+      description: Deletes the user account for the given user ID
+      operationId: deleteUser
+      responses:
+        "204":
+          description: User account deleted
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /users/me:
+    get:
+      tags: [Users]
+      summary: Get current user
+      description: Returns the current authenticated user
+      operationId: getCurrentUser
+      responses:
+        "200":
+          description: Current authenticated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  # Workspaces
+  /workspaces/{workspaceId}:
+    parameters:
+      - $ref: "#/components/parameters/workspaceId"
+    get:
+      tags: [Workspaces]
+      summary: Get workspace
+      description: Returns the workspace details for the given workspace ID
+      operationId: getWorkspace
+      responses:
+        "200":
+          description: Workspace details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workspace"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags: [Workspaces]
+      summary: Update workspace
+      description: Updates the workspace details for the given workspace ID
+      operationId: updateWorkspace
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkspaceUpdate"
+      responses:
+        "200":
+          description: Workspace updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workspace"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [Workspaces]
+      summary: Delete workspace
+      description: Deletes the workspace for the given workspace ID
+      operationId: deleteWorkspace
+      responses:
+        "204":
+          description: Workspace deleted
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /workspaces/{workspaceId}/jobs:
+    parameters:
+      - $ref: "#/components/parameters/workspaceId"
+    get:
+      tags: [Workspaces]
+      summary: List workspace jobs
+      description: Returns all jobs for the given workspace ID
+      operationId: workspaceListJobs
+      parameters:
+        - $ref: "#/components/parameters/nextToken"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: List of jobs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Job"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationInfo"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /workspaces/{workspaceId}/uploads:
+    parameters:
+      - $ref: "#/components/parameters/workspaceId"
+    get:
+      tags: [Workspaces]
+      summary: List workspace uploads
+      description: Returns all uploads for the given workspace ID
+      operationId: workspaceListUploads
+      parameters:
+        - $ref: "#/components/parameters/nextToken"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: List of uploads
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Upload"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationInfo"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      tags: [Workspaces]
+      summary: Create upload in the given workspace
+      description: Initiates a file upload and returns a presigned URL in the given workspace
+      operationId: workspaceCreateUpload
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UploadCreate"
+      responses:
+        "201":
+          description: Upload initiated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /workspaces/{workspaceId}/request-agent/conversations:
+    parameters:
+      - $ref: "#/components/parameters/workspaceId"
+    get:
+      tags: [Workspaces]
+      summary: List workspace request agent conversations
+      description: Returns all conversations for the given workspace ID
+      operationId: workspaceListRequestAgentConversations
+      parameters:
+        - $ref: "#/components/parameters/nextToken"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: List of conversations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Conversation"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationInfo"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      tags: [Workspaces]
+      summary: Start conversation in the given workspace
+      description: Initiates a new Request Agent conversation for job intake in the given workspace
+      operationId: workspaceStartRequestAgentConversation
+      responses:
+        "201":
+          description: Conversation started
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conversation"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /workspaces/{workspaceId}/audit-events:
+    parameters:
+      - $ref: "#/components/parameters/workspaceId"
+    get:
+      tags: [Workspaces]
+      summary: List workspace audit events
+      description: Returns audit events for all the resources in the given workspace ID
+      operationId: workspaceListAuditEvents
+      parameters:
+        - $ref: "#/components/parameters/nextToken"
+        - $ref: "#/components/parameters/limit"
+        - name: organizationId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: userId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: resourceType
+          in: query
+          schema:
+            type: string
+        - name: resourceId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: startTime
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: endTime
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: List of audit events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/AuditEvent"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationInfo"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  # Jobs
+  /jobs/{jobId}:
+    parameters:
+      - $ref: "#/components/parameters/jobId"
+    get:
+      tags: [Jobs]
+      summary: Get job
+      description: Returns the job details for the given job ID
+      operationId: getJob
+      responses:
+        "200":
+          description: Job details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags: [Jobs]
+      summary: Update job
+      description: Updates the job details for the given job ID
+      operationId: updateJob
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JobUpdate"
+      responses:
+        "200":
+          description: Job updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [Jobs]
+      summary: Delete job
+      description: Deletes the job for the given job ID
+      operationId: deleteJob
+      responses:
+        "204":
+          description: Job deleted
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # Uploads
+  /uploads/{uploadId}:
+    parameters:
+      - $ref: "#/components/parameters/uploadId"
+    get:
+      tags: [Uploads]
+      summary: Get upload
+      description: Returns the upload details for the given upload ID
+      operationId: getUpload
+      responses:
+        "200":
+          description: Upload details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Upload"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags: [Uploads]
+      summary: Update upload
+      description: Updates the upload details for the given upload ID
+      operationId: updateUpload
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Upload"
+      responses:
+        "200":
+          description: Upload updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Upload"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [Uploads]
+      summary: Delete upload
+      description: Deletes the upload for the given upload ID
+      operationId: deleteUpload
+      responses:
+        "204":
+          description: Upload deleted
+
+  # Request Agent Conversations
+  /conversations/{conversationId}:
+    parameters:
+      - $ref: "#/components/parameters/conversationId"
+    get:
+      tags: [Request Agent Conversations]
+      summary: Get conversation
+      description: Returns the conversation details for the given conversation ID
+      operationId: getConversation
+      responses:
+        "200":
+          description: Conversation details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conversation"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /conversations/{conversationId}/messages:
+    parameters:
+      - $ref: "#/components/parameters/conversationId"
+    get:
+      tags: [Request Agent Conversations]
+      summary: Get messages
+      description: Returns the messages for the given conversation ID
+      operationId: getMessages
+      parameters:
+        - $ref: "#/components/parameters/nextToken"
+        - $ref: "#/components/parameters/limit"
+      responses:
+        "200":
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ConversationMessage"
+                  pagination:
+                    $ref: "#/components/schemas/PaginationInfo"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      tags: [Request Agent Conversations]
+      summary: Send message
+      description: Sends a user message and receives agent response
+      operationId: sendMessage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - content
+              properties:
+                content:
+                  type: string
+      responses:
+        "201":
+          description: Agent response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConversationMessage"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Cognito JWT token from Cognito User Pool authentication
+
+  parameters:
+    # Pagination parameters
+    nextToken:
+      name: nextToken
+      in: query
+      description: Cursor for pagination. Pass the nextCursor from the previous response to get the next page.
+      schema:
+        type: string
+    limit:
+      name: limit
+      in: query
+      description: Maximum number of items to return per page.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    # Path parameters
+    organizationId:
+      name: organizationId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    userId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    workspaceId:
+      name: workspaceId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    jobId:
+      name: jobId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    uploadId:
+      name: uploadId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    conversationId:
+      name: conversationId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+  schemas:
+    # Organizations
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        slug:
+          type: string
+          description: URL-safe identifier
+        hubspotId:
+          type: string
+          description: Hubspot CRM company ID
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    OrganizationCreate:
+      type: object
+      required:
+        - name
+        - slug
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        hubspotId:
+          type: string
+
+    OrganizationUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        hubspotId:
+          type: string
+
+    # Users
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        organizationId:
+          type: string
+          format: uuid
+        role:
+          $ref: "#/components/schemas/UserRole"
+        googleSubjectId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    UserRole:
+      type: string
+      enum:
+        - VIEWER
+        - EDITOR
+        - ADMIN
+        - STAFF
+
+    UserInvite:
+      type: object
+      required:
+        - email
+        - role
+      properties:
+        email:
+          type: string
+          format: email
+        organizationId:
+          type: string
+          format: uuid
+        role:
+          $ref: "#/components/schemas/UserRole"
+        name:
+          type: string
+
+    UserUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        role:
+          $ref: "#/components/schemas/UserRole"
+
+    # Workspaces
+    Workspace:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        organizationId:
+          type: string
+          format: uuid
+        dataCoreUrl:
+          type: string
+          format: uri
+          description: Google Drive folder URL
+        trainingCoreUrls:
+          type: array
+          items:
+            type: string
+            format: uri
+          description: HuggingFace repository URLs
+        requestAgentPrompt:
+          type: string
+          description: Custom prompt for Request Agent
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    WorkspaceCreate:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        organizationId:
+          type: string
+          format: uuid
+        dataCoreUrl:
+          type: string
+          format: uri
+        trainingCoreUrls:
+          type: array
+          items:
+            type: string
+            format: uri
+        requestAgentPrompt:
+          type: string
+
+    WorkspaceUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        dataCoreUrl:
+          type: string
+          format: uri
+        trainingCoreUrls:
+          type: array
+          items:
+            type: string
+            format: uri
+        requestAgentPrompt:
+          type: string
+
+    # Jobs
+    Job:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        workspaceId:
+          type: string
+          format: uuid
+        organizationId:
+          type: string
+          format: uuid
+        airtableUrl:
+          type: string
+          format: uri
+        bubbleProjectId:
+          type: string
+        frameioUrl:
+          type: string
+          format: uri
+        figmaUrl:
+          type: string
+          format: uri
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    JobUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        airtableUrl:
+          type: string
+          format: uri
+        frameioUrl:
+          type: string
+          format: uri
+        figmaUrl:
+          type: string
+          format: uri
+
+    # Uploads
+    Upload:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        filename:
+          type: string
+        mimeType:
+          type: string
+        uri:
+          type: string
+          format: uri
+          description: Platform-agnostic storage URI
+        workspaceId:
+          type: string
+          format: uuid
+        organizationId:
+          type: string
+          format: uuid
+        jobId:
+          type: string
+          format: uuid
+        metadata:
+          $ref: "#/components/schemas/UploadMetadata"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    UploadMetadata:
+      type: object
+      properties:
+        width:
+          type: integer
+        height:
+          type: integer
+        duration:
+          type: number
+          description: Duration in seconds for video/audio
+        pageCount:
+          type: integer
+        fileSize:
+          type: integer
+
+    UploadCreate:
+      type: object
+      required:
+        - filename
+        - mimeType
+      properties:
+        filename:
+          type: string
+        mimeType:
+          type: string
+        workspaceId:
+          type: string
+          format: uuid
+        jobId:
+          type: string
+          format: uuid
+
+    UploadResponse:
+      type: object
+      properties:
+        upload:
+          $ref: "#/components/schemas/Upload"
+        presignedUrl:
+          type: string
+          format: uri
+          description: Presigned URL for uploading the file
+
+    # Audit Events
+    AuditEvent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        userId:
+          type: string
+          format: uuid
+        organizationId:
+          type: string
+          format: uuid
+        action:
+          type: string
+        resourceType:
+          type: string
+        resourceId:
+          type: string
+          format: uuid
+        details:
+          type: object
+
+    # Request Agent
+    Conversation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        workspaceId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - COMPLETED
+            - ABANDONED
+        jobId:
+          type: string
+          format: uuid
+          description: Created job ID (when completed)
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConversationMessage"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ConversationMessage:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    # Common
+    PaginationInfo:
+      type: object
+      properties:
+        nextToken:
+          type: string
+          description: Next token to use for fetching the next page. Null if there are no more items.
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string

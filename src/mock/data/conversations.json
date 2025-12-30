@@ -1,0 +1,80 @@
+{
+  "items": [
+    {
+      "id": "conv-001",
+      "workspaceId": "ws-001",
+      "status": "COMPLETED",
+      "jobId": "job-001",
+      "messages": [
+        {
+          "userId": "user-001",
+          "content": "I need to create social media assets for our summer campaign",
+          "createdAt": "2024-03-15T08:30:00Z"
+        },
+        {
+          "content": "I'd be happy to help you create social media assets for the summer campaign! To ensure we create the perfect content, I have a few questions:\n\n1. Which platforms are you targeting? (Instagram, Facebook, Twitter, etc.)\n2. What's the key message or theme for this summer campaign?\n3. Do you have specific product models or offerings you want to highlight?",
+          "createdAt": "2024-03-15T08:30:15Z"
+        },
+        {
+          "userId": "user-001",
+          "content": "We want Instagram posts, stories, and Facebook covers. The theme is adventure and outdoor activities with our SUV lineup.",
+          "createdAt": "2024-03-15T08:32:00Z"
+        },
+        {
+          "content": "Perfect! An adventure and outdoor theme with SUVs is a great direction for summer. Let me confirm a few more details:\n\n1. How many variations do you need for each format?\n2. Are there specific landscapes or settings you prefer? (mountains, beaches, forests, etc.)\n3. Do you have a deadline for the first drafts?",
+          "createdAt": "2024-03-15T08:32:20Z"
+        },
+        {
+          "userId": "user-001",
+          "content": "We need 5 Instagram posts, 3 stories, and 2 Facebook covers. Mix of mountain and beach settings. First drafts by end of next week.",
+          "createdAt": "2024-03-15T08:35:00Z"
+        },
+        {
+          "content": "Excellent! I've created a job for your Summer Social Media Kit with the following specifications:\n\n- 5 Instagram posts (1080x1080)\n- 3 Instagram stories (1080x1920)\n- 2 Facebook covers (820x312)\n- Theme: Adventure/outdoor with SUV lineup\n- Settings: Mountain and beach landscapes\n- Deadline: End of next week\n\nThe job has been created and assigned. You can track progress in the Jobs section.",
+          "createdAt": "2024-03-15T08:35:30Z"
+        }
+      ],
+      "createdAt": "2024-03-15T08:30:00Z",
+      "updatedAt": "2024-03-15T08:35:30Z"
+    },
+    {
+      "id": "conv-002",
+      "workspaceId": "ws-002",
+      "status": "ACTIVE",
+      "messages": [
+        {
+          "userId": "user-002",
+          "content": "We need product photos for the new EV model",
+          "createdAt": "2024-06-20T10:00:00Z"
+        },
+        {
+          "content": "I can help you organize a product photography session for the new EV model! To create the perfect brief, I need to understand your requirements:\n\n1. Is this for digital use, print, or both?\n2. What specific angles or details are most important? (exterior, interior, charging port, etc.)\n3. Do you prefer studio shots, outdoor locations, or a mix?",
+          "createdAt": "2024-06-20T10:00:20Z"
+        }
+      ],
+      "createdAt": "2024-06-20T10:00:00Z",
+      "updatedAt": "2024-06-20T10:00:20Z"
+    },
+    {
+      "id": "conv-003",
+      "workspaceId": "ws-001",
+      "status": "ABANDONED",
+      "messages": [
+        {
+          "userId": "user-003",
+          "content": "Looking for some design help",
+          "createdAt": "2024-04-10T15:00:00Z"
+        },
+        {
+          "content": "I'd be happy to help with your design needs! Could you tell me more about what you're looking for? For example:\n\n- What type of design? (social media, print, video, etc.)\n- What's the purpose or campaign this is for?\n- Do you have any reference materials or brand guidelines to follow?",
+          "createdAt": "2024-04-10T15:00:15Z"
+        }
+      ],
+      "createdAt": "2024-04-10T15:00:00Z",
+      "updatedAt": "2024-04-10T15:00:15Z"
+    }
+  ],
+  "pagination": {
+    "nextToken": null
+  }
+}

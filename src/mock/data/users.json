@@ -1,0 +1,43 @@
+{
+  "items": [
+    {
+      "id": "user-001",
+      "email": "sarah.chen@toyota.com",
+      "name": "Sarah Chen",
+      "organizationId": "org-001",
+      "role": "ADMIN",
+      "createdAt": "2024-01-15T10:00:00Z",
+      "updatedAt": "2024-06-20T14:30:00Z"
+    },
+    {
+      "id": "user-002",
+      "email": "mike.johnson@toyota.com",
+      "name": "Mike Johnson",
+      "organizationId": "org-001",
+      "role": "EDITOR",
+      "createdAt": "2024-02-01T09:00:00Z",
+      "updatedAt": "2024-05-15T11:20:00Z"
+    },
+    {
+      "id": "user-003",
+      "email": "lisa.wong@toyota.com",
+      "name": "Lisa Wong",
+      "organizationId": "org-001",
+      "role": "VIEWER",
+      "createdAt": "2024-03-10T14:00:00Z",
+      "updatedAt": "2024-03-10T14:00:00Z"
+    }
+  ],
+  "pagination": {
+    "nextToken": null
+  },
+  "currentUser": {
+    "id": "user-001",
+    "email": "sarah.chen@toyota.com",
+    "name": "Sarah Chen",
+    "organizationId": "org-001",
+    "role": "ADMIN",
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-06-20T14:30:00Z"
+  }
+}
