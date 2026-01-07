@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageHeader } from '@/components/shared'
-import { Button, Spinner, Modal, Input, Badge } from '@/components/ui'
+import { Button, Spinner, Modal, Input, Badge, Card } from '@/components/ui'
 import { useAuthStore } from '@/store/authStore'
 import { getWorkspaces, createWorkspace } from '@/api/endpoints/workspaces'
-import type { Workspace, WorkspaceCreate } from '@/types'
+import type { Workspace, WorkspaceCreate, Job, JobStatus } from '@/types'
+import jobsData from '@/mock/data/jobs.json'
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -12,6 +13,31 @@ function formatDate(dateString: string): string {
     day: 'numeric',
     year: 'numeric',
   })
+}
+
+function getJobStatusConfig(status: JobStatus): { label: string; variant: 'default' | 'info' | 'success' | 'warning' | 'error' } {
+  switch (status) {
+    case 'DRAFT':
+      return { label: 'Draft', variant: 'default' }
+    case 'PENDING':
+      return { label: 'Pending', variant: 'warning' }
+    case 'IN_PRODUCTION':
+      return { label: 'In Production', variant: 'info' }
+    case 'IN_REVIEW':
+      return { label: 'In Review', variant: 'warning' }
+    case 'COMPLETED':
+      return { label: 'Completed', variant: 'success' }
+    case 'CANCELLED':
+      return { label: 'Cancelled', variant: 'error' }
+    default:
+      return { label: status, variant: 'default' }
+  }
+}
+
+function getWorkspaceJobs(workspaceId: string): Job[] {
+  return (jobsData.items as Job[])
+    .filter(job => job.workspaceId === workspaceId)
+    .slice(0, 3)
 }
 
 export function WorkspacesPage() {
@@ -79,66 +105,94 @@ export function WorkspacesPage() {
         }
       />
 
-      <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                Name
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                Description
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                Integrations
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                Created
-              </th>
-              <th scope="col" className="relative px-6 py-3">
-                <span className="sr-only">View</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
-            {workspaces.map((workspace) => (
-              <tr key={workspace.id} className="hover:bg-gray-50">
-                <td className="whitespace-nowrap px-6 py-4">
-                  <Link to={`/workspaces/${workspace.id}`} className="font-medium text-gray-900 hover:text-primary-600">
-                    {workspace.name}
-                  </Link>
-                </td>
-                <td className="px-6 py-4">
-                  <p className="max-w-xs truncate text-sm text-gray-500">
-                    {workspace.requestAgentPrompt || '—'}
-                  </p>
-                </td>
-                <td className="whitespace-nowrap px-6 py-4">
-                  <div className="flex gap-2">
-                    {workspace.dataCoreUrl && (
-                      <Badge variant="info">Drive</Badge>
-                    )}
-                    {workspace.trainingCoreUrls && workspace.trainingCoreUrls.length > 0 && (
-                      <Badge variant="default">Training</Badge>
-                    )}
-                    {!workspace.dataCoreUrl && (!workspace.trainingCoreUrls || workspace.trainingCoreUrls.length === 0) && (
-                      <span className="text-sm text-gray-400">—</span>
-                    )}
+      <div className="space-y-4">
+        {workspaces.map((workspace) => {
+          const workspaceJobs = getWorkspaceJobs(workspace.id)
+
+          return (
+            <Card key={workspace.id} className="overflow-hidden">
+              {/* Workspace Header */}
+              <div className="flex items-start justify-between border-b border-gray-100 px-6 py-4">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-3">
+                    <Link
+                      to={`/workspaces/${workspace.id}`}
+                      className="text-lg font-semibold text-gray-900 hover:text-primary-600"
+                    >
+                      {workspace.name}
+                    </Link>
+                    <div className="flex gap-2">
+                      {workspace.dataCoreUrl && (
+                        <Badge variant="info">Drive</Badge>
+                      )}
+                      {workspace.trainingCoreUrls && workspace.trainingCoreUrls.length > 0 && (
+                        <Badge variant="default">Training</Badge>
+                      )}
+                    </div>
                   </div>
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                  {formatDate(workspace.createdAt)}
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                  <Link to={`/workspaces/${workspace.id}`} className="text-primary-600 hover:text-primary-900">
-                    View
-                    <span className="sr-only">, {workspace.name}</span>
+                  {workspace.requestAgentPrompt && (
+                    <p className="mt-1 text-sm text-gray-500 line-clamp-1">
+                      {workspace.requestAgentPrompt}
+                    </p>
+                  )}
+                  <p className="mt-1 text-xs text-gray-400">
+                    Created {formatDate(workspace.createdAt)}
+                  </p>
+                </div>
+                <Link
+                  to={`/workspaces/${workspace.id}`}
+                  className="ml-4 flex items-center gap-1 text-sm font-medium text-primary-600 hover:text-primary-700"
+                >
+                  View workspace
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              </div>
+
+              {/* Recent Jobs List */}
+              <div className="bg-gray-50 px-6 py-3">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="text-xs font-medium uppercase tracking-wider text-gray-500">Recent Jobs</h4>
+                  <Link
+                    to={`/workspaces/${workspace.id}`}
+                    className="text-xs text-primary-600 hover:text-primary-700"
+                  >
+                    View all
                   </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                </div>
+                {workspaceJobs.length > 0 ? (
+                  <ul className="divide-y divide-gray-200 rounded-md border border-gray-200 bg-white">
+                    {workspaceJobs.map((job) => {
+                      const statusConfig = getJobStatusConfig(job.status)
+                      return (
+                        <li key={job.id}>
+                          <Link
+                            to={`/jobs/${job.id}`}
+                            className="flex items-center justify-between px-4 py-2.5 hover:bg-gray-50"
+                          >
+                            <div className="flex items-center gap-3 min-w-0">
+                              <span className="truncate text-sm font-medium text-gray-900">
+                                {job.title}
+                              </span>
+                              <Badge variant={statusConfig.variant}>{statusConfig.label}</Badge>
+                            </div>
+                            <span className="ml-4 text-xs text-gray-400 whitespace-nowrap">
+                              {formatDate(job.updatedAt)}
+                            </span>
+                          </Link>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-gray-400 py-2">No jobs yet</p>
+                )}
+              </div>
+            </Card>
+          )
+        })}
+
         {workspaces.length === 0 && (
           <div className="py-12 text-center text-gray-500">
             No workspaces yet. Create your first workspace to get started.
