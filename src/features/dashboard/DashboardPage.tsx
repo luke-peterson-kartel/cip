@@ -4,7 +4,7 @@ import { PageHeader } from '@/components/shared'
 import { Card, CardContent, Badge, Spinner } from '@/components/ui'
 import { useAuthStore } from '@/store/authStore'
 import { getWorkspaces } from '@/api/endpoints/workspaces'
-import type { Workspace, Job, AuditEvent } from '@/types'
+import type { Workspace, Job, AuditEvent, JobStatus } from '@/types'
 import jobsData from '@/mock/data/jobs.json'
 import auditData from '@/mock/data/audit-events.json'
 
@@ -15,6 +15,25 @@ function formatDate(dateString: string): string {
     hour: '2-digit',
     minute: '2-digit',
   })
+}
+
+function getJobStatusConfig(status: JobStatus): { label: string; variant: 'default' | 'info' | 'success' | 'warning' | 'error' } {
+  switch (status) {
+    case 'DRAFT':
+      return { label: 'Draft', variant: 'default' }
+    case 'PENDING':
+      return { label: 'Pending', variant: 'warning' }
+    case 'IN_PRODUCTION':
+      return { label: 'In Production', variant: 'info' }
+    case 'IN_REVIEW':
+      return { label: 'In Review', variant: 'warning' }
+    case 'COMPLETED':
+      return { label: 'Completed', variant: 'success' }
+    case 'CANCELLED':
+      return { label: 'Cancelled', variant: 'error' }
+    default:
+      return { label: status, variant: 'default' }
+  }
 }
 
 export function DashboardPage() {
@@ -102,26 +121,32 @@ export function DashboardPage() {
           </div>
           <CardContent className="p-0">
             <ul className="divide-y divide-gray-200">
-              {recentJobs.map((job) => (
-                <li key={job.id}>
-                  <Link
-                    to={`/jobs/${job.id}`}
-                    className="block px-6 py-4 hover:bg-gray-50"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate font-medium text-gray-900">{job.title}</p>
-                        <p className="mt-1 truncate text-sm text-gray-500">
-                          {job.description}
-                        </p>
+              {recentJobs.map((job) => {
+                const statusConfig = getJobStatusConfig(job.status)
+                return (
+                  <li key={job.id}>
+                    <Link
+                      to={`/jobs/${job.id}`}
+                      className="block px-6 py-4 hover:bg-gray-50"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <p className="truncate font-medium text-gray-900">{job.title}</p>
+                            <Badge variant={statusConfig.variant}>{statusConfig.label}</Badge>
+                          </div>
+                          <p className="mt-1 truncate text-sm text-gray-500">
+                            {job.description}
+                          </p>
+                        </div>
+                        <span className="ml-4 text-xs text-gray-400">
+                          {formatDate(job.updatedAt)}
+                        </span>
                       </div>
-                      <span className="ml-4 text-xs text-gray-400">
-                        {formatDate(job.updatedAt)}
-                      </span>
-                    </div>
-                  </Link>
-                </li>
-              ))}
+                    </Link>
+                  </li>
+                )
+              })}
             </ul>
           </CardContent>
         </Card>
