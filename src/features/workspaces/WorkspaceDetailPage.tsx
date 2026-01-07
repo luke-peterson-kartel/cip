@@ -3,7 +3,7 @@ import { useParams, Link, Routes, Route, useLocation, useNavigate } from 'react-
 import { PageHeader } from '@/components/shared'
 import { Button, Spinner, Card, CardContent, Badge } from '@/components/ui'
 import { getWorkspace, getWorkspaceJobs, getWorkspaceUploads, getWorkspaceConversations, startConversation } from '@/api/endpoints/workspaces'
-import type { Workspace, Job, Upload, Conversation } from '@/types'
+import type { Workspace, Job, Upload, Conversation, JobStatus } from '@/types'
 import { cn } from '@/lib/cn'
 
 function formatDate(dateString: string): string {
@@ -18,6 +18,25 @@ function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
+
+function getJobStatusConfig(status: JobStatus): { label: string; variant: 'default' | 'info' | 'success' | 'warning' | 'error' } {
+  switch (status) {
+    case 'DRAFT':
+      return { label: 'Draft', variant: 'default' }
+    case 'PENDING':
+      return { label: 'Pending', variant: 'warning' }
+    case 'IN_PRODUCTION':
+      return { label: 'In Production', variant: 'info' }
+    case 'IN_REVIEW':
+      return { label: 'In Review', variant: 'warning' }
+    case 'COMPLETED':
+      return { label: 'Completed', variant: 'success' }
+    case 'CANCELLED':
+      return { label: 'Cancelled', variant: 'error' }
+    default:
+      return { label: status, variant: 'default' }
+  }
 }
 
 function JobsTab({ workspaceId }: { workspaceId: string }) {
@@ -42,26 +61,32 @@ function JobsTab({ workspaceId }: { workspaceId: string }) {
 
   return (
     <div className="space-y-4">
-      {jobs.map((job) => (
-        <Link key={job.id} to={`/jobs/${job.id}`}>
-          <Card className="transition-shadow hover:shadow-md">
-            <CardContent>
-              <div className="flex items-start justify-between">
-                <div className="min-w-0 flex-1">
-                  <h3 className="font-medium text-gray-900">{job.title}</h3>
-                  <p className="mt-1 text-sm text-gray-500 line-clamp-2">{job.description}</p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {job.airtableUrl && <Badge variant="info">Airtable</Badge>}
-                    {job.frameioUrl && <Badge variant="info">Frame.io</Badge>}
-                    {job.figmaUrl && <Badge variant="info">Figma</Badge>}
+      {jobs.map((job) => {
+        const statusConfig = getJobStatusConfig(job.status)
+        return (
+          <Link key={job.id} to={`/jobs/${job.id}`}>
+            <Card className="transition-shadow hover:shadow-md">
+              <CardContent>
+                <div className="flex items-start justify-between">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-3">
+                      <h3 className="font-medium text-gray-900">{job.title}</h3>
+                      <Badge variant={statusConfig.variant}>{statusConfig.label}</Badge>
+                    </div>
+                    <p className="mt-1 text-sm text-gray-500 line-clamp-2">{job.description}</p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {job.airtableUrl && <Badge variant="info">Airtable</Badge>}
+                      {job.frameioUrl && <Badge variant="info">Frame.io</Badge>}
+                      {job.figmaUrl && <Badge variant="info">Figma</Badge>}
+                    </div>
                   </div>
+                  <span className="ml-4 text-xs text-gray-400">{formatDate(job.updatedAt)}</span>
                 </div>
-                <span className="ml-4 text-xs text-gray-400">{formatDate(job.updatedAt)}</span>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-      ))}
+              </CardContent>
+            </Card>
+          </Link>
+        )
+      })}
       {jobs.length === 0 && (
         <div className="py-12 text-center text-gray-500">No jobs in this workspace yet.</div>
       )}

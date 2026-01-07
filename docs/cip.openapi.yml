@@ -736,6 +736,40 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
   # Jobs
+  /jobs/{jobId}/status:
+    parameters:
+      - $ref: "#/components/parameters/jobId"
+    put:
+      tags: [Jobs]
+      summary: Update job status
+      description: Updates the status of a job. This is a dedicated endpoint for status transitions.
+      operationId: updateJobStatus
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JobStatusUpdate"
+      responses:
+        "200":
+          description: Job status updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+        "400":
+          description: Invalid status transition
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
   /jobs/{jobId}:
     parameters:
       - $ref: "#/components/parameters/jobId"
@@ -1206,6 +1240,12 @@ components:
           type: string
         description:
           type: string
+        status:
+          $ref: "#/components/schemas/JobStatus"
+        statusChangedAt:
+          type: string
+          format: date-time
+          description: Timestamp of the last status transition
         workspaceId:
           type: string
           format: uuid
@@ -1229,6 +1269,32 @@ components:
         updatedAt:
           type: string
           format: date-time
+
+    JobStatus:
+      type: string
+      enum:
+        - DRAFT
+        - PENDING
+        - IN_PRODUCTION
+        - IN_REVIEW
+        - COMPLETED
+        - CANCELLED
+      description: |
+        Job lifecycle status:
+        - DRAFT: Request Agent conversation in progress, job not yet finalized
+        - PENDING: Job created, awaiting production start
+        - IN_PRODUCTION: Active work, Bubble project created
+        - IN_REVIEW: Deliverables submitted, awaiting client approval
+        - COMPLETED: Job finished and delivered
+        - CANCELLED: Job cancelled before completion
+
+    JobStatusUpdate:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          $ref: "#/components/schemas/JobStatus"
 
     JobUpdate:
       type: object

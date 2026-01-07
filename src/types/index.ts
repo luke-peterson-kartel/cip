@@ -1,6 +1,7 @@
 // Enums
 export type UserRole = 'VIEWER' | 'EDITOR' | 'ADMIN' | 'STAFF'
 export type ConversationStatus = 'ACTIVE' | 'COMPLETED' | 'ABANDONED'
+export type JobStatus = 'DRAFT' | 'PENDING' | 'IN_PRODUCTION' | 'IN_REVIEW' | 'COMPLETED' | 'CANCELLED'
 
 // Core Entities
 export interface Organization {
@@ -38,6 +39,8 @@ export interface Job {
   id: string
   title: string
   description?: string
+  status: JobStatus
+  statusChangedAt?: string
   workspaceId: string
   organizationId: string
   airtableUrl?: string

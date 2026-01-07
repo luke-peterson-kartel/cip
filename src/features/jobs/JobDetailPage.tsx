@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { PageHeader } from '@/components/shared'
 import { Card, CardContent, CardHeader, Badge, Spinner, Button } from '@/components/ui'
 import { getJob } from '@/api/endpoints/jobs'
-import type { Job } from '@/types'
+import type { Job, JobStatus } from '@/types'
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -13,6 +13,31 @@ function formatDate(dateString: string): string {
     hour: '2-digit',
     minute: '2-digit',
   })
+}
+
+function getJobStatusConfig(status: JobStatus): {
+  label: string
+  variant: 'default' | 'info' | 'success' | 'warning' | 'error'
+  bgColor: string
+  textColor: string
+  description: string
+} {
+  switch (status) {
+    case 'DRAFT':
+      return { label: 'Draft', variant: 'default', bgColor: 'bg-gray-100', textColor: 'text-gray-800', description: 'Request Agent conversation in progress' }
+    case 'PENDING':
+      return { label: 'Pending', variant: 'warning', bgColor: 'bg-yellow-50', textColor: 'text-yellow-800', description: 'Awaiting production start' }
+    case 'IN_PRODUCTION':
+      return { label: 'In Production', variant: 'info', bgColor: 'bg-blue-50', textColor: 'text-blue-800', description: 'Active work in progress' }
+    case 'IN_REVIEW':
+      return { label: 'In Review', variant: 'warning', bgColor: 'bg-orange-50', textColor: 'text-orange-800', description: 'Awaiting client approval' }
+    case 'COMPLETED':
+      return { label: 'Completed', variant: 'success', bgColor: 'bg-green-50', textColor: 'text-green-800', description: 'Job finished and delivered' }
+    case 'CANCELLED':
+      return { label: 'Cancelled', variant: 'error', bgColor: 'bg-red-50', textColor: 'text-red-800', description: 'Job cancelled' }
+    default:
+      return { label: status, variant: 'default', bgColor: 'bg-gray-100', textColor: 'text-gray-800', description: '' }
+  }
 }
 
 export function JobDetailPage() {
@@ -53,6 +78,8 @@ export function JobDetailPage() {
     { name: 'Figma', url: job.figmaUrl, icon: '🎨' },
   ].filter((link) => link.url)
 
+  const statusConfig = getJobStatusConfig(job.status)
+
   return (
     <div>
       <PageHeader
@@ -64,6 +91,23 @@ export function JobDetailPage() {
           </Link>
         }
       />
+
+      {/* Prominent Status Banner */}
+      <div className={`mb-6 rounded-lg ${statusConfig.bgColor} p-4`}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Badge variant={statusConfig.variant} className="text-sm px-3 py-1">
+              {statusConfig.label}
+            </Badge>
+            <span className={`text-sm ${statusConfig.textColor}`}>{statusConfig.description}</span>
+          </div>
+          {job.statusChangedAt && (
+            <span className={`text-xs ${statusConfig.textColor} opacity-75`}>
+              Since {formatDate(job.statusChangedAt)}
+            </span>
+          )}
+        </div>
+      </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Main Content */}
@@ -122,9 +166,15 @@ export function JobDetailPage() {
                 <div>
                   <dt className="text-sm font-medium text-gray-500">Status</dt>
                   <dd className="mt-1">
-                    <Badge variant="success">Active</Badge>
+                    <Badge variant={statusConfig.variant}>{statusConfig.label}</Badge>
                   </dd>
                 </div>
+                {job.statusChangedAt && (
+                  <div>
+                    <dt className="text-sm font-medium text-gray-500">Status Changed</dt>
+                    <dd className="mt-1 text-sm text-gray-900">{formatDate(job.statusChangedAt)}</dd>
+                  </div>
+                )}
                 <div>
                   <dt className="text-sm font-medium text-gray-500">Created</dt>
                   <dd className="mt-1 text-sm text-gray-900">{formatDate(job.createdAt)}</dd>
