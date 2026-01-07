@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageHeader } from '@/components/shared'
-import { Card, CardContent, Button, Spinner, Modal, Input } from '@/components/ui'
+import { Button, Spinner, Modal, Input, Badge } from '@/components/ui'
 import { useAuthStore } from '@/store/authStore'
 import { getWorkspaces, createWorkspace } from '@/api/endpoints/workspaces'
 import type { Workspace, WorkspaceCreate } from '@/types'
@@ -79,37 +79,71 @@ export function WorkspacesPage() {
         }
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {workspaces.map((workspace) => (
-          <Link key={workspace.id} to={`/workspaces/${workspace.id}`}>
-            <Card className="h-full transition-shadow hover:shadow-md">
-              <CardContent className="py-5">
-                <div className="mb-2 flex items-start justify-between">
-                  <h3 className="font-semibold text-gray-900">{workspace.name}</h3>
-                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-                {workspace.requestAgentPrompt && (
-                  <p className="mb-3 line-clamp-2 text-sm text-gray-500">
-                    {workspace.requestAgentPrompt}
+      <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                Name
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                Description
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                Integrations
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                Created
+              </th>
+              <th scope="col" className="relative px-6 py-3">
+                <span className="sr-only">View</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200 bg-white">
+            {workspaces.map((workspace) => (
+              <tr key={workspace.id} className="hover:bg-gray-50">
+                <td className="whitespace-nowrap px-6 py-4">
+                  <Link to={`/workspaces/${workspace.id}`} className="font-medium text-gray-900 hover:text-primary-600">
+                    {workspace.name}
+                  </Link>
+                </td>
+                <td className="px-6 py-4">
+                  <p className="max-w-xs truncate text-sm text-gray-500">
+                    {workspace.requestAgentPrompt || '—'}
                   </p>
-                )}
-                <div className="flex items-center gap-4 text-xs text-gray-400">
-                  <span>Created {formatDate(workspace.createdAt)}</span>
-                  {workspace.dataCoreUrl && (
-                    <span className="flex items-center gap-1">
-                      <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                      </svg>
-                      Drive linked
-                    </span>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
+                </td>
+                <td className="whitespace-nowrap px-6 py-4">
+                  <div className="flex gap-2">
+                    {workspace.dataCoreUrl && (
+                      <Badge variant="info">Drive</Badge>
+                    )}
+                    {workspace.trainingCoreUrls && workspace.trainingCoreUrls.length > 0 && (
+                      <Badge variant="default">Training</Badge>
+                    )}
+                    {!workspace.dataCoreUrl && (!workspace.trainingCoreUrls || workspace.trainingCoreUrls.length === 0) && (
+                      <span className="text-sm text-gray-400">—</span>
+                    )}
+                  </div>
+                </td>
+                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                  {formatDate(workspace.createdAt)}
+                </td>
+                <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+                  <Link to={`/workspaces/${workspace.id}`} className="text-primary-600 hover:text-primary-900">
+                    View
+                    <span className="sr-only">, {workspace.name}</span>
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {workspaces.length === 0 && (
+          <div className="py-12 text-center text-gray-500">
+            No workspaces yet. Create your first workspace to get started.
+          </div>
+        )}
       </div>
 
       {/* Create Workspace Modal */}
