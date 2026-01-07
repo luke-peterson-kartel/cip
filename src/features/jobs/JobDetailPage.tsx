@@ -101,11 +101,18 @@ export function JobDetailPage() {
             </Badge>
             <span className={`text-sm ${statusConfig.textColor}`}>{statusConfig.description}</span>
           </div>
-          {job.statusChangedAt && (
-            <span className={`text-xs ${statusConfig.textColor} opacity-75`}>
-              Since {formatDate(job.statusChangedAt)}
-            </span>
-          )}
+          <div className="flex items-center gap-4">
+            {job.status === 'DRAFT' && (
+              <Button size="sm">
+                Submit Request
+              </Button>
+            )}
+            {job.statusChangedAt && (
+              <span className={`text-xs ${statusConfig.textColor} opacity-75`}>
+                Since {formatDate(job.statusChangedAt)}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
