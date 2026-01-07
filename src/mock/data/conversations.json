@@ -72,6 +72,34 @@
       ],
       "createdAt": "2024-04-10T15:00:00Z",
       "updatedAt": "2024-04-10T15:00:15Z"
+    },
+    {
+      "id": "conv-004",
+      "workspaceId": "ws-003",
+      "status": "ACTIVE",
+      "jobId": "job-005",
+      "messages": [
+        {
+          "userId": "user-001",
+          "content": "We need comprehensive brand guidelines for our company",
+          "createdAt": "2024-05-10T09:00:00Z"
+        },
+        {
+          "content": "I'd be happy to help create comprehensive brand guidelines! To ensure we cover everything you need, let me ask a few questions:\n\n1. Do you have existing brand assets (logo, colors, fonts) that we need to document?\n2. What formats do you need the guidelines in? (PDF, web, both?)\n3. Are there any specific sections you want to prioritize? (logo usage, color palette, typography, imagery, voice & tone, etc.)",
+          "createdAt": "2024-05-10T09:00:20Z"
+        },
+        {
+          "userId": "user-001",
+          "content": "Yes, we have our logo and primary colors. We need a PDF. Focus on logo usage, colors, typography, and imagery standards.",
+          "createdAt": "2024-05-10T09:05:00Z"
+        },
+        {
+          "content": "I've started a draft job for your Brand Guidelines PDF. Before we finalize, I have a few more questions:\n\n1. How many logo variations do you have? (full color, mono, icon only, etc.)\n2. Do you have specific fonts already licensed, or should we recommend alternatives?\n3. What's your target page count for the guidelines document?",
+          "createdAt": "2024-05-10T09:05:30Z"
+        }
+      ],
+      "createdAt": "2024-05-10T09:00:00Z",
+      "updatedAt": "2024-05-10T09:05:30Z"
     }
   ],
   "pagination": {

@@ -3,7 +3,12 @@ import { useParams, Link } from 'react-router-dom'
 import { PageHeader } from '@/components/shared'
 import { Card, CardContent, CardHeader, Badge, Spinner, Button } from '@/components/ui'
 import { getJob } from '@/api/endpoints/jobs'
-import type { Job, JobStatus } from '@/types'
+import type { Job, JobStatus, Conversation } from '@/types'
+import conversationsData from '@/mock/data/conversations.json'
+
+function getConversationForJob(jobId: string): Conversation | undefined {
+  return (conversationsData.items as Conversation[]).find(conv => conv.jobId === jobId)
+}
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -102,11 +107,19 @@ export function JobDetailPage() {
             <span className={`text-sm ${statusConfig.textColor}`}>{statusConfig.description}</span>
           </div>
           <div className="flex items-center gap-4">
-            {job.status === 'DRAFT' && (
-              <Button size="sm">
-                Submit Request
-              </Button>
-            )}
+            {job.status === 'DRAFT' && (() => {
+              const conversation = getConversationForJob(job.id)
+              if (conversation) {
+                return (
+                  <Link to={`/workspaces/${job.workspaceId}/conversations/${conversation.id}`}>
+                    <Button size="sm">
+                      Open Request Agent
+                    </Button>
+                  </Link>
+                )
+              }
+              return null
+            })()}
             {job.statusChangedAt && (
               <span className={`text-xs ${statusConfig.textColor} opacity-75`}>
                 Since {formatDate(job.statusChangedAt)}
