@@ -114,22 +114,12 @@ export function WorkspacesPage() {
               {/* Workspace Header */}
               <div className="flex items-start justify-between border-b border-gray-100 px-6 py-4">
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-3">
-                    <Link
-                      to={`/workspaces/${workspace.id}`}
-                      className="text-lg font-semibold text-gray-900 hover:text-primary-600"
-                    >
-                      {workspace.name}
-                    </Link>
-                    <div className="flex gap-2">
-                      {workspace.dataCoreUrl && (
-                        <Badge variant="info">Drive</Badge>
-                      )}
-                      {workspace.trainingCoreUrls && workspace.trainingCoreUrls.length > 0 && (
-                        <Badge variant="default">Training</Badge>
-                      )}
-                    </div>
-                  </div>
+                  <Link
+                    to={`/workspaces/${workspace.id}`}
+                    className="text-lg font-semibold text-gray-900 hover:text-primary-600"
+                  >
+                    {workspace.name}
+                  </Link>
                   {workspace.requestAgentPrompt && (
                     <p className="mt-1 text-sm text-gray-500 line-clamp-1">
                       {workspace.requestAgentPrompt}
