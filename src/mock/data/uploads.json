@@ -4,14 +4,18 @@
       "id": "upload-001",
       "filename": "summer-hero-image.jpg",
       "mimeType": "image/jpeg",
-      "uri": "s3://cip-assets/org-001/ws-001/summer-hero-image.jpg",
+      "size": 2458624,
+      "uri": "s3://cip-assets/org-001/proj-001/summer-hero-image.jpg",
       "workspaceId": "ws-001",
+      "projectId": "proj-001",
       "organizationId": "org-001",
       "jobId": "job-001",
+      "uploadedBy": "user-001",
       "metadata": {
         "width": 1920,
         "height": 1080,
-        "fileSize": 2458624
+        "fileSize": 2458624,
+        "thumbnail": "s3://cip-assets/org-001/proj-001/thumbs/summer-hero-image-thumb.jpg"
       },
       "createdAt": "2024-03-20T10:00:00Z",
       "updatedAt": "2024-03-20T10:00:00Z"
@@ -20,14 +24,18 @@
       "id": "upload-002",
       "filename": "instagram-post-1.png",
       "mimeType": "image/png",
-      "uri": "s3://cip-assets/org-001/ws-001/instagram-post-1.png",
+      "size": 1245184,
+      "uri": "s3://cip-assets/org-001/proj-001/instagram-post-1.png",
       "workspaceId": "ws-001",
+      "projectId": "proj-001",
       "organizationId": "org-001",
       "jobId": "job-001",
+      "uploadedBy": "user-001",
       "metadata": {
         "width": 1080,
         "height": 1080,
-        "fileSize": 1245184
+        "fileSize": 1245184,
+        "thumbnail": "s3://cip-assets/org-001/proj-001/thumbs/instagram-post-1-thumb.png"
       },
       "createdAt": "2024-03-22T14:30:00Z",
       "updatedAt": "2024-03-22T14:30:00Z"
@@ -36,10 +44,13 @@
       "id": "upload-003",
       "filename": "billboard-draft-v1.pdf",
       "mimeType": "application/pdf",
-      "uri": "s3://cip-assets/org-001/ws-001/billboard-draft-v1.pdf",
+      "size": 5242880,
+      "uri": "s3://cip-assets/org-001/proj-002/billboard-draft-v1.pdf",
       "workspaceId": "ws-001",
+      "projectId": "proj-002",
       "organizationId": "org-001",
       "jobId": "job-002",
+      "uploadedBy": "user-002",
       "metadata": {
         "pageCount": 3,
         "fileSize": 5242880
@@ -51,15 +62,19 @@
       "id": "upload-004",
       "filename": "ev-hero-video.mp4",
       "mimeType": "video/mp4",
-      "uri": "s3://cip-assets/org-001/ws-002/ev-hero-video.mp4",
+      "size": 125829120,
+      "uri": "s3://cip-assets/org-001/proj-002/ev-hero-video.mp4",
       "workspaceId": "ws-002",
+      "projectId": "proj-002",
       "organizationId": "org-001",
       "jobId": "job-003",
+      "uploadedBy": "user-002",
       "metadata": {
         "width": 3840,
         "height": 2160,
         "duration": 62.5,
-        "fileSize": 125829120
+        "fileSize": 125829120,
+        "thumbnail": "s3://cip-assets/org-001/proj-002/thumbs/ev-hero-video-thumb.jpg"
       },
       "createdAt": "2024-05-15T16:00:00Z",
       "updatedAt": "2024-05-15T16:00:00Z"
@@ -68,14 +83,18 @@
       "id": "upload-005",
       "filename": "ev-exterior-front.jpg",
       "mimeType": "image/jpeg",
-      "uri": "s3://cip-assets/org-001/ws-002/ev-exterior-front.jpg",
+      "size": 8388608,
+      "uri": "s3://cip-assets/org-001/proj-003/ev-exterior-front.jpg",
       "workspaceId": "ws-002",
+      "projectId": "proj-003",
       "organizationId": "org-001",
       "jobId": "job-004",
+      "uploadedBy": "user-003",
       "metadata": {
         "width": 4000,
         "height": 3000,
-        "fileSize": 8388608
+        "fileSize": 8388608,
+        "thumbnail": "s3://cip-assets/org-001/proj-003/thumbs/ev-exterior-front-thumb.jpg"
       },
       "createdAt": "2024-05-20T10:30:00Z",
       "updatedAt": "2024-05-20T10:30:00Z"
@@ -84,16 +103,87 @@
       "id": "upload-006",
       "filename": "brand-colors-reference.png",
       "mimeType": "image/png",
-      "uri": "s3://cip-assets/org-001/ws-003/brand-colors-reference.png",
+      "size": 524288,
+      "uri": "s3://cip-assets/org-001/proj-003/brand-colors-reference.png",
       "workspaceId": "ws-003",
+      "projectId": "proj-003",
       "organizationId": "org-001",
+      "uploadedBy": "user-003",
       "metadata": {
         "width": 2400,
         "height": 1600,
-        "fileSize": 524288
+        "fileSize": 524288,
+        "thumbnail": "s3://cip-assets/org-001/proj-003/thumbs/brand-colors-reference-thumb.png"
       },
       "createdAt": "2024-05-12T09:00:00Z",
       "updatedAt": "2024-05-12T09:00:00Z"
+    }
+    ,
+    {
+      "id": "upload-del-001",
+      "filename": "meta-ad-hero-v1.jpg",
+      "mimeType": "image/jpeg",
+      "size": 1843200,
+      "uri": "https://picsum.photos/seed/del1/1080/1080",
+      "projectId": "proj-001",
+      "organizationId": "org-001",
+      "assetRequestId": "asset-001",
+      "uploadedBy": "sarah@kartel.ai",
+      "reviewStatus": "APPROVED",
+      "reviewedBy": "lisa@bubba.com",
+      "reviewedAt": "2024-04-10T14:30:00Z",
+      "reviewNotes": "Looks great, approved!",
+      "metadata": {
+        "width": 1080,
+        "height": 1080,
+        "fileSize": 1843200,
+        "thumbnail": "https://picsum.photos/seed/del1/200/200"
+      },
+      "createdAt": "2024-04-08T10:00:00Z",
+      "updatedAt": "2024-04-10T14:30:00Z"
+    },
+    {
+      "id": "upload-del-002",
+      "filename": "tiktok-square-v2.png",
+      "mimeType": "image/png",
+      "size": 2156544,
+      "uri": "https://picsum.photos/seed/del2/1080/1920",
+      "projectId": "proj-001",
+      "organizationId": "org-001",
+      "assetRequestId": "asset-001",
+      "uploadedBy": "sarah@kartel.ai",
+      "reviewStatus": "NEEDS_CHANGES",
+      "reviewedBy": "lisa@bubba.com",
+      "reviewedAt": "2024-04-11T09:15:00Z",
+      "reviewNotes": "Logo placement needs to be higher. Also can we try a warmer color palette?",
+      "metadata": {
+        "width": 1080,
+        "height": 1920,
+        "fileSize": 2156544,
+        "thumbnail": "https://picsum.photos/seed/del2/200/356"
+      },
+      "createdAt": "2024-04-09T15:00:00Z",
+      "updatedAt": "2024-04-11T09:15:00Z"
+    },
+    {
+      "id": "upload-del-003",
+      "filename": "product-showcase-30s.mp4",
+      "mimeType": "video/mp4",
+      "size": 45678592,
+      "uri": "https://picsum.photos/seed/del3/1920/1080",
+      "projectId": "proj-001",
+      "organizationId": "org-001",
+      "assetRequestId": "asset-001",
+      "uploadedBy": "sarah@kartel.ai",
+      "metadata": {
+        "width": 1920,
+        "height": 1080,
+        "duration": 30,
+        "fileSize": 45678592,
+        "thumbnail": "https://picsum.photos/seed/del3/200/113"
+      },
+      "createdAt": "2024-04-12T11:00:00Z",
+      "updatedAt": "2024-04-12T11:00:00Z"
     }
   ],
   "pagination": {

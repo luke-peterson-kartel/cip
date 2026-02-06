@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router-dom'
 import { AppLayout } from './components/layout/AppLayout'
 import { DashboardPage } from './features/dashboard/DashboardPage'
-import { WorkspacesPage } from './features/workspaces/WorkspacesPage'
-import { WorkspaceDetailPage } from './features/workspaces/WorkspaceDetailPage'
+import { ProjectsPage } from './features/projects/ProjectsPage'
+import { ProjectDetailPage } from './features/projects/ProjectDetailPage'
 import { JobDetailPage } from './features/jobs/JobDetailPage'
 import { ConversationPage } from './features/request-agent/ConversationPage'
 import { UsersPage } from './features/users/UsersPage'
@@ -15,10 +15,10 @@ function App() {
     <Routes>
       <Route path="/" element={<AppLayout />}>
         <Route index element={<DashboardPage />} />
-        <Route path="workspaces" element={<WorkspacesPage />} />
-        <Route path="workspaces/:workspaceId/*" element={<WorkspaceDetailPage />} />
+        <Route path="projects" element={<ProjectsPage />} />
+        <Route path="projects/:projectId/*" element={<ProjectDetailPage />} />
         <Route path="jobs/:jobId" element={<JobDetailPage />} />
-        <Route path="workspaces/:workspaceId/conversations/:conversationId" element={<ConversationPage />} />
+        <Route path="projects/:projectId/conversations/:conversationId" element={<ConversationPage />} />
         <Route path="settings/organization" element={<OrganizationSettingsPage />} />
         <Route path="settings/users" element={<UsersPage />} />
         <Route path="settings/profile" element={<ProfilePage />} />

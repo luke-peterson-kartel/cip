@@ -1,0 +1,539 @@
+{
+  "items": [
+    {
+      "id": "proj-001",
+      "name": "Bubba Brand Voice AI System",
+      "projectType": "INTERNAL_BUILD",
+      "organizationId": "org-001",
+      "submitDate": "2024-01-15T00:00:00Z",
+      "dueDate": "2024-04-30T00:00:00Z",
+      "submittedBy": "Sarah Chen",
+      "description": "Build an AI-powered brand voice system to ensure consistent Bubba brand messaging across all creative outputs.",
+      "googleDriveUrl": "https://drive.google.com/drive/folders/bubba-brand-voice",
+      "additionalLinks": [
+        {
+          "label": "Brand Guidelines",
+          "url": "https://www.figma.com/file/bubba-brand-guidelines"
+        },
+        {
+          "label": "Voice Examples",
+          "url": "https://pinterest.com/bubba/brand-voice"
+        }
+      ],
+      "problem": "Bubba's brand voice is inconsistent across different channels and creators, leading to diluted brand identity.",
+      "solution": "Develop a custom AI model trained on approved Bubba brand content to generate and validate brand-consistent messaging.",
+      "goal": "Achieve 95% brand voice consistency score across all creative outputs within 6 months.",
+      "why": "Consistent brand voice strengthens brand recognition, builds trust with consumers, and increases marketing effectiveness by 40%.",
+      "technicalWorkflowScope": "Fine-tune LLM on Bubba brand corpus, build validation API, create Figma/Slack integrations, develop approval workflow",
+      "dataRequirements": "3+ years of approved marketing copy, social media posts, product descriptions, customer communications, brand guidelines",
+      "setupPhase": {
+        "dataCapture": {
+          "status": "COMPLETED",
+          "days": 3,
+          "completedDate": "2024-01-18T00:00:00Z"
+        },
+        "parsing": {
+          "status": "COMPLETED",
+          "days": 2,
+          "completedDate": "2024-01-20T00:00:00Z"
+        },
+        "captioning": {
+          "status": "COMPLETED",
+          "days": 5,
+          "completedDate": "2024-01-27T00:00:00Z"
+        },
+        "loraTraining": {
+          "status": "IN_PROGRESS",
+          "days": 6
+        },
+        "workflowBuild": {
+          "status": "NOT_STARTED",
+          "days": 3
+        },
+        "generation": {
+          "status": "NOT_STARTED",
+          "days": 2
+        }
+      },
+      "assetRequests": [
+        {
+          "id": "asset-001",
+          "projectId": "proj-001",
+          "title": "Brand Voice Samples",
+          "platform": "Meta",
+          "creativeType": "Brand Voice Examples",
+          "description": "Sample outputs demonstrating brand voice consistency",
+          "targetCount": 10,
+          "dimensions": "1x1",
+          "format": "Static Image",
+          "status": "PENDING",
+          "workflowStage": "GEN_REFINE",
+          "priority": "MEDIUM",
+          "version": 1,
+          "kartelAssignedEmail": "sarah.chen@kartel.com",
+          "requestedDate": "2024-02-01T00:00:00Z",
+          "firstV1ReviewDate": "2024-02-15T00:00:00Z",
+          "finalDeliveryDate": "2024-03-01T00:00:00Z",
+          "messages": [
+            {
+              "id": "msg-001",
+              "senderEmail": "sarah.chen@kartel.com",
+              "senderName": "Sarah Chen",
+              "message": "Starting brand voice generation. Will have first batch ready for review by Feb 10.",
+              "timestamp": "2024-02-02T09:00:00Z"
+            }
+          ],
+          "createdAt": "2024-02-01T10:00:00Z",
+          "updatedAt": "2024-02-20T14:30:00Z",
+          "createdBy": "user-001"
+        }
+      ],
+      "createdAt": "2024-01-15T10:00:00Z",
+      "updatedAt": "2024-02-20T14:30:00Z"
+    },
+    {
+      "id": "proj-002",
+      "name": "Summer Campaign 2024",
+      "projectType": "CREATIVE_BRIEF",
+      "organizationId": "org-001",
+      "submitDate": "2024-02-01T00:00:00Z",
+      "dueDate": "2024-05-15T00:00:00Z",
+      "submittedBy": "Mike Johnson",
+      "description": "Summer campaign focusing on outdoor adventure and sustainability themes for Bubba's new eco-friendly product line.",
+      "googleDriveUrl": "https://drive.google.com/drive/folders/summer-campaign-2024",
+      "additionalLinks": [
+        {
+          "label": "Mood Board",
+          "url": "https://pinterest.com/bubba/summer-2024-inspo"
+        },
+        {
+          "label": "Competitive Analysis",
+          "url": "https://docs.google.com/presentation/d/summer-comp-analysis"
+        }
+      ],
+      "briefType": "Full campaign - concepting, storyboard, keyframe approval, video production, final edit",
+      "targetAudience": "Outdoor enthusiasts aged 25-45, environmentally conscious, active lifestyle",
+      "keyMessage": "Adventure responsibly with Bubba's sustainable gear that keeps up with your lifestyle",
+      "deliverables": "3x 30-second video ads, 12x social media assets (Instagram/TikTok), 6x still images for print/web, campaign landing page design",
+      "assetRequests": [
+        {
+          "id": "asset-002",
+          "projectId": "proj-002",
+          "title": "Hero Video Ads - Summer",
+          "platform": "OLV/YouTube/OTT",
+          "creativeType": "Hero Video Ads",
+          "description": "30-second video ads for summer campaign featuring outdoor adventure scenes",
+          "targetCount": 3,
+          "dimensions": "16x9",
+          "duration": 30,
+          "format": "Video",
+          "status": "APPROVE",
+          "workflowStage": "CLIENT_REVIEW",
+          "productionStage": "FINE_CUT",
+          "priority": "HIGH",
+          "version": 2,
+          "clientAssignedEmail": "jordan.kim@bubba.com",
+          "kartelAssignedEmail": "sarah.chen@kartel.com",
+          "requestedDate": "2024-02-01T00:00:00Z",
+          "firstV1ReviewDate": "2024-03-15T00:00:00Z",
+          "finalDeliveryDate": "2024-05-01T00:00:00Z",
+          "messages": [
+            {
+              "id": "msg-010",
+              "senderEmail": "jordan.kim@bubba.com",
+              "senderName": "Jordan Kim",
+              "message": "Love the sustainable messaging. Minor edits needed on scene transitions.",
+              "timestamp": "2024-03-18T10:30:00Z"
+            },
+            {
+              "id": "msg-011",
+              "senderEmail": "sarah.chen@kartel.com",
+              "senderName": "Sarah Chen",
+              "message": "Got it! I'll adjust the transitions and have a revision ready by Friday.",
+              "timestamp": "2024-03-18T11:15:00Z"
+            },
+            {
+              "id": "msg-012",
+              "senderEmail": "jordan.kim@bubba.com",
+              "senderName": "Jordan Kim",
+              "message": "Sounds good. Can you also check the audio levels in the last 5 seconds?",
+              "timestamp": "2024-03-18T11:20:00Z"
+            }
+          ],
+          "createdAt": "2024-02-01T09:00:00Z",
+          "updatedAt": "2024-03-20T15:45:00Z",
+          "createdBy": "user-002"
+        },
+        {
+          "id": "asset-003",
+          "projectId": "proj-002",
+          "title": "Instagram Feed - Summer Collection",
+          "platform": "Meta",
+          "creativeType": "Instagram Feed Posts",
+          "description": "Square format social media assets for Instagram feed",
+          "targetCount": 6,
+          "dimensions": "1x1",
+          "format": "Static Image",
+          "status": "ITERATE",
+          "workflowStage": "CLIENT_REVIEW",
+          "priority": "HIGH",
+          "version": 3,
+          "clientAssignedEmail": "emma.rodriguez@bubba.com",
+          "kartelAssignedEmail": "mike.johnson@kartel.com",
+          "requestedDate": "2024-02-01T00:00:00Z",
+          "firstV1ReviewDate": "2024-03-10T00:00:00Z",
+          "finalDeliveryDate": "2024-04-20T00:00:00Z",
+          "messages": [
+            {
+              "id": "msg-020",
+              "senderEmail": "emma.rodriguez@bubba.com",
+              "senderName": "Emma Rodriguez",
+              "message": "Colors need to match brand guidelines more closely. Try warmer tones.",
+              "timestamp": "2024-03-15T14:00:00Z"
+            },
+            {
+              "id": "msg-021",
+              "senderEmail": "mike.johnson@kartel.com",
+              "senderName": "Mike Johnson",
+              "message": "Adjusting color grading to match summer palette. Will have updated versions by EOD tomorrow.",
+              "timestamp": "2024-03-15T16:30:00Z"
+            }
+          ],
+          "createdAt": "2024-02-01T09:00:00Z",
+          "updatedAt": "2024-03-22T11:30:00Z",
+          "createdBy": "user-002"
+        },
+        {
+          "id": "asset-004",
+          "projectId": "proj-002",
+          "title": "TikTok Stories - Summer Vibes",
+          "platform": "TikTok",
+          "creativeType": "TikTok Stories",
+          "description": "Vertical format video assets for TikTok and Instagram Stories",
+          "targetCount": 6,
+          "dimensions": "9x16",
+          "duration": 15,
+          "format": "Video",
+          "status": "PENDING",
+          "workflowStage": "QC_LIBRARY",
+          "priority": "MEDIUM",
+          "version": 1,
+          "clientAssignedEmail": "jordan.kim@bubba.com",
+          "kartelAssignedEmail": "sarah.chen@kartel.com",
+          "requestedDate": "2024-02-01T00:00:00Z",
+          "firstV1ReviewDate": "2024-03-25T00:00:00Z",
+          "finalDeliveryDate": "2024-05-10T00:00:00Z",
+          "messages": [],
+          "createdAt": "2024-02-01T09:00:00Z",
+          "updatedAt": "2024-02-15T11:20:00Z",
+          "createdBy": "user-002"
+        },
+        {
+          "id": "asset-005",
+          "projectId": "proj-002",
+          "title": "Print/Web Heroes",
+          "platform": "Meta",
+          "creativeType": "Print/Web Hero Images",
+          "description": "High-resolution still images for print advertising and web banners",
+          "targetCount": 6,
+          "dimensions": "16x9",
+          "format": "Static Image",
+          "status": "IMPROVE",
+          "workflowStage": "GEN_REFINE",
+          "priority": "HIGH",
+          "version": 2,
+          "clientAssignedEmail": "emma.rodriguez@bubba.com",
+          "kartelAssignedEmail": "mike.johnson@kartel.com",
+          "requestedDate": "2024-02-01T00:00:00Z",
+          "firstV1ReviewDate": "2024-03-08T00:00:00Z",
+          "finalDeliveryDate": "2024-04-15T00:00:00Z",
+          "messages": [
+            {
+              "id": "msg-030",
+              "senderEmail": "emma.rodriguez@bubba.com",
+              "senderName": "Emma Rodriguez",
+              "message": "Resolution looks great but need more diverse scenes - mix of close-ups and wide shots",
+              "timestamp": "2024-03-09T14:00:00Z"
+            },
+            {
+              "id": "msg-031",
+              "senderEmail": "mike.johnson@kartel.com",
+              "senderName": "Mike Johnson",
+              "message": "Will add variety to the shots. Working on 3 close-up and 3 wide compositions.",
+              "timestamp": "2024-03-09T15:30:00Z"
+            }
+          ],
+          "createdAt": "2024-02-01T09:00:00Z",
+          "updatedAt": "2024-03-10T14:20:00Z",
+          "createdBy": "user-002"
+        }
+      ],
+      "createdAt": "2024-02-01T09:00:00Z",
+      "updatedAt": "2024-02-15T11:20:00Z"
+    },
+    {
+      "id": "proj-003",
+      "name": "Q2 Social Media Assets",
+      "projectType": "ASSETS_GENERATION",
+      "organizationId": "org-001",
+      "submitDate": "2024-03-01T00:00:00Z",
+      "dueDate": "2024-03-25T00:00:00Z",
+      "submittedBy": "Lisa Wong",
+      "description": "Generate social media assets for Q2 product launches across multiple platforms and formats.",
+      "googleDriveUrl": "https://drive.google.com/drive/folders/q2-social-assets",
+      "additionalLinks": [
+        {
+          "label": "Product Photos",
+          "url": "https://drive.google.com/drive/folders/product-photos-q2"
+        },
+        {
+          "label": "Social Calendar",
+          "url": "https://docs.google.com/spreadsheets/d/social-calendar-q2"
+        }
+      ],
+      "numberOfAssets": 48,
+      "timeline": "3 weeks",
+      "format": "Mixed: Video (15s, 30s), Static images (1:1, 9:16, 4:5), Carousels (10 slides)",
+      "duration": 15,
+      "outputChannels": ["Instagram", "TikTok", "Pinterest", "YouTube Shorts", "Meta"],
+      "csvData": null,
+      "assetRequests": [
+        {
+          "id": "asset-006",
+          "projectId": "proj-003",
+          "title": "Cooler Product Showcase",
+          "platform": "Meta",
+          "creativeType": "Cooler Instagram",
+          "description": "Summer cooler product showcase for Instagram feed and stories",
+          "targetCount": 12,
+          "dimensions": "1x1",
+          "format": "Static Image",
+          "status": "COMPLETED",
+          "workflowStage": "QC_DISTRO",
+          "priority": "HIGH",
+          "version": 1,
+          "clientAssignedEmail": "lisa.wong@bubba.com",
+          "kartelAssignedEmail": "sarah.chen@kartel.com",
+          "requestedDate": "2024-03-01T00:00:00Z",
+          "firstV1ReviewDate": "2024-03-08T00:00:00Z",
+          "finalDeliveryDate": "2024-03-20T00:00:00Z",
+          "completedDate": "2024-03-19T16:30:00Z",
+          "messages": [
+            {
+              "id": "msg-040",
+              "senderEmail": "lisa.wong@bubba.com",
+              "senderName": "Lisa Wong",
+              "message": "Perfect! Approved for distribution.",
+              "timestamp": "2024-03-19T15:00:00Z"
+            }
+          ],
+          "createdAt": "2024-03-01T14:00:00Z",
+          "updatedAt": "2024-03-19T16:30:00Z",
+          "createdBy": "user-003"
+        },
+        {
+          "id": "asset-007",
+          "projectId": "proj-003",
+          "title": "Drinkware Product Videos",
+          "platform": "TikTok",
+          "creativeType": "Drinkware TikTok",
+          "description": "Drinkware product videos for TikTok vertical format",
+          "targetCount": 8,
+          "dimensions": "9x16",
+          "duration": 15,
+          "format": "Video",
+          "status": "APPROVE",
+          "workflowStage": "CLIENT_REVIEW",
+          "priority": "HIGH",
+          "version": 2,
+          "clientAssignedEmail": "jordan.kim@bubba.com",
+          "kartelAssignedEmail": "sarah.chen@kartel.com",
+          "requestedDate": "2024-03-01T00:00:00Z",
+          "firstV1ReviewDate": "2024-03-12T00:00:00Z",
+          "finalDeliveryDate": "2024-03-22T00:00:00Z",
+          "messages": [
+            {
+              "id": "msg-050",
+              "senderEmail": "jordan.kim@bubba.com",
+              "senderName": "Jordan Kim",
+              "message": "Great energy! Approved with minor audio adjustments.",
+              "timestamp": "2024-03-13T10:00:00Z"
+            },
+            {
+              "id": "msg-051",
+              "senderEmail": "sarah.chen@kartel.com",
+              "senderName": "Sarah Chen",
+              "message": "Adjusting background music levels now. Will send updated cut by end of day.",
+              "timestamp": "2024-03-13T11:30:00Z"
+            }
+          ],
+          "createdAt": "2024-03-01T14:00:00Z",
+          "updatedAt": "2024-03-14T10:15:00Z",
+          "createdBy": "user-003"
+        },
+        {
+          "id": "asset-008",
+          "projectId": "proj-003",
+          "title": "YouTube Shorts - Product Demos",
+          "platform": "YouTube",
+          "creativeType": "YouTube Shorts - Product Demos",
+          "description": "Short-form product demonstration videos for YouTube Shorts",
+          "targetCount": 6,
+          "dimensions": "9x16",
+          "duration": 30,
+          "format": "Video",
+          "status": "PENDING",
+          "workflowStage": "GEN_REFINE",
+          "priority": "MEDIUM",
+          "version": 1,
+          "clientAssignedEmail": "jordan.kim@bubba.com",
+          "kartelAssignedEmail": "sarah.chen@kartel.com",
+          "requestedDate": "2024-03-01T00:00:00Z",
+          "firstV1ReviewDate": "2024-03-15T00:00:00Z",
+          "finalDeliveryDate": "2024-03-25T00:00:00Z",
+          "messages": [],
+          "createdAt": "2024-03-01T14:00:00Z",
+          "updatedAt": "2024-03-10T16:45:00Z",
+          "createdBy": "user-003"
+        },
+        {
+          "id": "asset-009",
+          "projectId": "proj-003",
+          "title": "Pinterest Product Pins",
+          "platform": "Pinterest",
+          "creativeType": "Pinterest Pins - Product Line",
+          "description": "Vertical format product pins optimized for Pinterest discovery",
+          "targetCount": 10,
+          "dimensions": "2x3",
+          "format": "Static Image",
+          "status": "ITERATE",
+          "workflowStage": "CLIENT_REVIEW",
+          "priority": "MEDIUM",
+          "version": 2,
+          "clientAssignedEmail": "emma.rodriguez@bubba.com",
+          "kartelAssignedEmail": "mike.johnson@kartel.com",
+          "requestedDate": "2024-03-01T00:00:00Z",
+          "firstV1ReviewDate": "2024-03-10T00:00:00Z",
+          "finalDeliveryDate": "2024-03-23T00:00:00Z",
+          "messages": [
+            {
+              "id": "msg-060",
+              "senderEmail": "emma.rodriguez@bubba.com",
+              "senderName": "Emma Rodriguez",
+              "message": "Text overlay is too small. Increase font size for mobile viewing.",
+              "timestamp": "2024-03-11T10:00:00Z"
+            },
+            {
+              "id": "msg-061",
+              "senderEmail": "mike.johnson@kartel.com",
+              "senderName": "Mike Johnson",
+              "message": "Redesigning text layout for better mobile legibility. Should have updated pins ready tomorrow.",
+              "timestamp": "2024-03-11T13:00:00Z"
+            }
+          ],
+          "createdAt": "2024-03-01T14:00:00Z",
+          "updatedAt": "2024-03-11T14:20:00Z",
+          "createdBy": "user-003"
+        },
+        {
+          "id": "asset-010",
+          "projectId": "proj-003",
+          "title": "Meta Carousel Ads",
+          "platform": "Meta",
+          "creativeType": "Meta Carousel Ads",
+          "description": "Multi-slide carousel ads showcasing product features for Facebook/Instagram",
+          "targetCount": 12,
+          "dimensions": "1x1",
+          "format": "GIF",
+          "status": "DENY",
+          "workflowStage": "CLIENT_REVIEW",
+          "priority": "LOW",
+          "version": 1,
+          "clientAssignedEmail": "lisa.wong@bubba.com",
+          "kartelAssignedEmail": "sarah.chen@kartel.com",
+          "requestedDate": "2024-03-01T00:00:00Z",
+          "firstV1ReviewDate": "2024-03-09T00:00:00Z",
+          "messages": [
+            {
+              "id": "msg-070",
+              "senderEmail": "lisa.wong@bubba.com",
+              "senderName": "Lisa Wong",
+              "message": "Not aligned with Q2 campaign strategy. Pausing this asset type.",
+              "timestamp": "2024-03-09T10:00:00Z"
+            }
+          ],
+          "createdAt": "2024-03-01T14:00:00Z",
+          "updatedAt": "2024-03-09T11:00:00Z",
+          "createdBy": "user-003"
+        }
+      ],
+      "createdAt": "2024-03-01T14:00:00Z",
+      "updatedAt": "2024-03-10T16:45:00Z"
+    },
+    {
+      "id": "proj-004",
+      "name": "Sustainable Product Line Concepts",
+      "projectType": "CREATIVE_EXPLORATION",
+      "organizationId": "org-001",
+      "submitDate": "2024-03-15T00:00:00Z",
+      "dueDate": "2024-04-05T00:00:00Z",
+      "submittedBy": "Sarah Chen",
+      "description": "Exploratory concept development for new sustainable product line with focus on packaging design and brand positioning.",
+      "googleDriveUrl": "https://drive.google.com/drive/folders/sustainable-concepts",
+      "additionalLinks": [
+        {
+          "label": "Sustainability Research",
+          "url": "https://docs.google.com/document/d/sustainability-research"
+        },
+        {
+          "label": "Material Samples",
+          "url": "https://pinterest.com/bubba/sustainable-materials"
+        }
+      ],
+      "explorationFocus": "Packaging innovation, visual identity refresh, storytelling approach for sustainability narrative",
+      "collaborationType": "Rapid iteration sprints with weekly review cycles",
+      "creativeDirector": "Emma Rodriguez",
+      "preditor": "Jordan Kim",
+      "iterationCount": 3,
+      "assetRequests": [
+        {
+          "id": "asset-011",
+          "projectId": "proj-004",
+          "title": "Sustainable Packaging Renders",
+          "platform": "Meta",
+          "creativeType": "Packaging Concept Renders",
+          "description": "3D renders of sustainable packaging concepts for product line",
+          "targetCount": 5,
+          "dimensions": "1x1",
+          "format": "Static Image",
+          "status": "PENDING",
+          "workflowStage": "GEN_REFINE",
+          "priority": "HIGH",
+          "version": 1,
+          "clientAssignedEmail": "emma.rodriguez@bubba.com",
+          "kartelAssignedEmail": "sarah.chen@kartel.com",
+          "requestedDate": "2024-03-15T00:00:00Z",
+          "firstV1ReviewDate": "2024-03-28T00:00:00Z",
+          "finalDeliveryDate": "2024-04-05T00:00:00Z",
+          "messages": [
+            {
+              "id": "msg-080",
+              "senderEmail": "sarah.chen@kartel.com",
+              "senderName": "Sarah Chen",
+              "message": "Exploring bamboo fiber and recycled ocean plastic materials for the renders. First concepts coming this week.",
+              "timestamp": "2024-03-16T09:00:00Z"
+            }
+          ],
+          "createdAt": "2024-03-15T10:00:00Z",
+          "updatedAt": "2024-03-20T09:30:00Z",
+          "createdBy": "user-001"
+        }
+      ],
+      "createdAt": "2024-03-15T10:00:00Z",
+      "updatedAt": "2024-03-20T09:30:00Z"
+    }
+  ],
+  "pagination": {
+    "nextToken": null
+  }
+}

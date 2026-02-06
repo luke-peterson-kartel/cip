@@ -77,7 +77,7 @@ export function DashboardPage() {
     <div>
       <PageHeader
         title="Dashboard"
-        description={`Welcome back! Here's what's happening with ${organization?.name || 'your organization'}.`}
+        description={`Welcome back! Here's what's happening with ${organization?.brand || organization?.name || 'your brand'}.`}
       />
 
       {/* Stats */}

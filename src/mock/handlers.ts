@@ -1,6 +1,7 @@
 import organizationsData from './data/organizations.json'
 import usersData from './data/users.json'
 import workspacesData from './data/workspaces.json'
+import projectsData from './data/projects.json'
 import jobsData from './data/jobs.json'
 import uploadsData from './data/uploads.json'
 import conversationsData from './data/conversations.json'
@@ -10,6 +11,7 @@ import type {
   Organization,
   User,
   Workspace,
+  Project,
   Job,
   Upload,
   Conversation,
@@ -171,6 +173,128 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
     return { items: events, pagination: { nextToken: null } } as T
   }
 
+  // ============ PROJECT ENDPOINTS ============
+
+  // GET /organizations/:id/projects
+  params = matchPath('/organizations/:organizationId/projects', path)
+  if (method === 'GET' && params) {
+    return projectsData as T
+  }
+
+  // POST /organizations/:id/projects
+  if (method === 'POST' && params) {
+    const body = JSON.parse(options.body as string)
+    const newProject: Project = {
+      id: `proj-${Date.now()}`,
+      organizationId: params.organizationId,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      ...body,
+    }
+    return newProject as T
+  }
+
+  // GET /projects/:id
+  params = matchPath('/projects/:projectId', path)
+  if (method === 'GET' && params) {
+    const project = (projectsData as PaginatedResponse<Project>).items.find(
+      p => p.id === params!.projectId
+    )
+    return project as T
+  }
+
+  // PATCH /projects/:id
+  if (method === 'PATCH' && params) {
+    const project = (projectsData as PaginatedResponse<Project>).items.find(
+      p => p.id === params!.projectId
+    )
+    if (project && options.body) {
+      const updates = JSON.parse(options.body as string)
+      return { ...project, ...updates, updatedAt: new Date().toISOString() } as T
+    }
+  }
+
+  // GET /projects/:id/jobs
+  params = matchPath('/projects/:projectId/jobs', path)
+  if (method === 'GET' && params) {
+    const jobs = (jobsData as PaginatedResponse<Job>).items.filter(
+      j => j.workspaceId === params!.projectId
+    )
+    return { items: jobs, pagination: { nextToken: null } } as T
+  }
+
+  // GET /projects/:id/uploads
+  params = matchPath('/projects/:projectId/uploads', path)
+  if (method === 'GET' && params) {
+    const uploads = (uploadsData as PaginatedResponse<Upload>).items.filter(
+      u => u.workspaceId === params!.projectId || u.projectId === params!.projectId
+    )
+    return { items: uploads, pagination: { nextToken: null } } as T
+  }
+
+  // POST /projects/:id/uploads
+  if (method === 'POST' && params) {
+    const body = JSON.parse(options.body as string)
+    const newUpload: Upload = {
+      id: `upload-${Date.now()}`,
+      projectId: params.projectId,
+      organizationId: 'org-001',
+      uploadedBy: 'current-user',
+      size: 0,
+      uri: `s3://cip-assets/${params.projectId}/${body.filename}`,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      ...body,
+    }
+    // In a real implementation, we'd also return a presigned URL
+    return {
+      upload: newUpload,
+      presignedUrl: `https://mock-presigned-url.s3.amazonaws.com/${body.filename}`
+    } as T
+  }
+
+  // GET /projects/:id/request-agent/conversations
+  params = matchPath('/projects/:projectId/request-agent/conversations', path)
+  if (method === 'GET' && params) {
+    const conversations = (conversationsData as PaginatedResponse<Conversation>).items.filter(
+      c => c.workspaceId === params!.projectId
+    )
+    return { items: conversations, pagination: { nextToken: null } } as T
+  }
+
+  // POST /projects/:id/request-agent/conversations
+  if (method === 'POST' && params) {
+    const newConversation: Conversation = {
+      id: `conv-${Date.now()}`,
+      workspaceId: params.projectId,
+      status: 'ACTIVE',
+      messages: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+    return newConversation as T
+  }
+
+  // GET /projects/:id/audit-events
+  params = matchPath('/projects/:projectId/audit-events', path)
+  if (method === 'GET' && params) {
+    // For project audit events, filter by resources in that project
+    const projectJobs = (jobsData as PaginatedResponse<Job>).items
+      .filter(j => j.workspaceId === params!.projectId)
+      .map(j => j.id)
+    const projectUploads = (uploadsData as PaginatedResponse<Upload>).items
+      .filter(u => u.workspaceId === params!.projectId)
+      .map(u => u.id)
+    const events = (auditEventsData as PaginatedResponse<AuditEvent>).items.filter(
+      e => e.resourceId === params!.projectId ||
+           projectJobs.includes(e.resourceId) ||
+           projectUploads.includes(e.resourceId)
+    )
+    return { items: events, pagination: { nextToken: null } } as T
+  }
+
+  // ============ END PROJECT ENDPOINTS ============
+
   // GET /jobs/:id
   params = matchPath('/jobs/:jobId', path)
   if (method === 'GET' && params) {
@@ -191,6 +315,15 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
     }
   }
 
+  // GET /asset-requests/:id/uploads
+  params = matchPath('/asset-requests/:assetRequestId/uploads', path)
+  if (method === 'GET' && params) {
+    const uploads = (uploadsData as PaginatedResponse<Upload>).items.filter(
+      u => u.assetRequestId === params!.assetRequestId
+    )
+    return { items: uploads, pagination: { nextToken: null } } as T
+  }
+
   // GET /uploads/:id
   params = matchPath('/uploads/:uploadId', path)
   if (method === 'GET' && params) {
@@ -198,6 +331,23 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
       u => u.id === params!.uploadId
     )
     return upload as T
+  }
+
+  // PATCH /uploads/:id
+  if (method === 'PATCH' && params) {
+    const upload = (uploadsData as PaginatedResponse<Upload>).items.find(
+      u => u.id === params!.uploadId
+    )
+    if (upload && options.body) {
+      const updates = JSON.parse(options.body as string)
+      return { ...upload, ...updates, updatedAt: new Date().toISOString() } as T
+    }
+  }
+
+  // DELETE /uploads/:id
+  if (method === 'DELETE' && params) {
+    // In a real implementation, this would delete from storage and database
+    return {} as T
   }
 
   // GET /conversations/:id

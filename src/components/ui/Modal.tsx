@@ -7,9 +7,19 @@ export interface ModalProps {
   title?: string
   children: ReactNode
   className?: string
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full'
 }
 
-export function Modal({ isOpen, onClose, title, children, className }: ModalProps) {
+const sizeClasses = {
+  sm: 'max-w-sm',
+  md: 'max-w-md',
+  lg: 'max-w-lg',
+  xl: 'max-w-4xl',
+  '2xl': 'max-w-6xl',
+  full: 'max-w-[95vw]'
+}
+
+export function Modal({ isOpen, onClose, title, children, className, size = 'lg' }: ModalProps) {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
@@ -45,7 +55,8 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
       />
       <div
         className={cn(
-          'relative z-10 w-full max-w-lg rounded-lg bg-white shadow-xl',
+          'relative z-10 w-full rounded-lg bg-white shadow-xl',
+          sizeClasses[size],
           className
         )}
         role="dialog"

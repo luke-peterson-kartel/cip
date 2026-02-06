@@ -14,8 +14,8 @@ const navigation = [
     ),
   },
   {
-    name: 'Workspaces',
-    href: '/workspaces',
+    name: 'Projects',
+    href: '/projects',
     icon: (
       <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -70,11 +70,19 @@ export function Sidebar() {
         <p className="mt-0.5 text-xs text-gray-400">Creative Intelligence Platform</p>
       </div>
 
-      {/* Organization */}
+      {/* Company/Brand */}
       {organization && (
         <div className="border-b border-gray-200 px-4 py-3">
-          <p className="text-xs font-medium uppercase text-gray-400">Organization</p>
-          <p className="mt-1 truncate text-sm font-medium text-gray-900">{organization.name}</p>
+          <div className="flex items-baseline gap-2">
+            <p className="text-xs font-medium uppercase text-gray-400">Company</p>
+            <p className="truncate text-sm font-medium text-gray-900">{organization.name}</p>
+          </div>
+          {organization.brand && (
+            <div className="mt-1.5 flex items-baseline gap-2">
+              <p className="text-xs font-medium uppercase text-gray-400">Brand</p>
+              <p className="truncate text-sm font-medium text-gray-900">{organization.brand}</p>
+            </div>
+          )}
         </div>
       )}
 
