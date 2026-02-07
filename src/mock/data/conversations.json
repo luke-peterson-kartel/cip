@@ -4,7 +4,6 @@
       "id": "conv-001",
       "workspaceId": "ws-001",
       "status": "COMPLETED",
-      "jobId": "job-001",
       "messages": [
         {
           "userId": "user-001",
@@ -30,7 +29,7 @@
           "createdAt": "2024-03-15T08:35:00Z"
         },
         {
-          "content": "Excellent! I've created a job for your Summer Social Media Kit with the following specifications:\n\n- 5 Instagram posts (1080x1080)\n- 3 Instagram stories (1080x1920)\n- 2 Facebook covers (820x312)\n- Theme: Adventure/outdoor with SUV lineup\n- Settings: Mountain and beach landscapes\n- Deadline: End of next week\n\nThe job has been created and assigned. You can track progress in the Jobs section.",
+          "content": "Excellent! I've created asset requests for your Summer Social Media Kit with the following specifications:\n\n- 5 Instagram posts (1080x1080)\n- 3 Instagram stories (1080x1920)\n- 2 Facebook covers (820x312)\n- Theme: Adventure/outdoor with SUV lineup\n- Settings: Mountain and beach landscapes\n- Deadline: End of next week\n\nThe asset requests have been created. You can track progress on the project page.",
           "createdAt": "2024-03-15T08:35:30Z"
         }
       ],
@@ -77,7 +76,6 @@
       "id": "conv-004",
       "workspaceId": "ws-003",
       "status": "ACTIVE",
-      "jobId": "job-005",
       "messages": [
         {
           "userId": "user-001",
@@ -94,7 +92,7 @@
           "createdAt": "2024-05-10T09:05:00Z"
         },
         {
-          "content": "I've started a draft job for your Brand Guidelines PDF. Before we finalize, I have a few more questions:\n\n1. How many logo variations do you have? (full color, mono, icon only, etc.)\n2. Do you have specific fonts already licensed, or should we recommend alternatives?\n3. What's your target page count for the guidelines document?",
+          "content": "I've started working on your Brand Guidelines PDF. Before we finalize, I have a few more questions:\n\n1. How many logo variations do you have? (full color, mono, icon only, etc.)\n2. Do you have specific fonts already licensed, or should we recommend alternatives?\n3. What's your target page count for the guidelines document?",
           "createdAt": "2024-05-10T09:05:30Z"
         }
       ],

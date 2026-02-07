@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from 'react'
 import { cn } from '@/lib/cn'
+import { Modal } from '@/components/ui'
 import {
   validateFileType,
   validateFileSize,
@@ -53,6 +54,8 @@ export function FileUploadZone({
   const [isDragging, setIsDragging] = useState(false)
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [pendingFiles, setPendingFiles] = useState<File[] | null>(null)
+  const [showDisclosure, setShowDisclosure] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleDragEnter = useCallback((e: React.DragEvent) => {
@@ -232,6 +235,27 @@ export function FileUploadZone({
     }
   }, [validateFiles, projectId, onUploadComplete])
 
+  const promptDisclosure = useCallback((files: File[]) => {
+    setPendingFiles(files)
+    setShowDisclosure(true)
+  }, [])
+
+  const handleDisclosureConfirm = useCallback(() => {
+    setShowDisclosure(false)
+    if (pendingFiles) {
+      uploadFiles(pendingFiles)
+      setPendingFiles(null)
+    }
+  }, [pendingFiles, uploadFiles])
+
+  const handleDisclosureCancel = useCallback(() => {
+    setShowDisclosure(false)
+    setPendingFiles(null)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }, [])
+
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -240,20 +264,20 @@ export function FileUploadZone({
     if (disabled) return
 
     const files = Array.from(e.dataTransfer.files)
-    uploadFiles(files)
-  }, [disabled, uploadFiles])
+    promptDisclosure(files)
+  }, [disabled, promptDisclosure])
 
   const handleFileInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const files = Array.from(e.target.files)
-      uploadFiles(files)
+      promptDisclosure(files)
 
       // Reset input
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
       }
     }
-  }, [uploadFiles])
+  }, [promptDisclosure])
 
   const handleClick = useCallback(() => {
     if (!disabled) {
@@ -340,6 +364,51 @@ export function FileUploadZone({
           </div>
         </div>
       )}
+
+      {/* Security Disclosure Modal */}
+      <Modal
+        isOpen={showDisclosure}
+        onClose={handleDisclosureCancel}
+        title="Data Security Disclosure"
+        size="md"
+      >
+        <div className="space-y-4">
+          <div className="rounded-md bg-amber-50 border border-amber-200 p-4">
+            <div className="flex">
+              <svg className="h-5 w-5 text-amber-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+              </svg>
+              <div className="ml-3">
+                <p className="text-sm text-amber-800">
+                  Please ensure that the files you are uploading do not contain any highly sensitive or confidential data such as passwords, API keys, financial records, or personally identifiable information (PII).
+                </p>
+              </div>
+            </div>
+          </div>
+          <p className="text-sm text-gray-600">
+            If you need to share secure data, please request your secure S3 bucket by contacting{' '}
+            <a href="mailto:security@kartel.ai" className="font-medium text-primary-600 hover:text-primary-700 underline">
+              security@kartel.ai
+            </a>
+          </p>
+          <div className="flex justify-end gap-3 pt-2">
+            <button
+              type="button"
+              onClick={handleDisclosureCancel}
+              className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleDisclosureConfirm}
+              className="rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
+            >
+              I understand, proceed with upload
+            </button>
+          </div>
+        </div>
+      </Modal>
 
       {/* Uploading Files */}
       {uploadingFiles.length > 0 && (

@@ -4,21 +4,16 @@ import { PageHeader } from '@/components/shared'
 import { Button, Spinner, Modal, Input, Badge, Card } from '@/components/ui'
 import { useAuthStore } from '@/store/authStore'
 import { getProjects, createProject } from '@/api/endpoints/projects'
-import type { Project, ProjectCreate, ProjectType, Job, JobStatus } from '@/types'
+import type { Project, ProjectCreate, ProjectType } from '@/types'
 import { ProjectTypeFields } from '@/components/forms/ProjectTypeFields'
 import { CSVUploadField } from '@/components/forms/CSVUploadField'
-import jobsData from '@/mock/data/jobs.json'
+import { RichTextEditor } from '@/components/forms/RichTextEditor'
 
 const projectTypes = [
   {
-    value: 'INTERNAL_BUILD' as ProjectType,
-    name: 'Internal Build',
-    description: 'Build creative intelligence system and workflow for brand'
-  },
-  {
     value: 'CREATIVE_BRIEF' as ProjectType,
-    name: 'Creative Brief & Asset Generation',
-    description: 'Creative concepting and asset production with detailed specifications'
+    name: 'Brief & Deliverable Request',
+    description: 'Define your deliverables, quantities, and timeline for production'
   },
   {
     value: 'CREATIVE_EXPLORATION' as ProjectType,
@@ -40,31 +35,6 @@ function formatDate(dateString: string): string {
   })
 }
 
-function getJobStatusConfig(status: JobStatus): { label: string; variant: 'default' | 'info' | 'success' | 'warning' | 'error' } {
-  switch (status) {
-    case 'DRAFT':
-      return { label: 'Draft', variant: 'default' }
-    case 'PENDING':
-      return { label: 'Pending', variant: 'warning' }
-    case 'IN_PRODUCTION':
-      return { label: 'In Production', variant: 'info' }
-    case 'IN_REVIEW':
-      return { label: 'In Review', variant: 'warning' }
-    case 'COMPLETED':
-      return { label: 'Completed', variant: 'success' }
-    case 'CANCELLED':
-      return { label: 'Cancelled', variant: 'error' }
-    default:
-      return { label: status, variant: 'default' }
-  }
-}
-
-function getProjectJobs(projectId: string): Job[] {
-  return (jobsData.items as Job[])
-    .filter(job => job.projectId === projectId)
-    .slice(0, 3)
-}
-
 export function ProjectsPage() {
   const { organization } = useAuthStore()
   const [projects, setProjects] = useState<Project[]>([])
@@ -78,7 +48,6 @@ export function ProjectsPage() {
     dueDate: '',
     submittedBy: '',
     description: '',
-    googleDriveUrl: '',
     additionalLinks: [],
   })
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
@@ -248,8 +217,6 @@ export function ProjectsPage() {
 
       <div className="space-y-4">
         {projects.map((project) => {
-          const projectJobs = getProjectJobs(project.id)
-
           return (
             <Card key={project.id} className="overflow-hidden">
               {/* Project Header */}
@@ -281,44 +248,26 @@ export function ProjectsPage() {
                 </Link>
               </div>
 
-              {/* Recent Jobs List */}
+              {/* Asset Request Summary */}
               <div className="bg-gray-50 px-6 py-3">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-xs font-medium uppercase tracking-wider text-gray-500">Recent Jobs</h4>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <span className="text-sm text-gray-600">
+                      {project.assetRequests?.length || 0} asset requests
+                    </span>
+                    {project.assetRequests && project.assetRequests.filter(ar => ar.status !== 'COMPLETED' && ar.status !== 'DENY').length > 0 && (
+                      <Badge variant="info">
+                        {project.assetRequests.filter(ar => ar.status !== 'COMPLETED' && ar.status !== 'DENY').length} active
+                      </Badge>
+                    )}
+                  </div>
                   <Link
                     to={`/projects/${project.id}`}
                     className="text-xs text-primary-600 hover:text-primary-700"
                   >
-                    View all
+                    View details
                   </Link>
                 </div>
-                {projectJobs.length > 0 ? (
-                  <ul className="divide-y divide-gray-200 rounded-md border border-gray-200 bg-white">
-                    {projectJobs.map((job) => {
-                      const statusConfig = getJobStatusConfig(job.status)
-                      return (
-                        <li key={job.id}>
-                          <Link
-                            to={`/jobs/${job.id}`}
-                            className="flex items-center justify-between px-4 py-2.5 hover:bg-gray-50"
-                          >
-                            <div className="flex items-center gap-3 min-w-0">
-                              <span className="truncate text-sm font-medium text-gray-900">
-                                {job.title}
-                              </span>
-                              <Badge variant={statusConfig.variant}>{statusConfig.label}</Badge>
-                            </div>
-                            <span className="ml-4 text-xs text-gray-400 whitespace-nowrap">
-                              {formatDate(job.updatedAt)}
-                            </span>
-                          </Link>
-                        </li>
-                      )
-                    })}
-                  </ul>
-                ) : (
-                  <p className="text-sm text-gray-400 py-2">No jobs yet</p>
-                )}
               </div>
             </Card>
           )
@@ -396,16 +345,27 @@ export function ProjectsPage() {
                   placeholder="e.g., Summer Campaign 2024"
                   required
                 />
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Full Description</label>
-                  <textarea
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-                    rows={4}
-                    value={formData.description || ''}
-                    onChange={(e) => handleFieldChange('description', e.target.value)}
-                    placeholder="Provide a detailed description of this project..."
-                  />
-                </div>
+                {formData.projectType === 'CREATIVE_EXPLORATION' ? (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Full Description</label>
+                    <RichTextEditor
+                      value={formData.description || ''}
+                      onChange={(html) => handleFieldChange('description', html)}
+                      placeholder="Describe your creative concept, goals, and any inspiration..."
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Full Description</label>
+                    <textarea
+                      className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                      rows={4}
+                      value={formData.description || ''}
+                      onChange={(e) => handleFieldChange('description', e.target.value)}
+                      placeholder="Provide a detailed description of this project..."
+                    />
+                  </div>
+                )}
                 <Input
                   type="email"
                   label="Submitted By"
@@ -426,7 +386,7 @@ export function ProjectsPage() {
                 />
                 <Input
                   type="date"
-                  label="Campaign Launch Date"
+                  label={formData.projectType === 'CREATIVE_EXPLORATION' ? 'When would you like to see initial concepts?' : 'Campaign Launch Date'}
                   value={formData.dueDate || ''}
                   onChange={(e) => handleFieldChange('dueDate', e.target.value)}
                 />
@@ -435,12 +395,6 @@ export function ProjectsPage() {
               {/* Assets & Links */}
               <div className="space-y-4">
                 <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Assets & Links</h3>
-                <Input
-                  label="Google Drive Link"
-                  value={formData.googleDriveUrl || ''}
-                  onChange={(e) => handleFieldChange('googleDriveUrl', e.target.value)}
-                  placeholder="https://drive.google.com/..."
-                />
 
                 {/* Additional Links */}
                 <div>

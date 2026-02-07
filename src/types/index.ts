@@ -1,7 +1,6 @@
 // Enums
 export type UserRole = 'VIEWER' | 'EDITOR' | 'ADMIN' | 'STAFF'
 export type ConversationStatus = 'ACTIVE' | 'COMPLETED' | 'ABANDONED'
-export type JobStatus = 'DRAFT' | 'PENDING' | 'IN_PRODUCTION' | 'IN_REVIEW' | 'COMPLETED' | 'CANCELLED'
 export type ProjectType = 'INTERNAL_BUILD' | 'CREATIVE_BRIEF' | 'CREATIVE_EXPLORATION'
 export type AssetRequestStatus = 'PENDING' | 'APPROVE' | 'DENY' | 'IMPROVE' | 'ITERATE' | 'COMPLETED'
 export type AssetWorkflowStage = 'QC_LIBRARY' | 'GEN_REFINE' | 'QC_EDIT' | 'CLIENT_REVIEW' | 'QC_DISTRO'
@@ -50,10 +49,8 @@ export interface AssetSpec {
   creativeType?: string // Static, Carousel, Video, etc.
   numberOfAssets?: number
   timeline?: string
-  format?: string
   size?: string // 1x1, 9x16, 4x5, etc.
   duration?: number
-  outputChannels?: string[] // DEPRECATED - use platform instead
 }
 
 // Chat message for asset request feedback
@@ -80,7 +77,6 @@ export interface AssetRequest {
   targetCount: number
   dimensions?: string // e.g., "1x1", "9x16", "4x5"
   duration?: number // in seconds for video
-  format: string // Static Image, GIF, Video, Long-Form Video
 
   // Workflow tracking
   status: AssetRequestStatus
@@ -143,6 +139,10 @@ export interface Project {
   submittedBy?: string
   description?: string
   googleDriveUrl?: string
+  collaborationCanvasUrl?: string
+  airtableUrl?: string
+  frameioUrl?: string
+  figmaUrl?: string
   additionalLinks?: Array<{ label: string; url: string }>
 
   // Internal Build fields
@@ -154,18 +154,10 @@ export interface Project {
   dataRequirements?: string
 
   // Creative Brief fields
-  briefType?: string
-  targetAudience?: string
-  keyMessage?: string
-  deliverables?: string
+  briefContent?: string // HTML string from rich text editor
 
   // Assets Generation fields
   assetSpecs?: AssetSpec[] // Multiple asset specifications
-  numberOfAssets?: number // Legacy - kept for backward compatibility
-  timeline?: string // Legacy - kept for backward compatibility
-  format?: string // Legacy - kept for backward compatibility
-  duration?: number // Legacy - kept for backward compatibility
-  outputChannels?: string[] // Legacy - kept for backward compatibility
   csvData?: any // Store parsed CSV data
 
   // Creative Exploration fields
@@ -175,31 +167,12 @@ export interface Project {
   preditor?: string
   iterationCount?: number
 
-  // Legacy fields (keep for backward compatibility)
-  dataCoreUrl?: string
-  trainingCoreUrls?: string[]
   requestAgentPrompt?: string
 
   // Asset tracking (NEW)
   assetRequests?: AssetRequest[]
   setupPhase?: ProjectSetupPhase
 
-  createdAt: string
-  updatedAt: string
-}
-
-export interface Job {
-  id: string
-  title: string
-  description?: string
-  status: JobStatus
-  statusChangedAt?: string
-  workspaceId: string
-  organizationId: string
-  airtableUrl?: string
-  bubbleProjectId?: string
-  frameioUrl?: string
-  figmaUrl?: string
   createdAt: string
   updatedAt: string
 }
@@ -217,14 +190,14 @@ export interface UploadMetadata {
 export interface Upload {
   id: string
   filename: string
+  label?: string // user-provided description of the upload
   mimeType: string
   size: number // in bytes
   uri: string // presigned URL or path
-  workspaceId?: string // legacy, kept for backward compatibility
+  workspaceId?: string // DEPRECATED: Use projectId instead
   projectId?: string // new field for project association
   organizationId: string
-  jobId?: string
-  assetRequestId?: string // NEW: link to asset request
+  assetRequestId?: string // link to asset request
   uploadedBy?: string // user email or ID
   metadata?: UploadMetadata
   reviewStatus?: DeliverableReviewStatus
@@ -245,7 +218,6 @@ export interface Conversation {
   id: string
   workspaceId: string
   status: ConversationStatus
-  jobId?: string
   messages?: ConversationMessage[]
   createdAt: string
   updatedAt: string
@@ -345,6 +317,10 @@ export interface ProjectCreate {
   submittedBy?: string
   description?: string
   googleDriveUrl?: string
+  collaborationCanvasUrl?: string
+  airtableUrl?: string
+  frameioUrl?: string
+  figmaUrl?: string
   additionalLinks?: Array<{ label: string; url: string }>
 
   // Type-specific fields
@@ -354,25 +330,14 @@ export interface ProjectCreate {
   why?: string
   technicalWorkflowScope?: string
   dataRequirements?: string
-  briefType?: string
-  targetAudience?: string
-  keyMessage?: string
-  deliverables?: string
-  numberOfAssets?: number
-  timeline?: string
-  format?: string
-  duration?: number
-  outputChannels?: string[]
+  briefContent?: string
+  assetSpecs?: AssetSpec[]
   csvData?: any
   explorationFocus?: string
   collaborationType?: string
   creativeDirector?: string
   preditor?: string
   iterationCount?: number
-
-  // Legacy fields
-  dataCoreUrl?: string
-  trainingCoreUrls?: string[]
   requestAgentPrompt?: string
 }
 
@@ -384,6 +349,10 @@ export interface ProjectUpdate {
   submittedBy?: string
   description?: string
   googleDriveUrl?: string
+  collaborationCanvasUrl?: string
+  airtableUrl?: string
+  frameioUrl?: string
+  figmaUrl?: string
   additionalLinks?: Array<{ label: string; url: string }>
   problem?: string
   solution?: string
@@ -391,38 +360,19 @@ export interface ProjectUpdate {
   why?: string
   technicalWorkflowScope?: string
   dataRequirements?: string
-  briefType?: string
-  targetAudience?: string
-  keyMessage?: string
-  deliverables?: string
-  numberOfAssets?: number
-  timeline?: string
-  format?: string
-  duration?: number
-  outputChannels?: string[]
+  briefContent?: string
   csvData?: any
   explorationFocus?: string
   collaborationType?: string
   creativeDirector?: string
   preditor?: string
   iterationCount?: number
-  dataCoreUrl?: string
-  trainingCoreUrls?: string[]
   requestAgentPrompt?: string
-}
-
-export interface JobUpdate {
-  title?: string
-  description?: string
-  airtableUrl?: string
-  frameioUrl?: string
-  figmaUrl?: string
 }
 
 export interface UploadCreate {
   filename: string
   mimeType: string
-  jobId?: string
 }
 
 export interface UploadResponse {

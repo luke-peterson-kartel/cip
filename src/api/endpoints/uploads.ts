@@ -2,35 +2,17 @@ import { apiClient } from '../client'
 import type { Upload, UploadCreate, UploadResponse, PaginatedResponse } from '@/types'
 
 /**
- * Get uploads for a project
- */
-export async function getProjectUploads(projectId: string): Promise<PaginatedResponse<Upload>> {
-  const response = await apiClient.get<PaginatedResponse<Upload>>(`/projects/${projectId}/uploads`)
-  return response.data
-}
-
-/**
- * Get uploads for a job
- */
-export async function getJobUploads(jobId: string): Promise<PaginatedResponse<Upload>> {
-  const response = await apiClient.get<PaginatedResponse<Upload>>(`/jobs/${jobId}/uploads`)
-  return response.data
-}
-
-/**
  * Get uploads for an asset request
  */
 export async function getAssetRequestUploads(assetRequestId: string): Promise<PaginatedResponse<Upload>> {
-  const response = await apiClient.get<PaginatedResponse<Upload>>(`/asset-requests/${assetRequestId}/uploads`)
-  return response.data
+  return apiClient(`/asset-requests/${assetRequestId}/uploads`)
 }
 
 /**
  * Get a single upload by ID
  */
 export async function getUpload(uploadId: string): Promise<Upload> {
-  const response = await apiClient.get<Upload>(`/uploads/${uploadId}`)
-  return response.data
+  return apiClient(`/uploads/${uploadId}`)
 }
 
 /**
@@ -40,26 +22,32 @@ export async function createUpload(
   projectId: string,
   data: UploadCreate
 ): Promise<UploadResponse> {
-  const response = await apiClient.post<UploadResponse>(`/projects/${projectId}/uploads`, data)
-  return response.data
+  return apiClient(`/projects/${projectId}/uploads`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  })
 }
 
 /**
- * Create upload for a job
+ * Update an upload (label, metadata, etc.)
  */
-export async function createJobUpload(
-  jobId: string,
-  data: UploadCreate
-): Promise<UploadResponse> {
-  const response = await apiClient.post<UploadResponse>(`/jobs/${jobId}/uploads`, data)
-  return response.data
+export async function updateUpload(
+  uploadId: string,
+  data: Partial<Pick<Upload, 'label' | 'assetRequestId' | 'reviewStatus' | 'reviewNotes'>>
+): Promise<Upload> {
+  return apiClient(`/uploads/${uploadId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  })
 }
 
 /**
  * Delete an upload
  */
 export async function deleteUpload(uploadId: string): Promise<void> {
-  await apiClient.delete(`/uploads/${uploadId}`)
+  return apiClient(`/uploads/${uploadId}`, {
+    method: 'DELETE',
+  })
 }
 
 /**
@@ -69,20 +57,20 @@ export async function linkUploadToAsset(
   uploadId: string,
   assetRequestId: string
 ): Promise<Upload> {
-  const response = await apiClient.patch<Upload>(`/uploads/${uploadId}`, {
-    assetRequestId
+  return apiClient(`/uploads/${uploadId}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ assetRequestId }),
   })
-  return response.data
 }
 
 /**
  * Unlink an upload from an asset request
  */
 export async function unlinkUploadFromAsset(uploadId: string): Promise<Upload> {
-  const response = await apiClient.patch<Upload>(`/uploads/${uploadId}`, {
-    assetRequestId: null
+  return apiClient(`/uploads/${uploadId}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ assetRequestId: null }),
   })
-  return response.data
 }
 
 /**
@@ -90,11 +78,6 @@ export async function unlinkUploadFromAsset(uploadId: string): Promise<Upload> {
  * In production, this would upload to the presigned URL
  */
 export async function uploadFile(file: File, presignedUrl: string): Promise<void> {
-  // In production, this would be a direct upload to S3 using the presigned URL
-  // For now, this is a placeholder for the upload logic
-  const formData = new FormData()
-  formData.append('file', file)
-
   const response = await fetch(presignedUrl, {
     method: 'PUT',
     body: file,

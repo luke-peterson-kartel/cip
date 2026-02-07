@@ -3,7 +3,6 @@ import { AppLayout } from './components/layout/AppLayout'
 import { DashboardPage } from './features/dashboard/DashboardPage'
 import { ProjectsPage } from './features/projects/ProjectsPage'
 import { ProjectDetailPage } from './features/projects/ProjectDetailPage'
-import { JobDetailPage } from './features/jobs/JobDetailPage'
 import { ConversationPage } from './features/request-agent/ConversationPage'
 import { UsersPage } from './features/users/UsersPage'
 import { AuditLogPage } from './features/audit/AuditLogPage'
@@ -17,7 +16,6 @@ function App() {
         <Route index element={<DashboardPage />} />
         <Route path="projects" element={<ProjectsPage />} />
         <Route path="projects/:projectId/*" element={<ProjectDetailPage />} />
-        <Route path="jobs/:jobId" element={<JobDetailPage />} />
         <Route path="projects/:projectId/conversations/:conversationId" element={<ConversationPage />} />
         <Route path="settings/organization" element={<OrganizationSettingsPage />} />
         <Route path="settings/users" element={<UsersPage />} />

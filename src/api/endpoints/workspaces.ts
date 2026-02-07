@@ -3,7 +3,6 @@ import type {
   Workspace,
   WorkspaceCreate,
   WorkspaceUpdate,
-  Job,
   Upload,
   Conversation,
   AuditEvent,
@@ -36,10 +35,6 @@ export async function deleteWorkspace(workspaceId: string): Promise<void> {
   return apiClient(`/workspaces/${workspaceId}`, {
     method: 'DELETE',
   })
-}
-
-export async function getWorkspaceJobs(workspaceId: string): Promise<PaginatedResponse<Job>> {
-  return apiClient(`/workspaces/${workspaceId}/jobs`)
 }
 
 export async function getWorkspaceUploads(workspaceId: string): Promise<PaginatedResponse<Upload>> {

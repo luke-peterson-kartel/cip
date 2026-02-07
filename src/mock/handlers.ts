@@ -2,7 +2,6 @@ import organizationsData from './data/organizations.json'
 import usersData from './data/users.json'
 import workspacesData from './data/workspaces.json'
 import projectsData from './data/projects.json'
-import jobsData from './data/jobs.json'
 import uploadsData from './data/uploads.json'
 import conversationsData from './data/conversations.json'
 import auditEventsData from './data/audit-events.json'
@@ -12,10 +11,10 @@ import type {
   User,
   Workspace,
   Project,
-  Job,
   Upload,
   Conversation,
   AuditEvent,
+  AssetRequest,
   PaginatedResponse,
   ConversationMessage,
 } from '@/types'
@@ -43,8 +42,8 @@ const agentResponses = [
   "I'd be happy to help with that! Could you tell me more about the specific requirements for this project?",
   "That sounds like an interesting project. Let me ask a few clarifying questions:\n\n1. What's the target audience?\n2. What's the timeline for this project?\n3. Are there any specific brand guidelines to follow?",
   "Great input! Based on what you've shared, I can help create a brief for this. Would you like me to focus on any particular aspect?",
-  "Thank you for the details. I'm preparing a comprehensive job brief based on our conversation. Is there anything else you'd like to add?",
-  "Perfect! I've gathered enough information to create a job for this project. The job has been created and you can track its progress in the Jobs section.",
+  "Thank you for the details. I'm preparing a comprehensive brief based on our conversation. Is there anything else you'd like to add?",
+  "Perfect! I've gathered enough information to create asset requests for this project. You can track progress on the project page.",
 ]
 
 export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
@@ -115,15 +114,6 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
     }
   }
 
-  // GET /workspaces/:id/jobs
-  params = matchPath('/workspaces/:workspaceId/jobs', path)
-  if (method === 'GET' && params) {
-    const jobs = (jobsData as PaginatedResponse<Job>).items.filter(
-      j => j.workspaceId === params!.workspaceId
-    )
-    return { items: jobs, pagination: { nextToken: null } } as T
-  }
-
   // GET /workspaces/:id/uploads
   params = matchPath('/workspaces/:workspaceId/uploads', path)
   if (method === 'GET' && params) {
@@ -158,16 +148,11 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
   // GET /workspaces/:id/audit-events
   params = matchPath('/workspaces/:workspaceId/audit-events', path)
   if (method === 'GET' && params) {
-    // For workspace audit events, filter by resources in that workspace
-    const workspaceJobs = (jobsData as PaginatedResponse<Job>).items
-      .filter(j => j.workspaceId === params!.workspaceId)
-      .map(j => j.id)
     const workspaceUploads = (uploadsData as PaginatedResponse<Upload>).items
       .filter(u => u.workspaceId === params!.workspaceId)
       .map(u => u.id)
     const events = (auditEventsData as PaginatedResponse<AuditEvent>).items.filter(
       e => e.resourceId === params!.workspaceId ||
-           workspaceJobs.includes(e.resourceId) ||
            workspaceUploads.includes(e.resourceId)
     )
     return { items: events, pagination: { nextToken: null } } as T
@@ -212,15 +197,6 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
       const updates = JSON.parse(options.body as string)
       return { ...project, ...updates, updatedAt: new Date().toISOString() } as T
     }
-  }
-
-  // GET /projects/:id/jobs
-  params = matchPath('/projects/:projectId/jobs', path)
-  if (method === 'GET' && params) {
-    const jobs = (jobsData as PaginatedResponse<Job>).items.filter(
-      j => j.workspaceId === params!.projectId
-    )
-    return { items: jobs, pagination: { nextToken: null } } as T
   }
 
   // GET /projects/:id/uploads
@@ -278,16 +254,11 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
   // GET /projects/:id/audit-events
   params = matchPath('/projects/:projectId/audit-events', path)
   if (method === 'GET' && params) {
-    // For project audit events, filter by resources in that project
-    const projectJobs = (jobsData as PaginatedResponse<Job>).items
-      .filter(j => j.workspaceId === params!.projectId)
-      .map(j => j.id)
     const projectUploads = (uploadsData as PaginatedResponse<Upload>).items
-      .filter(u => u.workspaceId === params!.projectId)
+      .filter(u => u.projectId === params!.projectId)
       .map(u => u.id)
     const events = (auditEventsData as PaginatedResponse<AuditEvent>).items.filter(
       e => e.resourceId === params!.projectId ||
-           projectJobs.includes(e.resourceId) ||
            projectUploads.includes(e.resourceId)
     )
     return { items: events, pagination: { nextToken: null } } as T
@@ -295,25 +266,73 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
 
   // ============ END PROJECT ENDPOINTS ============
 
-  // GET /jobs/:id
-  params = matchPath('/jobs/:jobId', path)
+  // ============ ASSET REQUEST ENDPOINTS ============
+
+  // GET /projects/:id/asset-requests
+  params = matchPath('/projects/:projectId/asset-requests', path)
   if (method === 'GET' && params) {
-    const job = (jobsData as PaginatedResponse<Job>).items.find(
-      j => j.id === params!.jobId
+    const project = (projectsData as PaginatedResponse<Project>).items.find(
+      p => p.id === params!.projectId
     )
-    return job as T
+    const assetRequests = project?.assetRequests || []
+    return { items: assetRequests, pagination: { nextToken: null } } as T
   }
 
-  // PATCH /jobs/:id
-  if (method === 'PATCH' && params) {
-    const job = (jobsData as PaginatedResponse<Job>).items.find(
-      j => j.id === params!.jobId
-    )
-    if (job && options.body) {
-      const updates = JSON.parse(options.body as string)
-      return { ...job, ...updates, updatedAt: new Date().toISOString() } as T
+  // POST /projects/:id/asset-requests
+  if (method === 'POST' && params) {
+    const body = JSON.parse(options.body as string)
+    const newAssetRequest: AssetRequest = {
+      id: `asset-${Date.now()}`,
+      projectId: params.projectId,
+      platform: '',
+      creativeType: '',
+      description: '',
+      targetCount: 0,
+      status: 'PENDING',
+      workflowStage: 'QC_LIBRARY',
+      priority: 'MEDIUM',
+      version: 1,
+      requestedDate: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      createdBy: 'current-user',
+      ...body,
     }
+    return newAssetRequest as T
   }
+
+  // GET /asset-requests/:id
+  params = matchPath('/asset-requests/:assetRequestId', path)
+  if (method === 'GET' && params) {
+    for (const project of (projectsData as PaginatedResponse<Project>).items) {
+      const found = project.assetRequests?.find(
+        ar => ar.id === params!.assetRequestId
+      )
+      if (found) return found as T
+    }
+    return undefined as T
+  }
+
+  // PATCH /asset-requests/:id
+  if (method === 'PATCH' && params) {
+    for (const project of (projectsData as PaginatedResponse<Project>).items) {
+      const found = project.assetRequests?.find(
+        ar => ar.id === params!.assetRequestId
+      )
+      if (found && options.body) {
+        const updates = JSON.parse(options.body as string)
+        return { ...found, ...updates, updatedAt: new Date().toISOString() } as T
+      }
+    }
+    return undefined as T
+  }
+
+  // DELETE /asset-requests/:id
+  if (method === 'DELETE' && params) {
+    return {} as T
+  }
+
+  // ============ END ASSET REQUEST ENDPOINTS ============
 
   // GET /asset-requests/:id/uploads
   params = matchPath('/asset-requests/:assetRequestId/uploads', path)
@@ -399,11 +418,6 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
   // GET /admin/organizations
   if (method === 'GET' && path === '/admin/organizations') {
     return organizationsData as T
-  }
-
-  // GET /admin/jobs
-  if (method === 'GET' && path === '/admin/jobs') {
-    return jobsData as T
   }
 
   // GET /admin/audit-events

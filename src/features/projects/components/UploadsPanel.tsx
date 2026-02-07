@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Card, CardContent, CardHeader, Badge } from '@/components/ui'
 import { FileUploadZone } from '@/components/uploads/FileUploadZone'
+import { EditableField } from '@/components/forms/EditableField'
 import {
   formatFileSize,
   getFileTypeIcon,
@@ -8,7 +9,7 @@ import {
   isVideo,
   isPDF
 } from '@/lib/file-utils'
-import type { Project, Upload, AssetRequest } from '@/types'
+import type { Project, Upload } from '@/types'
 import { cn } from '@/lib/cn'
 
 export interface UploadsPanelProps {
@@ -16,6 +17,7 @@ export interface UploadsPanelProps {
   uploads: Upload[]
   onUpload: (files: File[]) => Promise<void>
   onDelete: (uploadId: string) => Promise<void>
+  onUpdateUpload?: (uploadId: string, data: Partial<Upload>) => Promise<void>
   onLinkToAsset?: (uploadId: string, assetRequestId: string) => Promise<void>
 }
 
@@ -27,6 +29,7 @@ export function UploadsPanel({
   uploads,
   onUpload,
   onDelete,
+  onUpdateUpload,
   onLinkToAsset
 }: UploadsPanelProps) {
   const [filter, setFilter] = useState<FileFilter>('all')
@@ -222,7 +225,21 @@ export function UploadsPanel({
                   <p className="truncate text-sm font-medium text-gray-900">
                     {upload.filename}
                   </p>
-                  <p className="text-xs text-gray-500">
+                  {onUpdateUpload ? (
+                    <EditableField
+                      label=""
+                      value={upload.label || ''}
+                      type="text"
+                      onSave={(val) => onUpdateUpload(upload.id, { label: val })}
+                      placeholder="Add a label..."
+                      className="[&_span]:text-xs [&_span]:text-gray-500 [&_input]:text-xs [&>div]:min-h-0 [&>div]:py-0.5 [&>div]:px-0"
+                    />
+                  ) : (
+                    upload.label && (
+                      <p className="text-xs text-gray-500">{upload.label}</p>
+                    )
+                  )}
+                  <p className="text-xs text-gray-400">
                     {formatFileSize(upload.size)}
                   </p>
                   {upload.assetRequestId && (

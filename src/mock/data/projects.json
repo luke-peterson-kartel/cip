@@ -10,6 +10,7 @@
       "submittedBy": "Sarah Chen",
       "description": "Build an AI-powered brand voice system to ensure consistent Bubba brand messaging across all creative outputs.",
       "googleDriveUrl": "https://drive.google.com/drive/folders/bubba-brand-voice",
+      "collaborationCanvasUrl": "https://canvas.example.com/bubba-brand-voice",
       "additionalLinks": [
         {
           "label": "Brand Guidelines",
@@ -65,7 +66,6 @@
           "description": "Sample outputs demonstrating brand voice consistency",
           "targetCount": 10,
           "dimensions": "1x1",
-          "format": "Static Image",
           "status": "PENDING",
           "workflowStage": "GEN_REFINE",
           "priority": "MEDIUM",
@@ -101,6 +101,9 @@
       "submittedBy": "Mike Johnson",
       "description": "Summer campaign focusing on outdoor adventure and sustainability themes for Bubba's new eco-friendly product line.",
       "googleDriveUrl": "https://drive.google.com/drive/folders/summer-campaign-2024",
+      "airtableUrl": "https://airtable.com/app123/tbl456",
+      "frameioUrl": "https://app.frame.io/reviews/abc123",
+      "figmaUrl": "https://www.figma.com/file/xyz789",
       "additionalLinks": [
         {
           "label": "Mood Board",
@@ -111,10 +114,7 @@
           "url": "https://docs.google.com/presentation/d/summer-comp-analysis"
         }
       ],
-      "briefType": "Full campaign - concepting, storyboard, keyframe approval, video production, final edit",
-      "targetAudience": "Outdoor enthusiasts aged 25-45, environmentally conscious, active lifestyle",
-      "keyMessage": "Adventure responsibly with Bubba's sustainable gear that keeps up with your lifestyle",
-      "deliverables": "3x 30-second video ads, 12x social media assets (Instagram/TikTok), 6x still images for print/web, campaign landing page design",
+      "briefContent": "<h3>Brief Type</h3><p>Full campaign - concepting, storyboard, keyframe approval, video production, final edit</p><h3>Target Audience</h3><p>Outdoor enthusiasts aged 25-45, environmentally conscious, active lifestyle</p><h3>Key Message</h3><p>Adventure responsibly with Bubba's sustainable gear that keeps up with your lifestyle</p><h3>Deliverables</h3><ul><li>3x 30-second video ads</li><li>12x social media assets (Instagram/TikTok)</li><li>6x still images for print/web</li><li>Campaign landing page design</li></ul>",
       "assetRequests": [
         {
           "id": "asset-002",
@@ -126,7 +126,6 @@
           "targetCount": 3,
           "dimensions": "16x9",
           "duration": 30,
-          "format": "Video",
           "status": "APPROVE",
           "workflowStage": "CLIENT_REVIEW",
           "productionStage": "FINE_CUT",
@@ -173,7 +172,6 @@
           "description": "Square format social media assets for Instagram feed",
           "targetCount": 6,
           "dimensions": "1x1",
-          "format": "Static Image",
           "status": "ITERATE",
           "workflowStage": "CLIENT_REVIEW",
           "priority": "HIGH",
@@ -213,7 +211,6 @@
           "targetCount": 6,
           "dimensions": "9x16",
           "duration": 15,
-          "format": "Video",
           "status": "PENDING",
           "workflowStage": "QC_LIBRARY",
           "priority": "MEDIUM",
@@ -237,7 +234,6 @@
           "description": "High-resolution still images for print advertising and web banners",
           "targetCount": 6,
           "dimensions": "16x9",
-          "format": "Static Image",
           "status": "IMPROVE",
           "workflowStage": "GEN_REFINE",
           "priority": "HIGH",
@@ -274,7 +270,7 @@
     {
       "id": "proj-003",
       "name": "Q2 Social Media Assets",
-      "projectType": "ASSETS_GENERATION",
+      "projectType": "CREATIVE_BRIEF",
       "organizationId": "org-001",
       "submitDate": "2024-03-01T00:00:00Z",
       "dueDate": "2024-03-25T00:00:00Z",
@@ -291,11 +287,7 @@
           "url": "https://docs.google.com/spreadsheets/d/social-calendar-q2"
         }
       ],
-      "numberOfAssets": 48,
-      "timeline": "3 weeks",
-      "format": "Mixed: Video (15s, 30s), Static images (1:1, 9:16, 4:5), Carousels (10 slides)",
-      "duration": 15,
-      "outputChannels": ["Instagram", "TikTok", "Pinterest", "YouTube Shorts", "Meta"],
+      "briefContent": "<h3>Brief Type</h3><p>Asset generation - multi-platform social media campaign</p><h3>Target Audience</h3><p>Outdoor enthusiasts and lifestyle consumers aged 18-35 across Instagram, TikTok, Pinterest, and YouTube</p><h3>Key Message</h3><p>Premium drinkware and coolers built for adventure — show, don't tell</p><h3>Deliverables</h3><ul><li>12x Instagram statics</li><li>8x TikTok videos (15s)</li><li>6x YouTube Shorts (30s)</li><li>10x Pinterest pins</li><li>12x Meta carousel ads</li></ul>",
       "csvData": null,
       "assetRequests": [
         {
@@ -307,7 +299,6 @@
           "description": "Summer cooler product showcase for Instagram feed and stories",
           "targetCount": 12,
           "dimensions": "1x1",
-          "format": "Static Image",
           "status": "COMPLETED",
           "workflowStage": "QC_DISTRO",
           "priority": "HIGH",
@@ -341,7 +332,6 @@
           "targetCount": 8,
           "dimensions": "9x16",
           "duration": 15,
-          "format": "Video",
           "status": "APPROVE",
           "workflowStage": "CLIENT_REVIEW",
           "priority": "HIGH",
@@ -381,7 +371,6 @@
           "targetCount": 6,
           "dimensions": "9x16",
           "duration": 30,
-          "format": "Video",
           "status": "PENDING",
           "workflowStage": "GEN_REFINE",
           "priority": "MEDIUM",
@@ -405,7 +394,6 @@
           "description": "Vertical format product pins optimized for Pinterest discovery",
           "targetCount": 10,
           "dimensions": "2x3",
-          "format": "Static Image",
           "status": "ITERATE",
           "workflowStage": "CLIENT_REVIEW",
           "priority": "MEDIUM",
@@ -444,7 +432,6 @@
           "description": "Multi-slide carousel ads showcasing product features for Facebook/Instagram",
           "targetCount": 12,
           "dimensions": "1x1",
-          "format": "GIF",
           "status": "DENY",
           "workflowStage": "CLIENT_REVIEW",
           "priority": "LOW",
@@ -505,7 +492,6 @@
           "description": "3D renders of sustainable packaging concepts for product line",
           "targetCount": 5,
           "dimensions": "1x1",
-          "format": "Static Image",
           "status": "PENDING",
           "workflowStage": "GEN_REFINE",
           "priority": "HIGH",

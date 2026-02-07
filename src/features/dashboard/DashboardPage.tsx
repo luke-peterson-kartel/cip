@@ -4,8 +4,8 @@ import { PageHeader } from '@/components/shared'
 import { Card, CardContent, Badge, Spinner } from '@/components/ui'
 import { useAuthStore } from '@/store/authStore'
 import { getWorkspaces } from '@/api/endpoints/workspaces'
-import type { Workspace, Job, AuditEvent, JobStatus } from '@/types'
-import jobsData from '@/mock/data/jobs.json'
+import type { Workspace, AssetRequest, AssetRequestStatus, AuditEvent, Project } from '@/types'
+import projectsData from '@/mock/data/projects.json'
 import auditData from '@/mock/data/audit-events.json'
 
 function formatDate(dateString: string): string {
@@ -17,20 +17,20 @@ function formatDate(dateString: string): string {
   })
 }
 
-function getJobStatusConfig(status: JobStatus): { label: string; variant: 'default' | 'info' | 'success' | 'warning' | 'error' } {
+function getAssetRequestStatusConfig(status: AssetRequestStatus): { label: string; variant: 'default' | 'info' | 'success' | 'warning' | 'error' } {
   switch (status) {
-    case 'DRAFT':
-      return { label: 'Draft', variant: 'default' }
     case 'PENDING':
       return { label: 'Pending', variant: 'warning' }
-    case 'IN_PRODUCTION':
-      return { label: 'In Production', variant: 'info' }
-    case 'IN_REVIEW':
-      return { label: 'In Review', variant: 'warning' }
+    case 'APPROVE':
+      return { label: 'Approved', variant: 'success' }
+    case 'DENY':
+      return { label: 'Denied', variant: 'error' }
+    case 'IMPROVE':
+      return { label: 'Improve', variant: 'info' }
+    case 'ITERATE':
+      return { label: 'Iterate', variant: 'info' }
     case 'COMPLETED':
       return { label: 'Completed', variant: 'success' }
-    case 'CANCELLED':
-      return { label: 'Cancelled', variant: 'error' }
     default:
       return { label: status, variant: 'default' }
   }
@@ -41,8 +41,18 @@ export function DashboardPage() {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
-  // Use mock data directly for jobs and audit events
-  const recentJobs = (jobsData.items as Job[]).slice(0, 5)
+  // Flatten asset requests from all projects
+  const allAssetRequests: (AssetRequest & { projectName: string; projectId: string })[] =
+    (projectsData.items as Project[]).flatMap(project =>
+      (project.assetRequests || []).map(ar => ({
+        ...(ar as AssetRequest),
+        projectName: project.name,
+        projectId: project.id,
+      }))
+    )
+  const recentAssetRequests = allAssetRequests
+    .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+    .slice(0, 5)
   const recentActivity = (auditData.items as AuditEvent[]).slice(0, 5)
 
   useEffect(() => {
@@ -70,7 +80,6 @@ export function DashboardPage() {
     )
   }
 
-  const totalJobs = jobsData.items.length
   const totalUploads = 6 // From mock data
 
   return (
@@ -90,8 +99,8 @@ export function DashboardPage() {
         </Card>
         <Card>
           <CardContent className="py-5">
-            <p className="text-sm font-medium text-gray-500">Total Jobs</p>
-            <p className="mt-1 text-3xl font-semibold text-gray-900">{totalJobs}</p>
+            <p className="text-sm font-medium text-gray-500">Asset Requests</p>
+            <p className="mt-1 text-3xl font-semibold text-gray-900">{allAssetRequests.length}</p>
           </CardContent>
         </Card>
         <Card>
@@ -109,44 +118,51 @@ export function DashboardPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Recent Jobs */}
+        {/* Recent Asset Requests */}
         <Card>
           <div className="border-b border-gray-200 px-6 py-4">
             <div className="flex items-center justify-between">
-              <h2 className="font-semibold text-gray-900">Recent Jobs</h2>
-              <Link to="/workspaces" className="text-sm text-primary-600 hover:text-primary-700">
+              <h2 className="font-semibold text-gray-900">Recent Asset Requests</h2>
+              <Link to="/projects" className="text-sm text-primary-600 hover:text-primary-700">
                 View all
               </Link>
             </div>
           </div>
           <CardContent className="p-0">
             <ul className="divide-y divide-gray-200">
-              {recentJobs.map((job) => {
-                const statusConfig = getJobStatusConfig(job.status)
+              {recentAssetRequests.map((ar) => {
+                const statusConfig = getAssetRequestStatusConfig(ar.status)
                 return (
-                  <li key={job.id}>
+                  <li key={ar.id}>
                     <Link
-                      to={`/jobs/${job.id}`}
+                      to={`/projects/${ar.projectId}`}
                       className="block px-6 py-4 hover:bg-gray-50"
                     >
                       <div className="flex items-center justify-between">
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2">
-                            <p className="truncate font-medium text-gray-900">{job.title}</p>
+                            <p className="truncate font-medium text-gray-900">
+                              {ar.title || ar.description}
+                            </p>
                             <Badge variant={statusConfig.variant}>{statusConfig.label}</Badge>
                           </div>
                           <p className="mt-1 truncate text-sm text-gray-500">
-                            {job.description}
+                            {ar.projectName} &middot; {ar.platform} &middot; {ar.creativeType}
                           </p>
                         </div>
                         <span className="ml-4 text-xs text-gray-400">
-                          {formatDate(job.updatedAt)}
+                          {formatDate(ar.updatedAt)}
                         </span>
                       </div>
                     </Link>
                   </li>
                 )
               })}
+              {recentAssetRequests.length === 0 && (
+                <li className="px-6 py-8 text-center text-sm text-gray-500">
+                  No asset requests yet.
+                </li>
+              )}
             </ul>
           </CardContent>
         </Card>

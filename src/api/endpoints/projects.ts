@@ -3,7 +3,6 @@ import type {
   Project,
   ProjectCreate,
   ProjectUpdate,
-  Job,
   Upload,
   Conversation,
   AuditEvent,
@@ -36,10 +35,6 @@ export async function deleteProject(projectId: string): Promise<void> {
   return apiClient(`/projects/${projectId}`, {
     method: 'DELETE',
   })
-}
-
-export async function getProjectJobs(projectId: string): Promise<PaginatedResponse<Job>> {
-  return apiClient(`/projects/${projectId}/jobs`)
 }
 
 export async function getProjectUploads(projectId: string): Promise<PaginatedResponse<Upload>> {

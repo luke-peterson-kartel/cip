@@ -1,4 +1,6 @@
 export * from './endpoints/workspaces'
-export * from './endpoints/jobs'
 export * from './endpoints/conversations'
 export * from './endpoints/users'
+export * from './endpoints/projects'
+export * from './endpoints/uploads'
+export * from './endpoints/asset-requests'

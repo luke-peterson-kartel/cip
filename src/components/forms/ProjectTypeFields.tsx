@@ -1,5 +1,6 @@
 import type { ProjectType, ProjectCreate } from '@/types'
 import { Input } from '@/components/ui'
+import { RichTextEditor } from './RichTextEditor'
 
 interface ProjectTypeFieldsProps {
   projectType: ProjectType
@@ -84,9 +85,7 @@ export function ProjectTypeFields({ projectType, formData, onChange }: ProjectTy
         title: '',
         numberOfAssets: 0,
         timeline: '',
-        format: '',
         duration: undefined,
-        outputChannels: []
       }
       onChange('assetSpecs', [...assetSpecs, newSpec])
     }
@@ -110,45 +109,10 @@ export function ProjectTypeFields({ projectType, formData, onChange }: ProjectTy
             Step 1: Creative Brief Details
           </h3>
 
-          <Input
-            label="Brief Type"
-            value={formData.briefType || ''}
-            onChange={(e) => onChange('briefType', e.target.value)}
-            placeholder="e.g., Concepting, Storyboard, Final Edit"
+          <RichTextEditor
+            value={formData.briefContent || ''}
+            onChange={(html) => onChange('briefContent', html)}
           />
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Target Audience</label>
-            <textarea
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-              rows={2}
-              value={formData.targetAudience || ''}
-              onChange={(e) => onChange('targetAudience', e.target.value)}
-              placeholder="Who is the target audience?"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Key Message</label>
-            <textarea
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-              rows={3}
-              value={formData.keyMessage || ''}
-              onChange={(e) => onChange('keyMessage', e.target.value)}
-              placeholder="What's the main message?"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Deliverables</label>
-            <textarea
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-              rows={4}
-              value={formData.deliverables || ''}
-              onChange={(e) => onChange('deliverables', e.target.value)}
-              placeholder="List expected deliverables"
-            />
-          </div>
         </div>
 
         {/* Step 2: Assets Generation Details */}
@@ -211,94 +175,15 @@ export function ProjectTypeFields({ projectType, formData, onChange }: ProjectTy
               />
 
               <Input
-                label="Format"
-                value={spec.format || ''}
-                onChange={(e) => handleAssetSpecChange(index, 'format', e.target.value)}
-                placeholder="e.g., Video (15s, 30s), Static (1:1, 9:16)"
-              />
-
-              <Input
                 label="Duration (seconds, for video)"
                 type="number"
                 value={spec.duration || ''}
                 onChange={(e) => handleAssetSpecChange(index, 'duration', parseInt(e.target.value) || undefined)}
                 placeholder="15"
               />
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Output Channels</label>
-                <div className="mt-2 space-y-2">
-                  {['Instagram', 'TikTok', 'Pinterest', 'YouTube', 'Meta', 'LinkedIn'].map((channel) => (
-                    <label key={channel} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-                        checked={(spec.outputChannels || []).includes(channel)}
-                        onChange={(e) => {
-                          const current = spec.outputChannels || []
-                          const updated = e.target.checked
-                            ? [...current, channel]
-                            : current.filter(c => c !== channel)
-                          handleAssetSpecChange(index, 'outputChannels', updated)
-                        }}
-                      />
-                      <span className="ml-2 text-sm text-gray-700">{channel}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
             </div>
           ))}
         </div>
-      </div>
-    )
-  }
-
-  // Creative Exploration fields
-  if (projectType === 'CREATIVE_EXPLORATION') {
-    return (
-      <div className="space-y-4">
-        <h3 className="text-sm font-medium text-gray-700">Creative Exploration Details</h3>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Exploration Focus</label>
-          <textarea
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-            rows={3}
-            value={formData.explorationFocus || ''}
-            onChange={(e) => onChange('explorationFocus', e.target.value)}
-            placeholder="What areas are we exploring?"
-          />
-        </div>
-
-        <Input
-          label="Collaboration Type"
-          value={formData.collaborationType || ''}
-          onChange={(e) => onChange('collaborationType', e.target.value)}
-          placeholder="e.g., Rapid iteration sprints"
-        />
-
-        <Input
-          label="Creative Director"
-          value={formData.creativeDirector || ''}
-          onChange={(e) => onChange('creativeDirector', e.target.value)}
-          placeholder="Name of creative director"
-        />
-
-        <Input
-          label="PREDITOR"
-          value={formData.preditor || ''}
-          onChange={(e) => onChange('preditor', e.target.value)}
-          placeholder="Name of PREDITOR"
-        />
-
-        <Input
-          label="Iteration Count"
-          type="number"
-          value={formData.iterationCount || ''}
-          onChange={(e) => onChange('iterationCount', parseInt(e.target.value) || undefined)}
-          placeholder="3"
-        />
       </div>
     )
   }

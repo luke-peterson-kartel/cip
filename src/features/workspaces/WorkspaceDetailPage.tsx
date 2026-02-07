@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { useParams, Link, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import { PageHeader } from '@/components/shared'
 import { Button, Spinner, Card, CardContent, Badge } from '@/components/ui'
-import { getWorkspace, getWorkspaceJobs, getWorkspaceUploads, getWorkspaceConversations, startConversation } from '@/api/endpoints/workspaces'
-import type { Workspace, Job, Upload, Conversation, JobStatus } from '@/types'
+import { getWorkspace, getWorkspaceUploads, getWorkspaceConversations, startConversation } from '@/api/endpoints/workspaces'
+import type { Workspace, Upload, Conversation } from '@/types'
 import { cn } from '@/lib/cn'
 
 function formatDate(dateString: string): string {
@@ -18,80 +18,6 @@ function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
-
-function getJobStatusConfig(status: JobStatus): { label: string; variant: 'default' | 'info' | 'success' | 'warning' | 'error' } {
-  switch (status) {
-    case 'DRAFT':
-      return { label: 'Draft', variant: 'default' }
-    case 'PENDING':
-      return { label: 'Pending', variant: 'warning' }
-    case 'IN_PRODUCTION':
-      return { label: 'In Production', variant: 'info' }
-    case 'IN_REVIEW':
-      return { label: 'In Review', variant: 'warning' }
-    case 'COMPLETED':
-      return { label: 'Completed', variant: 'success' }
-    case 'CANCELLED':
-      return { label: 'Cancelled', variant: 'error' }
-    default:
-      return { label: status, variant: 'default' }
-  }
-}
-
-function JobsTab({ workspaceId }: { workspaceId: string }) {
-  const [jobs, setJobs] = useState<Job[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    async function loadJobs() {
-      try {
-        const response = await getWorkspaceJobs(workspaceId)
-        setJobs(response.items)
-      } catch (error) {
-        console.error('Failed to load jobs:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    loadJobs()
-  }, [workspaceId])
-
-  if (isLoading) return <div className="py-8 text-center"><Spinner /></div>
-
-  return (
-    <div className="space-y-4">
-      {jobs.map((job) => {
-        const statusConfig = getJobStatusConfig(job.status)
-        return (
-          <Link key={job.id} to={`/jobs/${job.id}`}>
-            <Card className="transition-shadow hover:shadow-md">
-              <CardContent>
-                <div className="flex items-start justify-between">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-3">
-                      <h3 className="font-medium text-gray-900">{job.title}</h3>
-                      <Badge variant={statusConfig.variant}>{statusConfig.label}</Badge>
-                    </div>
-                    <p className="mt-1 text-sm text-gray-500 line-clamp-2">{job.description}</p>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {job.airtableUrl && <Badge variant="info">Airtable</Badge>}
-                      {job.frameioUrl && <Badge variant="info">Frame.io</Badge>}
-                      {job.figmaUrl && <Badge variant="info">Figma</Badge>}
-                    </div>
-                  </div>
-                  <span className="ml-4 text-xs text-gray-400">{formatDate(job.updatedAt)}</span>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        )
-      })}
-      {jobs.length === 0 && (
-        <div className="py-12 text-center text-gray-500">No jobs in this workspace yet.</div>
-      )}
-    </div>
-  )
 }
 
 function UploadsTab({ workspaceId }: { workspaceId: string }) {
@@ -206,7 +132,7 @@ function RequestAgentTab({ workspaceId }: { workspaceId: string }) {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h3 className="font-medium text-gray-900">Request Agent</h3>
-          <p className="text-sm text-gray-500">Start a conversation to create a new job</p>
+          <p className="text-sm text-gray-500">Start a conversation to create asset requests</p>
         </div>
         <Button onClick={handleStartConversation} disabled={isStarting}>
           {isStarting ? 'Starting...' : 'New Conversation'}
@@ -247,7 +173,7 @@ function RequestAgentTab({ workspaceId }: { workspaceId: string }) {
         ))}
         {conversations.length === 0 && (
           <div className="py-12 text-center text-gray-500">
-            No conversations yet. Start one to create a new job!
+            No conversations yet. Start one to create asset requests!
           </div>
         )}
       </div>
@@ -292,8 +218,7 @@ export function WorkspaceDetailPage() {
   const currentPath = location.pathname
 
   const tabs = [
-    { name: 'Jobs', path: basePath, exact: true },
-    { name: 'Uploads', path: `${basePath}/uploads` },
+    { name: 'Uploads', path: basePath, exact: true },
     { name: 'Request Agent', path: `${basePath}/request-agent` },
   ]
 
@@ -330,8 +255,7 @@ export function WorkspaceDetailPage() {
 
       {/* Tab Content */}
       <Routes>
-        <Route index element={<JobsTab workspaceId={workspaceId!} />} />
-        <Route path="uploads" element={<UploadsTab workspaceId={workspaceId!} />} />
+        <Route index element={<UploadsTab workspaceId={workspaceId!} />} />
         <Route path="request-agent" element={<RequestAgentTab workspaceId={workspaceId!} />} />
       </Routes>
     </div>

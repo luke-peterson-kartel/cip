@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
-import { PageHeader } from '@/components/shared'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { Button, Spinner, Card, CardContent, Badge } from '@/components/ui'
-import { getProject, getProjectJobs, getProjectUploads, getProjectConversations, startProjectConversation } from '@/api/endpoints/projects'
-import { deleteUpload } from '@/api/endpoints/uploads'
+import { getProject, getProjectUploads, getProjectConversations, startProjectConversation, updateProject } from '@/api/endpoints/projects'
+import { deleteUpload, updateUpload } from '@/api/endpoints/uploads'
+import { updateAssetRequest } from '@/api/endpoints/asset-requests'
 import { UploadsPanel } from './components/UploadsPanel'
 import { AssetRequestsTable } from './components/AssetRequestsTable'
-import type { Project, Job, Upload, Conversation, JobStatus, ProjectType } from '@/types'
+import { DeliverablesTab } from './components/DeliverablesTab'
+import { EditableField } from '@/components/forms/EditableField'
+import { EditableRichText } from '@/components/forms/EditableRichText'
+import type { Project, Upload, Conversation, ProjectType } from '@/types'
 import { cn } from '@/lib/cn'
 
 function formatDate(dateString: string): string {
@@ -23,25 +26,6 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
-function getJobStatusConfig(status: JobStatus): { label: string; variant: 'default' | 'info' | 'success' | 'warning' | 'error' } {
-  switch (status) {
-    case 'DRAFT':
-      return { label: 'Draft', variant: 'default' }
-    case 'PENDING':
-      return { label: 'Pending', variant: 'warning' }
-    case 'IN_PRODUCTION':
-      return { label: 'In Production', variant: 'info' }
-    case 'IN_REVIEW':
-      return { label: 'In Review', variant: 'warning' }
-    case 'COMPLETED':
-      return { label: 'Completed', variant: 'success' }
-    case 'CANCELLED':
-      return { label: 'Cancelled', variant: 'error' }
-    default:
-      return { label: status, variant: 'default' }
-  }
-}
-
 function getProjectTypeName(type: ProjectType): string {
   switch (type) {
     case 'INTERNAL_BUILD':
@@ -55,7 +39,7 @@ function getProjectTypeName(type: ProjectType): string {
   }
 }
 
-function ProjectOverview({ project }: { project: Project }) {
+function ProjectOverview({ project, onUpdate }: { project: Project; onUpdate: (field: string, value: any) => Promise<void> }) {
   return (
     <div className="mb-8 space-y-6">
       {/* Basic Information */}
@@ -66,54 +50,74 @@ function ProjectOverview({ project }: { project: Project }) {
             <Badge variant="info">{getProjectTypeName(project.projectType)}</Badge>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2">
             {/* Left Column */}
-            <div className="space-y-4">
-              {project.submitDate && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Submit Date</label>
-                  <p className="mt-1 text-sm text-gray-900">{formatDate(project.submitDate)}</p>
-                </div>
-              )}
-
-              {project.dueDate && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Campaign Launch Date</label>
-                  <p className="mt-1 text-sm text-gray-900">{formatDate(project.dueDate)}</p>
-                </div>
-              )}
-
-              {project.submittedBy && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Submitted By</label>
-                  <p className="mt-1 text-sm text-gray-900">{project.submittedBy}</p>
-                </div>
-              )}
+            <div className="space-y-2">
+              <EditableField
+                label="Submit Date"
+                value={project.submitDate || ''}
+                type="date"
+                onSave={(val) => onUpdate('submitDate', val)}
+                placeholder="Not set"
+              />
+              <EditableField
+                label="Campaign Launch Date"
+                value={project.dueDate || ''}
+                type="date"
+                onSave={(val) => onUpdate('dueDate', val)}
+                placeholder="Not set"
+              />
+              <EditableField
+                label="Submitted By"
+                value={project.submittedBy || ''}
+                type="text"
+                onSave={(val) => onUpdate('submittedBy', val)}
+                placeholder="Not set"
+              />
             </div>
 
             {/* Right Column */}
-            <div className="space-y-4">
-              {project.googleDriveUrl && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Google Drive</label>
-                  <a
-                    href={project.googleDriveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-1 inline-flex items-center gap-1 text-sm text-primary-600 hover:text-primary-700"
-                  >
-                    View Drive Folder
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                  </a>
-                </div>
-              )}
+            <div className="space-y-2">
+              <EditableField
+                label="Google Drive URL"
+                value={project.googleDriveUrl || ''}
+                type="text"
+                onSave={(val) => onUpdate('googleDriveUrl', val)}
+                placeholder="Paste Google Drive link"
+              />
+              <EditableField
+                label="Collaboration Canvas"
+                value={project.collaborationCanvasUrl || ''}
+                type="text"
+                onSave={(val) => onUpdate('collaborationCanvasUrl', val)}
+                placeholder="Paste Collaboration Canvas link"
+              />
+              <EditableField
+                label="Airtable URL"
+                value={project.airtableUrl || ''}
+                type="text"
+                onSave={(val) => onUpdate('airtableUrl', val)}
+                placeholder="Paste Airtable link"
+              />
+              <EditableField
+                label="Frame.io URL"
+                value={project.frameioUrl || ''}
+                type="text"
+                onSave={(val) => onUpdate('frameioUrl', val)}
+                placeholder="Paste Frame.io link"
+              />
+              <EditableField
+                label="Figma URL"
+                value={project.figmaUrl || ''}
+                type="text"
+                onSave={(val) => onUpdate('figmaUrl', val)}
+                placeholder="Paste Figma link"
+              />
 
               {project.additionalLinks && project.additionalLinks.length > 0 && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-500">Additional Links</label>
-                  <div className="mt-1 space-y-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Additional Links</label>
+                  <div className="space-y-1 px-3 py-2">
                     {project.additionalLinks.map((link, index) => (
                       <a
                         key={index}
@@ -134,12 +138,16 @@ function ProjectOverview({ project }: { project: Project }) {
             </div>
           </div>
 
-          {project.description && (
-            <div className="mt-6 border-t border-gray-200 pt-4">
-              <label className="block text-sm font-medium text-gray-500">Description</label>
-              <p className="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{project.description}</p>
-            </div>
-          )}
+          <div className="mt-4 border-t border-gray-200 pt-4">
+            <EditableField
+              label="Description"
+              value={project.description || ''}
+              type="textarea"
+              onSave={(val) => onUpdate('description', val)}
+              placeholder="Add a project description..."
+              rows={3}
+            />
+          </div>
         </CardContent>
       </Card>
 
@@ -148,43 +156,55 @@ function ProjectOverview({ project }: { project: Project }) {
         <Card>
           <CardContent className="p-6">
             <h3 className="mb-4 text-lg font-semibold text-gray-900">Internal Build Details</h3>
-            <div className="space-y-4">
-              {project.problem && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Problem</label>
-                  <p className="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{project.problem}</p>
-                </div>
-              )}
-              {project.solution && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Solution</label>
-                  <p className="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{project.solution}</p>
-                </div>
-              )}
-              {project.goal && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Goal</label>
-                  <p className="mt-1 text-sm text-gray-900">{project.goal}</p>
-                </div>
-              )}
-              {project.why && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Why</label>
-                  <p className="mt-1 text-sm text-gray-900">{project.why}</p>
-                </div>
-              )}
-              {project.technicalWorkflowScope && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Technical Workflow Scope</label>
-                  <p className="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{project.technicalWorkflowScope}</p>
-                </div>
-              )}
-              {project.dataRequirements && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Data Requirements</label>
-                  <p className="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{project.dataRequirements}</p>
-                </div>
-              )}
+            <div className="space-y-2">
+              <EditableField
+                label="Problem"
+                value={project.problem || ''}
+                type="textarea"
+                onSave={(val) => onUpdate('problem', val)}
+                placeholder="Describe the problem..."
+                rows={3}
+              />
+              <EditableField
+                label="Solution"
+                value={project.solution || ''}
+                type="textarea"
+                onSave={(val) => onUpdate('solution', val)}
+                placeholder="Describe the solution..."
+                rows={3}
+              />
+              <div className="grid gap-4 md:grid-cols-2">
+                <EditableField
+                  label="Goal"
+                  value={project.goal || ''}
+                  type="text"
+                  onSave={(val) => onUpdate('goal', val)}
+                  placeholder="Not set"
+                />
+                <EditableField
+                  label="Why"
+                  value={project.why || ''}
+                  type="text"
+                  onSave={(val) => onUpdate('why', val)}
+                  placeholder="Not set"
+                />
+              </div>
+              <EditableField
+                label="Technical Workflow Scope"
+                value={project.technicalWorkflowScope || ''}
+                type="textarea"
+                onSave={(val) => onUpdate('technicalWorkflowScope', val)}
+                placeholder="Describe the technical workflow scope..."
+                rows={3}
+              />
+              <EditableField
+                label="Data Requirements"
+                value={project.dataRequirements || ''}
+                type="textarea"
+                onSave={(val) => onUpdate('dataRequirements', val)}
+                placeholder="Describe data requirements..."
+                rows={3}
+              />
             </div>
           </CardContent>
         </Card>
@@ -194,33 +214,12 @@ function ProjectOverview({ project }: { project: Project }) {
         <>
           <Card>
             <CardContent className="p-6">
-              <h3 className="mb-4 text-lg font-semibold text-gray-900">Creative Brief Details</h3>
-              <div className="grid gap-4 md:grid-cols-2">
-                {project.briefType && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-500">Brief Type</label>
-                    <p className="mt-1 text-sm text-gray-900">{project.briefType}</p>
-                  </div>
-                )}
-                {project.targetAudience && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-500">Target Audience</label>
-                    <p className="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{project.targetAudience}</p>
-                  </div>
-                )}
-                {project.keyMessage && (
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-500">Key Message</label>
-                    <p className="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{project.keyMessage}</p>
-                  </div>
-                )}
-                {project.deliverables && (
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-500">Deliverables</label>
-                    <p className="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{project.deliverables}</p>
-                  </div>
-                )}
-              </div>
+              <EditableRichText
+                label="Creative Brief"
+                value={project.briefContent || ''}
+                onSave={(html) => onUpdate('briefContent', html)}
+                placeholder="Add creative brief details..."
+              />
             </CardContent>
           </Card>
 
@@ -246,10 +245,10 @@ function ProjectOverview({ project }: { project: Project }) {
                             <p className="mt-1 text-sm text-gray-900">{spec.timeline}</p>
                           </div>
                         )}
-                        {spec.format && (
+                        {spec.platform && (
                           <div>
-                            <label className="block text-xs font-medium text-gray-500">Format</label>
-                            <p className="mt-1 text-sm text-gray-900">{spec.format}</p>
+                            <label className="block text-xs font-medium text-gray-500">Platform</label>
+                            <p className="mt-1 text-sm text-gray-900">{spec.platform}</p>
                           </div>
                         )}
                         {spec.duration && (
@@ -259,16 +258,6 @@ function ProjectOverview({ project }: { project: Project }) {
                           </div>
                         )}
                       </div>
-                      {spec.outputChannels && spec.outputChannels.length > 0 && (
-                        <div className="mt-3">
-                          <label className="block text-xs font-medium text-gray-500">Output Channels</label>
-                          <div className="mt-2 flex flex-wrap gap-2">
-                            {spec.outputChannels.map((channel) => (
-                              <Badge key={channel} variant="info">{channel}</Badge>
-                            ))}
-                          </div>
-                        </div>
-                      )}
                     </div>
                   ))}
                 </div>
@@ -282,168 +271,48 @@ function ProjectOverview({ project }: { project: Project }) {
         <Card>
           <CardContent className="p-6">
             <h3 className="mb-4 text-lg font-semibold text-gray-900">Creative Exploration Details</h3>
-            <div className="grid gap-4 md:grid-cols-2">
-              {project.explorationFocus && (
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-500">Exploration Focus</label>
-                  <p className="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{project.explorationFocus}</p>
-                </div>
-              )}
-              {project.collaborationType && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Collaboration Type</label>
-                  <p className="mt-1 text-sm text-gray-900">{project.collaborationType}</p>
-                </div>
-              )}
-              {project.iterationCount && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Iteration Count</label>
-                  <p className="mt-1 text-sm text-gray-900">{project.iterationCount}</p>
-                </div>
-              )}
-              {project.creativeDirector && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">Creative Director</label>
-                  <p className="mt-1 text-sm text-gray-900">{project.creativeDirector}</p>
-                </div>
-              )}
-              {project.preditor && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-500">PREDITOR</label>
-                  <p className="mt-1 text-sm text-gray-900">{project.preditor}</p>
-                </div>
-              )}
+            <div className="space-y-2">
+              <EditableField
+                label="Exploration Focus"
+                value={project.explorationFocus || ''}
+                type="textarea"
+                onSave={(val) => onUpdate('explorationFocus', val)}
+                placeholder="Describe the exploration focus..."
+                rows={3}
+              />
+              <div className="grid gap-4 md:grid-cols-2">
+                <EditableField
+                  label="Collaboration Type"
+                  value={project.collaborationType || ''}
+                  type="text"
+                  onSave={(val) => onUpdate('collaborationType', val)}
+                  placeholder="Not set"
+                />
+                <EditableField
+                  label="Iteration Count"
+                  value={project.iterationCount || ''}
+                  type="number"
+                  onSave={(val) => onUpdate('iterationCount', val)}
+                  placeholder="Not set"
+                />
+                <EditableField
+                  label="Creative Director"
+                  value={project.creativeDirector || ''}
+                  type="text"
+                  onSave={(val) => onUpdate('creativeDirector', val)}
+                  placeholder="Not set"
+                />
+                <EditableField
+                  label="PREDITOR"
+                  value={project.preditor || ''}
+                  type="text"
+                  onSave={(val) => onUpdate('preditor', val)}
+                  placeholder="Not set"
+                />
+              </div>
             </div>
           </CardContent>
         </Card>
-      )}
-    </div>
-  )
-}
-
-function JobsTab({ projectId }: { projectId: string }) {
-  const [jobs, setJobs] = useState<Job[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    async function loadJobs() {
-      try {
-        const response = await getProjectJobs(projectId)
-        setJobs(response.items)
-      } catch (error) {
-        console.error('Failed to load jobs:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    loadJobs()
-  }, [projectId])
-
-  if (isLoading) return <div className="py-8 text-center"><Spinner /></div>
-
-  return (
-    <div className="space-y-4">
-      {jobs.map((job) => {
-        const statusConfig = getJobStatusConfig(job.status)
-        return (
-          <Link key={job.id} to={`/jobs/${job.id}`}>
-            <Card className="transition-shadow hover:shadow-md">
-              <CardContent>
-                <div className="flex items-start justify-between">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-3">
-                      <h3 className="font-medium text-gray-900">{job.title}</h3>
-                      <Badge variant={statusConfig.variant}>{statusConfig.label}</Badge>
-                    </div>
-                    <p className="mt-1 text-sm text-gray-500 line-clamp-2">{job.description}</p>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {job.airtableUrl && <Badge variant="info">Airtable</Badge>}
-                      {job.frameioUrl && <Badge variant="info">Frame.io</Badge>}
-                      {job.figmaUrl && <Badge variant="info">Figma</Badge>}
-                    </div>
-                  </div>
-                  <span className="ml-4 text-xs text-gray-400">{formatDate(job.updatedAt)}</span>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        )
-      })}
-      {jobs.length === 0 && (
-        <div className="py-12 text-center text-gray-500">No jobs in this project yet.</div>
-      )}
-    </div>
-  )
-}
-
-function UploadsTab({ projectId }: { projectId: string }) {
-  const [uploads, setUploads] = useState<Upload[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    async function loadUploads() {
-      try {
-        const response = await getProjectUploads(projectId)
-        setUploads(response.items)
-      } catch (error) {
-        console.error('Failed to load uploads:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    loadUploads()
-  }, [projectId])
-
-  if (isLoading) return <div className="py-8 text-center"><Spinner /></div>
-
-  return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {uploads.map((upload) => (
-        <Card key={upload.id} className="overflow-hidden">
-          <div className="aspect-video bg-gray-100 flex items-center justify-center">
-            {upload.mimeType.startsWith('image/') ? (
-              <div className="flex h-full w-full items-center justify-center bg-gray-200 text-gray-400">
-                <svg className="h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-            ) : upload.mimeType.startsWith('video/') ? (
-              <div className="flex h-full w-full items-center justify-center bg-gray-800 text-white">
-                <svg className="h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-            ) : (
-              <div className="flex h-full w-full items-center justify-center bg-gray-100 text-gray-400">
-                <svg className="h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
-              </div>
-            )}
-          </div>
-          <CardContent className="py-3">
-            <p className="truncate text-sm font-medium text-gray-900">{upload.filename}</p>
-            <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
-              <span>{upload.mimeType.split('/')[1].toUpperCase()}</span>
-              {upload.metadata?.fileSize && (
-                <>
-                  <span>•</span>
-                  <span>{formatFileSize(upload.metadata.fileSize)}</span>
-                </>
-              )}
-              {upload.metadata?.duration && (
-                <>
-                  <span>•</span>
-                  <span>{Math.round(upload.metadata.duration)}s</span>
-                </>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-      {uploads.length === 0 && (
-        <div className="col-span-full py-12 text-center text-gray-500">No uploads in this project yet.</div>
       )}
     </div>
   )
@@ -488,7 +357,7 @@ function RequestAgentTab({ projectId }: { projectId: string }) {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h3 className="font-medium text-gray-900">Request Agent</h3>
-          <p className="text-sm text-gray-500">Start a conversation to create a new job</p>
+          <p className="text-sm text-gray-500">Start a conversation to create asset requests</p>
         </div>
         <Button onClick={handleStartConversation} disabled={isStarting}>
           {isStarting ? 'Starting...' : 'New Conversation'}
@@ -529,7 +398,7 @@ function RequestAgentTab({ projectId }: { projectId: string }) {
         ))}
         {conversations.length === 0 && (
           <div className="py-12 text-center text-gray-500">
-            No conversations yet. Start one to create a new job!
+            No conversations yet. Start one to create asset requests!
           </div>
         )}
       </div>
@@ -539,11 +408,11 @@ function RequestAgentTab({ projectId }: { projectId: string }) {
 
 export function ProjectDetailPage() {
   const { projectId } = useParams<{ projectId: string }>()
-  const location = useLocation()
   const [project, setProject] = useState<Project | null>(null)
   const [uploads, setUploads] = useState<Upload[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isLoadingUploads, setIsLoadingUploads] = useState(true)
+  const [rightTab, setRightTab] = useState<'uploads' | 'deliverables' | 'request-agent'>('uploads')
 
   useEffect(() => {
     async function loadProject() {
@@ -591,20 +460,43 @@ export function ProjectDetailPage() {
     }
   }
 
+  const handleUpdateUpload = async (uploadId: string, data: Partial<Upload>) => {
+    try {
+      const updated = await updateUpload(uploadId, data)
+      setUploads(uploads.map(u => u.id === uploadId ? updated : u))
+    } catch (error) {
+      console.error('Failed to update upload:', error)
+      throw error
+    }
+  }
+
   const handleLinkUpload = async (uploadId: string, assetRequestId: string) => {
     // TODO: Implement when asset requests are added
     console.log('Linking upload to asset:', uploadId, assetRequestId)
   }
 
   const handleAssetRequestUpdate = async (id: string, field: string, value: any) => {
-    // TODO: Implement API call to update asset request
-    console.log('Updating asset request:', id, field, value)
-    // For now, just update local state
-    if (project && project.assetRequests) {
+    if (!project?.assetRequests) return
+    try {
+      const updated = await updateAssetRequest(id, { [field]: value })
       const updatedRequests = project.assetRequests.map(req =>
-        req.id === id ? { ...req, [field]: value, updatedAt: new Date().toISOString() } : req
+        req.id === id ? updated : req
       )
       setProject({ ...project, assetRequests: updatedRequests })
+    } catch (error) {
+      console.error('Failed to update asset request:', error)
+      throw error
+    }
+  }
+
+  const handleProjectUpdate = async (field: string, value: any) => {
+    if (!project || !projectId) return
+    try {
+      const updated = await updateProject(projectId, { [field]: value })
+      setProject(updated)
+    } catch (error) {
+      console.error('Failed to update project:', error)
+      throw error
     }
   }
 
@@ -620,89 +512,101 @@ export function ProjectDetailPage() {
     return <div className="py-12 text-center text-gray-500">Project not found</div>
   }
 
-  const basePath = `/projects/${projectId}`
-  const currentPath = location.pathname
+  const hasAssetRequests = project.assetRequests && project.assetRequests.length > 0
 
-  const tabs = [
-    { name: 'Jobs', path: basePath, exact: true },
-    { name: 'Uploads', path: `${basePath}/uploads` },
-    { name: 'Request Agent', path: `${basePath}/request-agent` },
+  const rightTabs: Array<{ key: 'uploads' | 'deliverables' | 'request-agent'; label: string }> = [
+    { key: 'uploads', label: 'Uploads' },
+    ...(hasAssetRequests
+      ? [{ key: 'deliverables' as const, label: 'Deliverables' }]
+      : []),
+    { key: 'request-agent', label: 'Request Agent' },
   ]
-
-  const activeTab = tabs.find((tab) =>
-    tab.exact ? currentPath === tab.path : currentPath.startsWith(tab.path)
-  ) || tabs[0]
 
   return (
     <div className="space-y-6">
-      <PageHeader title={project.name} description={project.description} />
+      {/* Editable Page Header */}
+      <div className="mb-6">
+        <EditableField
+          label=""
+          value={project.name}
+          type="text"
+          onSave={(val) => handleProjectUpdate('name', val)}
+          required
+          className="[&_span]:text-2xl [&_span]:font-semibold [&_span]:text-gray-900 [&_input]:text-2xl [&_input]:font-semibold"
+        />
+      </div>
 
       {/* Asset Requests Table - Full Width */}
-      {project.assetRequests && project.assetRequests.length > 0 && (
+      {hasAssetRequests && (
         <AssetRequestsTable
           projectId={project.id}
-          assetRequests={project.assetRequests}
+          assetRequests={project.assetRequests!}
           onUpdate={handleAssetRequestUpdate}
         />
       )}
 
       {/* 2-Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column - Main Content */}
+        {/* Left Column - Project Overview */}
         <div className="lg:col-span-7 space-y-6">
-          {/* Project Overview */}
-          <ProjectOverview project={project} />
+          <ProjectOverview project={project} onUpdate={handleProjectUpdate} />
+        </div>
 
-          {/* Tabs */}
-          <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8">
-              {tabs.map((tab) => {
-                const isActive = tab === activeTab
-                return (
-                  <Link
-                    key={tab.name}
-                    to={tab.path}
+        {/* Right Column - Tabbed Panel */}
+        <div className="lg:col-span-5">
+          <div className="sticky top-4 space-y-4">
+            {/* Tab Bar */}
+            <div className="border-b border-gray-200">
+              <nav className="-mb-px flex space-x-6">
+                {rightTabs.map((tab) => (
+                  <button
+                    key={tab.key}
+                    onClick={() => setRightTab(tab.key)}
                     className={cn(
-                      'whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium',
-                      isActive
+                      'whitespace-nowrap border-b-2 py-3 px-1 text-sm font-medium transition-colors',
+                      rightTab === tab.key
                         ? 'border-primary-500 text-primary-600'
                         : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                     )}
                   >
-                    {tab.name}
-                  </Link>
-                )
-              })}
-            </nav>
-          </div>
+                    {tab.label}
+                  </button>
+                ))}
+              </nav>
+            </div>
 
-          {/* Tab Content */}
-          <div className="mt-6">
-            <Routes>
-              <Route index element={<JobsTab projectId={projectId!} />} />
-              <Route path="uploads" element={<UploadsTab projectId={projectId!} />} />
-              <Route path="request-agent" element={<RequestAgentTab projectId={projectId!} />} />
-            </Routes>
-          </div>
-        </div>
+            {/* Tab Content */}
+            {rightTab === 'uploads' && (
+              isLoadingUploads ? (
+                <Card>
+                  <CardContent className="flex items-center justify-center py-12">
+                    <Spinner />
+                  </CardContent>
+                </Card>
+              ) : (
+                <UploadsPanel
+                  project={project}
+                  uploads={uploads}
+                  onUpload={handleUpload}
+                  onDelete={handleDeleteUpload}
+                  onUpdateUpload={handleUpdateUpload}
+                  onLinkToAsset={handleLinkUpload}
+                />
+              )
+            )}
 
-        {/* Right Column - Uploads */}
-        <div className="lg:col-span-5">
-          <div className="sticky top-4">
-            {isLoadingUploads ? (
-              <Card>
-                <CardContent className="flex items-center justify-center py-12">
-                  <Spinner />
-                </CardContent>
-              </Card>
-            ) : (
-              <UploadsPanel
-                project={project}
+            {rightTab === 'deliverables' && hasAssetRequests && (
+              <DeliverablesTab
+                projectId={projectId!}
+                assetRequests={project.assetRequests || []}
                 uploads={uploads}
-                onUpload={handleUpload}
-                onDelete={handleDeleteUpload}
-                onLinkToAsset={handleLinkUpload}
+                loadingUploads={isLoadingUploads}
+                onAssetRequestUpdate={handleAssetRequestUpdate}
               />
+            )}
+
+            {rightTab === 'request-agent' && (
+              <RequestAgentTab projectId={projectId!} />
             )}
           </div>
         </div>

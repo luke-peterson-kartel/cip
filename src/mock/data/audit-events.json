@@ -27,33 +27,6 @@
       }
     },
     {
-      "id": "audit-003",
-      "createdAt": "2024-06-18T09:20:00Z",
-      "userId": "user-001",
-      "organizationId": "org-001",
-      "action": "UPDATE",
-      "resourceType": "job",
-      "resourceId": "job-003",
-      "details": {
-        "field": "frameioUrl",
-        "newValue": "https://app.frame.io/reviews/ghi789"
-      }
-    },
-    {
-      "id": "audit-004",
-      "createdAt": "2024-06-15T16:00:00Z",
-      "userId": "user-002",
-      "organizationId": "org-001",
-      "action": "UPDATE",
-      "resourceType": "job",
-      "resourceId": "job-004",
-      "details": {
-        "field": "description",
-        "previousValue": "Studio photography session...",
-        "newValue": "Studio photography session for the new EV model..."
-      }
-    },
-    {
       "id": "audit-005",
       "createdAt": "2024-05-20T10:30:00Z",
       "userId": "user-002",
@@ -63,7 +36,7 @@
       "resourceId": "upload-005",
       "details": {
         "filename": "ev-exterior-front.jpg",
-        "jobId": "job-004"
+        "projectId": "proj-003"
       }
     },
     {
@@ -76,33 +49,7 @@
       "resourceId": "upload-004",
       "details": {
         "filename": "ev-hero-video.mp4",
-        "jobId": "job-003"
-      }
-    },
-    {
-      "id": "audit-007",
-      "createdAt": "2024-05-10T09:30:00Z",
-      "userId": "user-001",
-      "organizationId": "org-001",
-      "action": "CREATE",
-      "resourceType": "job",
-      "resourceId": "job-005",
-      "details": {
-        "title": "Brand Guidelines PDF",
-        "workspaceId": "ws-003"
-      }
-    },
-    {
-      "id": "audit-008",
-      "createdAt": "2024-05-05T11:00:00Z",
-      "userId": "user-001",
-      "organizationId": "org-001",
-      "action": "CREATE",
-      "resourceType": "job",
-      "resourceId": "job-004",
-      "details": {
-        "title": "EV Product Photography",
-        "workspaceId": "ws-002"
+        "projectId": "proj-002"
       }
     },
     {
@@ -115,19 +62,6 @@
       "resourceId": "ws-003",
       "details": {
         "name": "Brand Guidelines Refresh"
-      }
-    },
-    {
-      "id": "audit-010",
-      "createdAt": "2024-03-15T08:35:30Z",
-      "userId": "user-001",
-      "organizationId": "org-001",
-      "action": "CREATE",
-      "resourceType": "job",
-      "resourceId": "job-001",
-      "details": {
-        "title": "Summer Social Media Kit",
-        "createdFromConversation": "conv-001"
       }
     }
   ],
