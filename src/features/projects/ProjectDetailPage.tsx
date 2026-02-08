@@ -1,24 +1,18 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
-import { Button, Spinner, Card, CardContent, Badge } from '@/components/ui'
-import { getProject, getProjectUploads, getProjectConversations, startProjectConversation, updateProject } from '@/api/endpoints/projects'
+import { useParams } from 'react-router-dom'
+import { Spinner, Card, CardContent, Badge } from '@/components/ui'
+import { getProject, getProjectUploads, updateProject } from '@/api/endpoints/projects'
 import { deleteUpload, updateUpload } from '@/api/endpoints/uploads'
-import { updateAssetRequest } from '@/api/endpoints/asset-requests'
+import { createAssetRequest, updateAssetRequest } from '@/api/endpoints/asset-requests'
 import { UploadsPanel } from './components/UploadsPanel'
 import { AssetRequestsTable } from './components/AssetRequestsTable'
 import { DeliverablesTab } from './components/DeliverablesTab'
+import { ProjectChatTab } from './components/ProjectChatTab'
+import { AssetRequestDetailModal } from './components/AssetRequestDetailModal'
 import { EditableField } from '@/components/forms/EditableField'
 import { EditableRichText } from '@/components/forms/EditableRichText'
-import type { Project, Upload, Conversation, ProjectType } from '@/types'
+import type { Project, Upload } from '@/types'
 import { cn } from '@/lib/cn'
-
-function formatDate(dateString: string): string {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
-}
 
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
@@ -26,18 +20,6 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
-function getProjectTypeName(type: ProjectType): string {
-  switch (type) {
-    case 'INTERNAL_BUILD':
-      return 'Internal Build'
-    case 'CREATIVE_BRIEF':
-      return 'Creative Brief & Asset Generation'
-    case 'CREATIVE_EXPLORATION':
-      return 'Creative Exploration'
-    default:
-      return type
-  }
-}
 
 function ProjectOverview({ project, onUpdate }: { project: Project; onUpdate: (field: string, value: any) => Promise<void> }) {
   return (
@@ -47,76 +29,89 @@ function ProjectOverview({ project, onUpdate }: { project: Project; onUpdate: (f
         <CardContent className="p-6">
           <div className="mb-4 flex items-center justify-between border-b border-gray-200 pb-4">
             <h3 className="text-lg font-semibold text-gray-900">Project Details</h3>
-            <Badge variant="info">{getProjectTypeName(project.projectType)}</Badge>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            {/* Left Column */}
-            <div className="space-y-2">
+          {/* Description */}
+          <div className="mb-5 [&_label]:font-semibold">
+            <EditableField
+              label="Description"
+              value={project.description || ''}
+              type="textarea"
+              onSave={(val) => onUpdate('description', val)}
+              placeholder="Add a project description..."
+              rows={3}
+            />
+          </div>
+
+          {/* Key Details */}
+          <div className="grid gap-x-6 gap-y-2 md:grid-cols-3 mb-5 [&_label]:font-semibold">
+            <EditableField
+              label="Submit Date"
+              value={project.submitDate || ''}
+              type="date"
+              onSave={(val) => onUpdate('submitDate', val)}
+              placeholder="Not set"
+            />
+            <EditableField
+              label="Campaign Launch Date"
+              value={project.dueDate || ''}
+              type="date"
+              onSave={(val) => onUpdate('dueDate', val)}
+              placeholder="Not set"
+            />
+            <EditableField
+              label="Submitted By"
+              value={project.submittedBy || ''}
+              type="text"
+              onSave={(val) => onUpdate('submittedBy', val)}
+              placeholder="Not set"
+            />
+          </div>
+
+          {/* Links */}
+          <div className="border-t border-gray-200 pt-4 [&_label]:font-semibold">
+            <div className="mb-2">
               <EditableField
-                label="Submit Date"
-                value={project.submitDate || ''}
-                type="date"
-                onSave={(val) => onUpdate('submitDate', val)}
-                placeholder="Not set"
-              />
-              <EditableField
-                label="Campaign Launch Date"
-                value={project.dueDate || ''}
-                type="date"
-                onSave={(val) => onUpdate('dueDate', val)}
-                placeholder="Not set"
-              />
-              <EditableField
-                label="Submitted By"
-                value={project.submittedBy || ''}
-                type="text"
-                onSave={(val) => onUpdate('submittedBy', val)}
-                placeholder="Not set"
+                label="Collaboration Canvas"
+                value={project.collaborationCanvasUrl || ''}
+                type="url"
+                onSave={(val) => onUpdate('collaborationCanvasUrl', val)}
+                placeholder="Paste Collaboration Canvas link"
               />
             </div>
-
-            {/* Right Column */}
-            <div className="space-y-2">
+            <div className="grid gap-x-6 gap-y-2 md:grid-cols-2">
               <EditableField
                 label="Google Drive URL"
                 value={project.googleDriveUrl || ''}
-                type="text"
+                type="url"
                 onSave={(val) => onUpdate('googleDriveUrl', val)}
                 placeholder="Paste Google Drive link"
               />
               <EditableField
-                label="Collaboration Canvas"
-                value={project.collaborationCanvasUrl || ''}
-                type="text"
-                onSave={(val) => onUpdate('collaborationCanvasUrl', val)}
-                placeholder="Paste Collaboration Canvas link"
-              />
-              <EditableField
                 label="Airtable URL"
                 value={project.airtableUrl || ''}
-                type="text"
+                type="url"
                 onSave={(val) => onUpdate('airtableUrl', val)}
                 placeholder="Paste Airtable link"
               />
               <EditableField
                 label="Frame.io URL"
                 value={project.frameioUrl || ''}
-                type="text"
+                type="url"
                 onSave={(val) => onUpdate('frameioUrl', val)}
                 placeholder="Paste Frame.io link"
               />
               <EditableField
                 label="Figma URL"
                 value={project.figmaUrl || ''}
-                type="text"
+                type="url"
                 onSave={(val) => onUpdate('figmaUrl', val)}
                 placeholder="Paste Figma link"
               />
 
               {project.additionalLinks && project.additionalLinks.length > 0 && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Additional Links</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Additional Links</label>
                   <div className="space-y-1 px-3 py-2">
                     {project.additionalLinks.map((link, index) => (
                       <a
@@ -137,17 +132,6 @@ function ProjectOverview({ project, onUpdate }: { project: Project; onUpdate: (f
               )}
             </div>
           </div>
-
-          <div className="mt-4 border-t border-gray-200 pt-4">
-            <EditableField
-              label="Description"
-              value={project.description || ''}
-              type="textarea"
-              onSave={(val) => onUpdate('description', val)}
-              placeholder="Add a project description..."
-              rows={3}
-            />
-          </div>
         </CardContent>
       </Card>
 
@@ -155,7 +139,7 @@ function ProjectOverview({ project, onUpdate }: { project: Project; onUpdate: (f
       {project.projectType === 'INTERNAL_BUILD' && (
         <Card>
           <CardContent className="p-6">
-            <h3 className="mb-4 text-lg font-semibold text-gray-900">Internal Build Details</h3>
+            <h3 className="mb-4 text-lg font-semibold text-gray-900 border-b border-gray-200 pb-4">Internal Build Details</h3>
             <div className="space-y-2">
               <EditableField
                 label="Problem"
@@ -214,8 +198,9 @@ function ProjectOverview({ project, onUpdate }: { project: Project; onUpdate: (f
         <>
           <Card>
             <CardContent className="p-6">
+              <h3 className="mb-4 text-lg font-semibold text-gray-900 border-b border-gray-200 pb-4">Creative Brief</h3>
               <EditableRichText
-                label="Creative Brief"
+                label=""
                 value={project.briefContent || ''}
                 onSave={(html) => onUpdate('briefContent', html)}
                 placeholder="Add creative brief details..."
@@ -226,7 +211,7 @@ function ProjectOverview({ project, onUpdate }: { project: Project; onUpdate: (f
           {project.assetSpecs && project.assetSpecs.length > 0 && (
             <Card>
               <CardContent className="p-6">
-                <h3 className="mb-4 text-lg font-semibold text-gray-900">Asset Specifications</h3>
+                <h3 className="mb-4 text-lg font-semibold text-gray-900 border-b border-gray-200 pb-4">Asset Specifications</h3>
                 <div className="space-y-4">
                   {project.assetSpecs.map((spec, index) => (
                     <div key={index} className="rounded-lg border border-gray-200 bg-gray-50 p-4">
@@ -270,7 +255,7 @@ function ProjectOverview({ project, onUpdate }: { project: Project; onUpdate: (f
       {project.projectType === 'CREATIVE_EXPLORATION' && (
         <Card>
           <CardContent className="p-6">
-            <h3 className="mb-4 text-lg font-semibold text-gray-900">Creative Exploration Details</h3>
+            <h3 className="mb-4 text-lg font-semibold text-gray-900 border-b border-gray-200 pb-4">Creative Exploration Details</h3>
             <div className="space-y-2">
               <EditableField
                 label="Exploration Focus"
@@ -318,101 +303,14 @@ function ProjectOverview({ project, onUpdate }: { project: Project; onUpdate: (f
   )
 }
 
-function RequestAgentTab({ projectId }: { projectId: string }) {
-  const navigate = useNavigate()
-  const [conversations, setConversations] = useState<Conversation[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [isStarting, setIsStarting] = useState(false)
-
-  useEffect(() => {
-    async function loadConversations() {
-      try {
-        const response = await getProjectConversations(projectId)
-        setConversations(response.items)
-      } catch (error) {
-        console.error('Failed to load conversations:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    loadConversations()
-  }, [projectId])
-
-  async function handleStartConversation() {
-    setIsStarting(true)
-    try {
-      const conversation = await startProjectConversation(projectId)
-      navigate(`/projects/${projectId}/conversations/${conversation.id}`)
-    } catch (error) {
-      console.error('Failed to start conversation:', error)
-    } finally {
-      setIsStarting(false)
-    }
-  }
-
-  if (isLoading) return <div className="py-8 text-center"><Spinner /></div>
-
-  return (
-    <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h3 className="font-medium text-gray-900">Request Agent</h3>
-          <p className="text-sm text-gray-500">Start a conversation to create asset requests</p>
-        </div>
-        <Button onClick={handleStartConversation} disabled={isStarting}>
-          {isStarting ? 'Starting...' : 'New Conversation'}
-        </Button>
-      </div>
-
-      <div className="space-y-3">
-        {conversations.map((conversation) => (
-          <Link
-            key={conversation.id}
-            to={`/projects/${projectId}/conversations/${conversation.id}`}
-          >
-            <Card className="transition-shadow hover:shadow-md">
-              <CardContent className="py-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Badge
-                      variant={
-                        conversation.status === 'ACTIVE'
-                          ? 'info'
-                          : conversation.status === 'COMPLETED'
-                          ? 'success'
-                          : 'default'
-                      }
-                    >
-                      {conversation.status}
-                    </Badge>
-                    <span className="text-sm text-gray-900">
-                      {conversation.messages?.[0]?.content.slice(0, 50) || 'New conversation'}
-                      {(conversation.messages?.[0]?.content.length || 0) > 50 ? '...' : ''}
-                    </span>
-                  </div>
-                  <span className="text-xs text-gray-400">{formatDate(conversation.createdAt)}</span>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
-        {conversations.length === 0 && (
-          <div className="py-12 text-center text-gray-500">
-            No conversations yet. Start one to create asset requests!
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
-
 export function ProjectDetailPage() {
   const { projectId } = useParams<{ projectId: string }>()
   const [project, setProject] = useState<Project | null>(null)
   const [uploads, setUploads] = useState<Upload[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isLoadingUploads, setIsLoadingUploads] = useState(true)
-  const [rightTab, setRightTab] = useState<'uploads' | 'deliverables' | 'request-agent'>('uploads')
+  const [rightTab, setRightTab] = useState<'chat' | 'uploads' | 'deliverables'>('chat')
+  const [chatMentionAssetId, setChatMentionAssetId] = useState<string | null>(null)
 
   useEffect(() => {
     async function loadProject() {
@@ -475,14 +373,38 @@ export function ProjectDetailPage() {
     console.log('Linking upload to asset:', uploadId, assetRequestId)
   }
 
+  const handleCreateAssetRequest = async () => {
+    if (!project) return
+    try {
+      const newRequest = await createAssetRequest(project.id, {})
+      setProject(prev => {
+        if (!prev) return prev
+        // Filter out if mock already pushed (same array ref), then always append
+        const existing = (prev.assetRequests || []).filter(r => r.id !== newRequest.id)
+        return {
+          ...prev,
+          assetRequests: [...existing, newRequest],
+        }
+      })
+      return newRequest
+    } catch (error) {
+      console.error('Failed to create asset request:', error)
+    }
+  }
+
   const handleAssetRequestUpdate = async (id: string, field: string, value: any) => {
     if (!project?.assetRequests) return
     try {
       const updated = await updateAssetRequest(id, { [field]: value })
-      const updatedRequests = project.assetRequests.map(req =>
-        req.id === id ? updated : req
-      )
-      setProject({ ...project, assetRequests: updatedRequests })
+      setProject(prev => {
+        if (!prev?.assetRequests) return prev
+        return {
+          ...prev,
+          assetRequests: prev.assetRequests.map(req =>
+            req.id === id ? updated : req
+          ),
+        }
+      })
     } catch (error) {
       console.error('Failed to update asset request:', error)
       throw error
@@ -514,12 +436,12 @@ export function ProjectDetailPage() {
 
   const hasAssetRequests = project.assetRequests && project.assetRequests.length > 0
 
-  const rightTabs: Array<{ key: 'uploads' | 'deliverables' | 'request-agent'; label: string }> = [
-    { key: 'uploads', label: 'Uploads' },
+  const rightTabs: Array<{ key: 'chat' | 'uploads' | 'deliverables'; label: string }> = [
+    { key: 'chat', label: 'Chat' },
+    { key: 'uploads', label: 'Project Uploads' },
     ...(hasAssetRequests
       ? [{ key: 'deliverables' as const, label: 'Deliverables' }]
       : []),
-    { key: 'request-agent', label: 'Request Agent' },
   ]
 
   return (
@@ -536,14 +458,14 @@ export function ProjectDetailPage() {
         />
       </div>
 
-      {/* Asset Requests Table - Full Width */}
-      {hasAssetRequests && (
-        <AssetRequestsTable
-          projectId={project.id}
-          assetRequests={project.assetRequests!}
-          onUpdate={handleAssetRequestUpdate}
-        />
-      )}
+      {/* Deliverables Table - Full Width */}
+      <AssetRequestsTable
+        projectId={project.id}
+        projectName={project.name}
+        assetRequests={project.assetRequests || []}
+        onUpdate={handleAssetRequestUpdate}
+        onCreate={handleCreateAssetRequest}
+      />
 
       {/* 2-Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -554,63 +476,85 @@ export function ProjectDetailPage() {
 
         {/* Right Column - Tabbed Panel */}
         <div className="lg:col-span-5">
-          <div className="sticky top-4 space-y-4">
-            {/* Tab Bar */}
-            <div className="border-b border-gray-200">
-              <nav className="-mb-px flex space-x-6">
-                {rightTabs.map((tab) => (
-                  <button
-                    key={tab.key}
-                    onClick={() => setRightTab(tab.key)}
-                    className={cn(
-                      'whitespace-nowrap border-b-2 py-3 px-1 text-sm font-medium transition-colors',
-                      rightTab === tab.key
-                        ? 'border-primary-500 text-primary-600'
-                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                    )}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </nav>
-            </div>
+          <div className="sticky top-4">
+            <Card>
+              <CardContent className="p-0">
+                {/* Tab Bar */}
+                <div className="border-b border-gray-200 px-6">
+                  <nav className="-mb-px flex space-x-6">
+                    {rightTabs.map((tab) => (
+                      <button
+                        key={tab.key}
+                        onClick={() => setRightTab(tab.key)}
+                        className={cn(
+                          'whitespace-nowrap border-b-2 py-4 text-sm font-medium transition-colors',
+                          rightTab === tab.key
+                            ? 'border-primary-500 text-primary-600'
+                            : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                        )}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
+                  </nav>
+                </div>
 
-            {/* Tab Content */}
-            {rightTab === 'uploads' && (
-              isLoadingUploads ? (
-                <Card>
-                  <CardContent className="flex items-center justify-center py-12">
-                    <Spinner />
-                  </CardContent>
-                </Card>
-              ) : (
-                <UploadsPanel
-                  project={project}
-                  uploads={uploads}
-                  onUpload={handleUpload}
-                  onDelete={handleDeleteUpload}
-                  onUpdateUpload={handleUpdateUpload}
-                  onLinkToAsset={handleLinkUpload}
-                />
-              )
-            )}
+                {/* Tab Content */}
+                <div className="p-6">
+                  {rightTab === 'uploads' && (
+                    isLoadingUploads ? (
+                      <div className="flex items-center justify-center py-12">
+                        <Spinner />
+                      </div>
+                    ) : (
+                      <UploadsPanel
+                        project={project}
+                        uploads={uploads}
+                        onUpload={handleUpload}
+                        onDelete={handleDeleteUpload}
+                        onUpdateUpload={handleUpdateUpload}
+                        onLinkToAsset={handleLinkUpload}
+                      />
+                    )
+                  )}
 
-            {rightTab === 'deliverables' && hasAssetRequests && (
-              <DeliverablesTab
-                projectId={projectId!}
-                assetRequests={project.assetRequests || []}
-                uploads={uploads}
-                loadingUploads={isLoadingUploads}
-                onAssetRequestUpdate={handleAssetRequestUpdate}
-              />
-            )}
+                  {rightTab === 'deliverables' && hasAssetRequests && (
+                    <DeliverablesTab
+                      projectId={projectId!}
+                      projectName={project.name}
+                      assetRequests={project.assetRequests || []}
+                      uploads={uploads}
+                      loadingUploads={isLoadingUploads}
+                      onAssetRequestUpdate={handleAssetRequestUpdate}
+                    />
+                  )}
 
-            {rightTab === 'request-agent' && (
-              <RequestAgentTab projectId={projectId!} />
-            )}
+                  {rightTab === 'chat' && (
+                    <ProjectChatTab
+                      projectId={projectId!}
+                      project={project}
+                      onOpenAssetRequest={(id) => setChatMentionAssetId(id)}
+                    />
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
+
+      {/* Asset Request Modal from chat mention click */}
+      {chatMentionAssetId && project.assetRequests && (
+        <AssetRequestDetailModal
+          isOpen={!!chatMentionAssetId}
+          onClose={() => setChatMentionAssetId(null)}
+          assetRequest={project.assetRequests.find(ar => ar.id === chatMentionAssetId)!}
+          onUpdate={async (field, value) => {
+            await handleAssetRequestUpdate(chatMentionAssetId, field, value)
+          }}
+          projectName={project.name}
+        />
+      )}
     </div>
   )
 }

@@ -5,6 +5,7 @@ import type {
   ProjectUpdate,
   Upload,
   Conversation,
+  ChatMessage,
   AuditEvent,
   PaginatedResponse,
 } from '@/types'
@@ -48,6 +49,20 @@ export async function getProjectConversations(projectId: string): Promise<Pagina
 export async function startProjectConversation(projectId: string): Promise<Conversation> {
   return apiClient(`/projects/${projectId}/request-agent/conversations`, {
     method: 'POST',
+  })
+}
+
+export async function getProjectChatMessages(projectId: string): Promise<PaginatedResponse<ChatMessage>> {
+  return apiClient(`/projects/${projectId}/chat-messages`)
+}
+
+export async function sendProjectChatMessage(
+  projectId: string,
+  data: { senderEmail: string; senderName: string; message: string }
+): Promise<ChatMessage> {
+  return apiClient(`/projects/${projectId}/chat-messages`, {
+    method: 'POST',
+    body: JSON.stringify(data),
   })
 }
 

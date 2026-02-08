@@ -1,7 +1,10 @@
+import { useState, useEffect, useRef } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { cn } from '@/lib/cn'
 import { useAuthStore } from '@/store/authStore'
 import { Avatar } from '@/components/ui'
+import { getProject, updateProject } from '@/api/endpoints/projects'
+import type { Project, TeamMember } from '@/types'
 
 const navigation = [
   {
@@ -54,10 +57,214 @@ const adminNavigation = [
   },
 ]
 
+// --- Sidebar Team Panel ---
+
+function EditableLeadField({
+  label,
+  value,
+  onSave,
+}: {
+  label: string
+  value: string
+  onSave: (val: string) => void
+}) {
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft] = useState(value)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (editing) inputRef.current?.focus()
+  }, [editing])
+
+  useEffect(() => {
+    setDraft(value)
+  }, [value])
+
+  const commit = () => {
+    setEditing(false)
+    if (draft.trim() !== value) onSave(draft.trim())
+  }
+
+  return (
+    <div className="flex items-baseline gap-1.5 min-w-0">
+      <span className="text-[10px] font-medium text-gray-400 uppercase shrink-0">{label}:</span>
+      {editing ? (
+        <input
+          ref={inputRef}
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onBlur={commit}
+          onKeyDown={(e) => { if (e.key === 'Enter') commit(); if (e.key === 'Escape') { setDraft(value); setEditing(false) } }}
+          className="flex-1 min-w-0 bg-transparent text-xs text-gray-700 border-b border-primary-300 outline-none py-0"
+        />
+      ) : (
+        <button
+          onClick={() => setEditing(true)}
+          className="flex-1 min-w-0 text-left text-xs text-gray-700 truncate hover:text-primary-600 transition-colors"
+          title={value || 'Click to set'}
+        >
+          {value || <span className="italic text-gray-400">Not set</span>}
+        </button>
+      )}
+    </div>
+  )
+}
+
+function MemberRow({ member, onRemove }: { member: TeamMember; onRemove: () => void }) {
+  return (
+    <div className="group flex items-center gap-2 py-0.5 pr-1">
+      <Avatar name={member.name || member.email} size="xs" />
+      <p className="flex-1 min-w-0 text-xs text-gray-700 truncate">{member.name || member.email}</p>
+      <button
+        onClick={onRemove}
+        className="opacity-0 group-hover:opacity-100 shrink-0 rounded p-0.5 hover:bg-red-100 transition-opacity"
+        title="Remove"
+      >
+        <svg className="h-3 w-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  )
+}
+
+function AddMemberInline({ onAdd }: { onAdd: (email: string) => void }) {
+  const [open, setOpen] = useState(false)
+  const [email, setEmail] = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (open) inputRef.current?.focus()
+  }, [open])
+
+  const submit = () => {
+    if (email.trim()) {
+      onAdd(email.trim())
+      setEmail('')
+    }
+    setOpen(false)
+  }
+
+  if (!open) {
+    return (
+      <button
+        onClick={() => setOpen(true)}
+        className="flex items-center gap-1 text-[10px] text-gray-400 hover:text-primary-600 transition-colors py-0.5"
+      >
+        <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+        </svg>
+        Add member
+      </button>
+    )
+  }
+
+  return (
+    <div className="flex items-center gap-1 py-0.5">
+      <input
+        ref={inputRef}
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        onBlur={submit}
+        onKeyDown={(e) => { if (e.key === 'Enter') submit(); if (e.key === 'Escape') { setEmail(''); setOpen(false) } }}
+        placeholder="email@example.com"
+        className="flex-1 min-w-0 text-xs bg-transparent border-b border-primary-300 outline-none py-0 placeholder:text-gray-300"
+      />
+    </div>
+  )
+}
+
+function SidebarTeamPanel({ project, onRefresh }: { project: Project; onRefresh: () => void }) {
+  const handleLeadSave = async (field: string, value: string) => {
+    await updateProject(project.id, { [field]: value })
+    onRefresh()
+  }
+
+  const handleAddMember = async (section: 'clientTeam' | 'kartelTeam', email: string) => {
+    const current = project[section] || []
+    await updateProject(project.id, {
+      [section]: [...current, { email, name: email.split('@')[0] }],
+    })
+    onRefresh()
+  }
+
+  const handleRemoveMember = async (section: 'clientTeam' | 'kartelTeam', idx: number) => {
+    const current = [...(project[section] || [])]
+    current.splice(idx, 1)
+    await updateProject(project.id, { [section]: current })
+    onRefresh()
+  }
+
+  return (
+    <div className="border-t border-gray-200">
+      <div className="border-l-2 border-primary-500 px-3 py-3 space-y-3">
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Project Team</p>
+
+        {/* Client */}
+        <div className="space-y-1">
+          <p className="text-[10px] font-semibold uppercase text-gray-500">Client</p>
+          <EditableLeadField
+            label="Lead"
+            value={project.clientLead || ''}
+            onSave={(val) => handleLeadSave('clientLead', val)}
+          />
+          {(project.clientTeam || []).map((m, i) => (
+            <MemberRow key={m.email + i} member={m} onRemove={() => handleRemoveMember('clientTeam', i)} />
+          ))}
+          <AddMemberInline onAdd={(email) => handleAddMember('clientTeam', email)} />
+        </div>
+
+        {/* Kartel */}
+        <div className="space-y-1">
+          <p className="text-[10px] font-semibold uppercase text-gray-500">Kartel</p>
+          <EditableLeadField
+            label="AM"
+            value={project.accountManager || ''}
+            onSave={(val) => handleLeadSave('accountManager', val)}
+          />
+          <EditableLeadField
+            label="LP"
+            value={project.leadProducer || ''}
+            onSave={(val) => handleLeadSave('leadProducer', val)}
+          />
+          {(project.kartelTeam || []).map((m, i) => (
+            <MemberRow key={m.email + i} member={m} onRemove={() => handleRemoveMember('kartelTeam', i)} />
+          ))}
+          <AddMemberInline onAdd={(email) => handleAddMember('kartelTeam', email)} />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// --- Main Sidebar ---
+
 export function Sidebar() {
   const location = useLocation()
   const { user, organization } = useAuthStore()
   const isAdmin = user?.role === 'ADMIN' || user?.role === 'STAFF'
+
+  // Project awareness — fetch project when on a project detail route
+  const projectMatch = location.pathname.match(/\/projects\/([^/]+)/)
+  const projectId = projectMatch?.[1]
+  const [project, setProject] = useState<Project | null>(null)
+
+  const fetchProject = async (id: string) => {
+    try {
+      const p = await getProject(id)
+      setProject(p)
+    } catch {
+      setProject(null)
+    }
+  }
+
+  useEffect(() => {
+    if (projectId) {
+      fetchProject(projectId)
+    } else {
+      setProject(null)
+    }
+  }, [projectId])
 
   return (
     <aside className="flex h-screen w-64 flex-col border-r border-gray-200 bg-white">
@@ -142,6 +349,11 @@ export function Sidebar() {
           </>
         )}
       </nav>
+
+      {/* Project Team Panel */}
+      {project && (
+        <SidebarTeamPanel project={project} onRefresh={() => fetchProject(project.id)} />
+      )}
 
       {/* User */}
       {user && (

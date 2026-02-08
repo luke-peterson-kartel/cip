@@ -96,6 +96,7 @@ export interface AssetRequest {
   // Additional tracking
   priority: AssetPriority
   version: number // iteration count
+  workflowStageLabels?: string[] // custom per-deliverable step names (5 entries)
   messages?: ChatMessage[]
 
   // Metadata
@@ -114,6 +115,7 @@ export const PLATFORM_OPTIONS = [
   { label: 'Animated GIF', value: 'Animated GIF' },
   { label: 'CTV (Connected TV)', value: 'CTV' },
   { label: 'TV/Long Form Video', value: 'TV/Long Form' },
+  { label: 'Other', value: 'Other' },
 ] as const
 
 // Project Setup Phase - tracks initial 21-day setup
@@ -124,6 +126,12 @@ export interface ProjectSetupPhase {
   loraTraining: { status: SetupPhaseStatus; days: number; completedDate?: string }
   workflowBuild: { status: SetupPhaseStatus; days: number; completedDate?: string }
   generation: { status: SetupPhaseStatus; days: number; completedDate?: string }
+}
+
+export interface TeamMember {
+  email: string
+  name?: string
+  title?: string
 }
 
 // Project (replaces Workspace with type-specific fields)
@@ -144,6 +152,13 @@ export interface Project {
   frameioUrl?: string
   figmaUrl?: string
   additionalLinks?: Array<{ label: string; url: string }>
+
+  // Team
+  clientLead?: string
+  clientTeam?: TeamMember[]
+  accountManager?: string
+  leadProducer?: string
+  kartelTeam?: TeamMember[]
 
   // Internal Build fields
   problem?: string
@@ -169,9 +184,10 @@ export interface Project {
 
   requestAgentPrompt?: string
 
-  // Asset tracking (NEW)
+  // Asset tracking
   assetRequests?: AssetRequest[]
   setupPhase?: ProjectSetupPhase
+  chatMessages?: ChatMessage[]
 
   createdAt: string
   updatedAt: string

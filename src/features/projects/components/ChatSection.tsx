@@ -6,6 +6,8 @@ interface ChatSectionProps {
   messages: ChatMessage[]
   currentUserEmail: string
   onSendMessage: (message: string) => Promise<void>
+  renderMessage?: (message: string, isCurrentUser: boolean) => React.ReactNode
+  inputComponent?: React.ReactNode
 }
 
 function formatTimestamp(timestamp: string): string {
@@ -38,15 +40,20 @@ export function ChatSection({
   messages,
   currentUserEmail,
   onSendMessage,
+  renderMessage,
+  inputComponent,
 }: ChatSectionProps) {
   const [newMessage, setNewMessage] = useState('')
   const [isSending, setIsSending] = useState(false)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const messagesContainerRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    const container = messagesContainerRef.current
+    if (container) {
+      container.scrollTop = container.scrollHeight
+    }
   }, [messages])
 
   const handleSend = async () => {
@@ -84,7 +91,7 @@ export function ChatSection({
   return (
     <div className="flex flex-col border border-gray-200 rounded-lg overflow-hidden bg-white">
       {/* Messages area */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-3 max-h-[300px] min-h-[120px] bg-gray-50">
+      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-3 space-y-3 max-h-[300px] min-h-[120px] bg-gray-50">
         {messages.length === 0 ? (
           <div className="flex items-center justify-center h-full py-6">
             <p className="text-xs text-gray-400">No messages yet. Start the conversation.</p>
@@ -128,7 +135,7 @@ export function ChatSection({
                         : 'bg-white text-gray-900 border border-gray-200 rounded-bl-md'
                     )}
                   >
-                    {msg.message}
+                    {renderMessage ? renderMessage(msg.message, isCurrentUser) : msg.message}
                   </div>
                   <div
                     className={cn(
@@ -143,40 +150,45 @@ export function ChatSection({
             )
           })
         )}
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Input area */}
       <div className="border-t border-gray-200 p-2 bg-white">
-        <div className="flex items-end gap-2">
-          <textarea
-            ref={textareaRef}
-            value={newMessage}
-            onChange={handleInput}
-            onKeyDown={handleKeyDown}
-            placeholder="Type a message..."
-            rows={1}
-            disabled={isSending}
-            className="flex-1 resize-none rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none disabled:opacity-50"
-          />
-          <button
-            onClick={handleSend}
-            disabled={!newMessage.trim() || isSending}
-            className={cn(
-              'flex-shrink-0 rounded-lg p-2 transition-colors',
-              newMessage.trim() && !isSending
-                ? 'bg-blue-500 text-white hover:bg-blue-600'
-                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-            )}
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-            </svg>
-          </button>
-        </div>
-        <p className="text-[10px] text-gray-400 mt-1 px-1">
-          Press Enter to send, Shift+Enter for new line
-        </p>
+        {inputComponent ? (
+          inputComponent
+        ) : (
+          <>
+            <div className="flex items-end gap-2">
+              <textarea
+                ref={textareaRef}
+                value={newMessage}
+                onChange={handleInput}
+                onKeyDown={handleKeyDown}
+                placeholder="Type a message..."
+                rows={1}
+                disabled={isSending}
+                className="flex-1 resize-none rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none disabled:opacity-50"
+              />
+              <button
+                onClick={handleSend}
+                disabled={!newMessage.trim() || isSending}
+                className={cn(
+                  'flex-shrink-0 rounded-lg p-2 transition-colors',
+                  newMessage.trim() && !isSending
+                    ? 'bg-blue-500 text-white hover:bg-blue-600'
+                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                )}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+              </button>
+            </div>
+            <p className="text-[10px] text-gray-400 mt-1 px-1">
+              Press Enter to send, Shift+Enter for new line
+            </p>
+          </>
+        )}
       </div>
     </div>
   )

@@ -264,6 +264,26 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
     return { items: events, pagination: { nextToken: null } } as T
   }
 
+  // GET /projects/:id/chat-messages
+  params = matchPath('/projects/:projectId/chat-messages', path)
+  if (method === 'GET' && params) {
+    const project = (projectsData as PaginatedResponse<Project>).items.find(
+      p => p.id === params!.projectId
+    )
+    return { items: project?.chatMessages || [], pagination: { nextToken: null } } as T
+  }
+
+  // POST /projects/:id/chat-messages
+  if (method === 'POST' && params) {
+    const body = JSON.parse(options.body as string)
+    const newMessage = {
+      id: `pchat-${Date.now()}`,
+      ...body,
+      timestamp: new Date().toISOString(),
+    }
+    return newMessage as T
+  }
+
   // ============ END PROJECT ENDPOINTS ============
 
   // ============ ASSET REQUEST ENDPOINTS ============
@@ -298,6 +318,14 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
       createdBy: 'current-user',
       ...body,
     }
+    // Persist to mock data so PATCH/GET can find it later
+    const project = (projectsData as PaginatedResponse<Project>).items.find(
+      p => p.id === params!.projectId
+    )
+    if (project) {
+      if (!project.assetRequests) project.assetRequests = []
+      project.assetRequests.push(newAssetRequest)
+    }
     return newAssetRequest as T
   }
 
@@ -316,12 +344,14 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
   // PATCH /asset-requests/:id
   if (method === 'PATCH' && params) {
     for (const project of (projectsData as PaginatedResponse<Project>).items) {
-      const found = project.assetRequests?.find(
+      const idx = project.assetRequests?.findIndex(
         ar => ar.id === params!.assetRequestId
-      )
-      if (found && options.body) {
+      ) ?? -1
+      if (idx >= 0 && options.body) {
         const updates = JSON.parse(options.body as string)
-        return { ...found, ...updates, updatedAt: new Date().toISOString() } as T
+        const updated = { ...project.assetRequests![idx], ...updates, updatedAt: new Date().toISOString() }
+        project.assetRequests![idx] = updated
+        return updated as T
       }
     }
     return undefined as T

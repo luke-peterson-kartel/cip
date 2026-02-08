@@ -6,9 +6,10 @@ import { cn } from '@/lib/cn'
 
 export interface AssetRequestsTableProps {
   projectId: string
+  projectName?: string
   assetRequests: AssetRequest[]
   onUpdate?: (id: string, field: string, value: any) => Promise<void>
-  onCreate?: (request: Partial<AssetRequest>) => Promise<void>
+  onCreate?: (request: Partial<AssetRequest>) => Promise<AssetRequest | void>
   onDelete?: (id: string) => Promise<void>
 }
 
@@ -81,6 +82,7 @@ function formatDate(dateString?: string): string {
 
 export function AssetRequestsTable({
   projectId,
+  projectName,
   assetRequests,
   onUpdate,
   onCreate,
@@ -130,14 +132,18 @@ export function AssetRequestsTable({
     }
   }
 
+  const handleCreate = async () => {
+    await onCreate?.({})
+  }
+
   if (assetRequests.length === 0) {
     return (
       <Card>
         <CardHeader className="border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900">Asset Requests</h3>
-            <Button size="sm" onClick={() => onCreate?.({})}>
-              Add Asset Request
+            <h3 className="text-lg font-semibold text-gray-900">Deliverables</h3>
+            <Button size="sm" onClick={() => handleCreate()}>
+              Add Deliverable
             </Button>
           </div>
         </CardHeader>
@@ -156,14 +162,14 @@ export function AssetRequestsTable({
                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No asset requests</h3>
-            <p className="mt-1 text-sm text-gray-500">Get started by creating a new asset request.</p>
+            <h3 className="mt-2 text-sm font-medium text-gray-900">No deliverables</h3>
+            <p className="mt-1 text-sm text-gray-500">Get started by creating a new deliverable.</p>
             <div className="mt-6">
-              <Button onClick={() => onCreate?.({})}>
+              <Button onClick={() => handleCreate()}>
                 <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
-                New Asset Request
+                New Deliverable
               </Button>
             </div>
           </div>
@@ -178,8 +184,7 @@ export function AssetRequestsTable({
         <CardHeader className="border-b border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">Asset Requests</h3>
-              <p className="mt-1 text-sm text-gray-500">{assetRequests.length} total requests</p>
+              <h3 className="text-lg font-semibold text-gray-900">Deliverables</h3>
             </div>
             <div className="flex items-center gap-2">
               {selectedRequests.size > 0 && (
@@ -187,8 +192,8 @@ export function AssetRequestsTable({
                   {selectedRequests.size} selected
                 </span>
               )}
-              <Button size="sm" onClick={() => onCreate?.({})}>
-                Add Request
+              <Button size="sm" onClick={() => handleCreate()}>
+                Add Deliverable
               </Button>
             </div>
           </div>
@@ -220,13 +225,7 @@ export function AssetRequestsTable({
                     Status
                   </th>
                   <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Workflow Stage
-                  </th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Priority
-                  </th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Assigned
                   </th>
                   <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     First V1 Review
@@ -243,11 +242,19 @@ export function AssetRequestsTable({
                 {assetRequests.map((request) => {
                   const statusConfig = getStatusConfig(request.status)
                   const priorityConfig = getPriorityConfig(request.priority)
-                  const workflowProgress = getWorkflowStageProgress(request.workflowStage)
+
+                  const needsTitle = !request.title
 
                   return (
-                    <tr key={request.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-4">
+                    <tr
+                      key={request.id}
+                      onClick={() => setSelectedAsset(request)}
+                      className={cn(
+                        'cursor-pointer hover:bg-gray-50',
+                        needsTitle && 'bg-blue-50/60 border-l-2 border-l-blue-400'
+                      )}
+                    >
+                      <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
                         <input
                           type="checkbox"
                           checked={selectedRequests.has(request.id)}
@@ -255,12 +262,14 @@ export function AssetRequestsTable({
                           className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
                         />
                       </td>
-                      <td
-                        className="px-4 py-4 cursor-pointer hover:bg-gray-100"
-                        onClick={() => setSelectedAsset(request)}
-                      >
+                      <td className="px-4 py-4">
                         <div>
-                          <div className="text-sm font-medium text-gray-900">{request.title || request.creativeType}</div>
+                          <div className={cn(
+                            'text-sm font-medium',
+                            needsTitle ? 'text-blue-600 italic' : 'text-gray-900'
+                          )}>
+                            {request.title || request.creativeType || 'Click to add title...'}
+                          </div>
                           {request.title && (
                             <div className="text-xs text-gray-500 line-clamp-1">{request.creativeType}</div>
                           )}
@@ -281,7 +290,7 @@ export function AssetRequestsTable({
                       <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
                         {request.targetCount}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap">
+                      <td className="px-4 py-4 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                         {editingCell?.id === request.id && editingCell?.field === 'status' ? (
                           <select
                             autoFocus
@@ -304,20 +313,7 @@ export function AssetRequestsTable({
                           </Badge>
                         )}
                       </td>
-                      <td className="px-4 py-4">
-                        <div className="space-y-1">
-                          <div className="text-xs text-gray-700">
-                            {getWorkflowStageLabel(request.workflowStage)}
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-1.5">
-                            <div
-                              className="bg-primary-600 h-1.5 rounded-full transition-all"
-                              style={{ width: `${workflowProgress}%` }}
-                            />
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap">
+                      <td className="px-4 py-4 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                         {editingCell?.id === request.id && editingCell?.field === 'priority' ? (
                           <select
                             autoFocus
@@ -340,36 +336,14 @@ export function AssetRequestsTable({
                           </Badge>
                         )}
                       </td>
-                      <td
-                        className="px-4 py-4 whitespace-nowrap text-sm text-gray-900 cursor-pointer hover:bg-gray-100"
-                        onClick={() => setSelectedAsset(request)}
-                      >
-                        {request.clientAssignedEmail || request.kartelAssignedEmail || <span className="text-gray-400">Unassigned</span>}
-                      </td>
-                      <td
-                        className="px-4 py-4 whitespace-nowrap text-sm text-gray-900 cursor-pointer hover:bg-gray-100"
-                        onClick={() => setSelectedAsset(request)}
-                      >
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
                         {formatDate(request.firstV1ReviewDate)}
                       </td>
-                      <td
-                        className="px-4 py-4 whitespace-nowrap text-sm text-gray-900 cursor-pointer hover:bg-gray-100"
-                        onClick={() => setSelectedAsset(request)}
-                      >
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
                         {formatDate(request.finalDeliveryDate)}
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center gap-1">
-                          <button
-                            onClick={() => setSelectedAsset(request)}
-                            className="rounded p-1 hover:bg-gray-200"
-                            title="View details"
-                          >
-                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                          </button>
                           <button
                             onClick={() => onDelete?.(request.id)}
                             className="rounded p-1 hover:bg-red-100"
@@ -397,6 +371,19 @@ export function AssetRequestsTable({
           onClose={() => setSelectedAsset(null)}
           assetRequest={selectedAsset}
           onUpdate={handleModalUpdate}
+          projectName={projectName}
+          currentIndex={assetRequests.findIndex(r => r.id === selectedAsset.id)}
+          totalCount={assetRequests.length}
+          onPrev={() => {
+            const idx = assetRequests.findIndex(r => r.id === selectedAsset.id)
+            const prevIdx = idx <= 0 ? assetRequests.length - 1 : idx - 1
+            setSelectedAsset(assetRequests[prevIdx])
+          }}
+          onNext={() => {
+            const idx = assetRequests.findIndex(r => r.id === selectedAsset.id)
+            const nextIdx = idx >= assetRequests.length - 1 ? 0 : idx + 1
+            setSelectedAsset(assetRequests[nextIdx])
+          }}
         />
       )}
     </>

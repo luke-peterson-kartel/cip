@@ -60,29 +60,12 @@ export function TimelineCalendarView({ dates, onDateChange, editable = true }: T
     setSelectedField(null)
   }
 
-  const tileContent = ({ date }: { date: Date }) => {
-    const key = toISOString(date)
-    const markers = dateMarkerMap.get(key)
-    if (!markers || markers.length === 0) return null
-
-    return (
-      <div className="flex justify-center gap-0.5 mt-0.5">
-        {markers.map((m) => (
-          <span
-            key={m.key}
-            className={cn('w-1.5 h-1.5 rounded-full', m.color)}
-            title={m.label}
-          />
-        ))}
-      </div>
-    )
-  }
-
   const tileClassName = ({ date }: { date: Date }) => {
     const key = toISOString(date)
     const markers = dateMarkerMap.get(key)
     if (markers && markers.length > 0) {
-      return 'font-semibold'
+      const primary = markers[0]
+      return `font-semibold timeline-marker-${primary.key}`
     }
     return ''
   }
@@ -110,14 +93,12 @@ export function TimelineCalendarView({ dates, onDateChange, editable = true }: T
               )}
             >
               <span className={cn('w-2.5 h-2.5 rounded-full flex-shrink-0', field.color)} />
-              <div className="min-w-0 flex-1">
-                <div className={cn('font-medium truncate', field.textColor)}>{field.label}</div>
-                <div className="text-gray-500 truncate">
-                  {val
-                    ? new Date(val).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-                    : 'Not set'}
-                </div>
-              </div>
+              <span className={cn('font-medium truncate', field.textColor)}>{field.label}</span>
+              <span className="text-gray-500 ml-auto whitespace-nowrap">
+                {val
+                  ? new Date(val).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                  : 'Not set'}
+              </span>
               {isSelected && (
                 <span className="text-[10px] text-gray-400 flex-shrink-0">Click a day</span>
               )}
@@ -131,7 +112,6 @@ export function TimelineCalendarView({ dates, onDateChange, editable = true }: T
         <Calendar
           defaultActiveStartDate={activeDate}
           onClickDay={handleClickDay}
-          tileContent={tileContent}
           tileClassName={tileClassName}
           locale="en-US"
           minDetail="month"

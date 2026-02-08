@@ -4,7 +4,7 @@ import { cn } from '@/lib/cn'
 export interface EditableFieldProps {
   label: string
   value: any
-  type: 'text' | 'textarea' | 'date' | 'select' | 'number' | 'multiselect' | 'email'
+  type: 'text' | 'textarea' | 'date' | 'select' | 'number' | 'multiselect' | 'email' | 'url'
   options?: Array<{ label: string; value: string }>
   onSave: (newValue: any) => Promise<void>
   validate?: (value: any) => string | null
@@ -48,7 +48,7 @@ export function EditableField({
       inputRef.current.focus()
 
       // For text inputs, select all text
-      if (type === 'text' || type === 'email') {
+      if (type === 'text' || type === 'email' || type === 'url') {
         (inputRef.current as HTMLInputElement).select()
       }
     }
@@ -248,6 +248,20 @@ export function EditableField({
           />
         )
 
+      case 'url':
+        return (
+          <input
+            ref={inputRef as React.RefObject<HTMLInputElement>}
+            type="url"
+            value={editValue || ''}
+            onChange={(e) => setEditValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder}
+            disabled={isSaving}
+            className={baseInputClass}
+          />
+        )
+
       default: // text
         return (
           <input
@@ -274,6 +288,42 @@ export function EditableField({
       )}
 
       {!isEditing ? (
+        type === 'url' && value ? (
+          <div className="flex items-center gap-1 min-h-[2.5rem] rounded-md px-3 py-2 text-sm">
+            <a
+              href={value}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 truncate text-primary-600 hover:text-primary-700 hover:underline"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {value}
+            </a>
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                navigator.clipboard.writeText(value)
+              }}
+              className="flex-shrink-0 rounded p-1 text-gray-400 hover:text-gray-600 transition-colors opacity-0 group-hover:opacity-100"
+              title="Copy URL"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </button>
+            {!disabled && (
+              <button
+                onClick={handleEdit}
+                className="flex-shrink-0 rounded p-1 text-gray-400 hover:text-gray-600 transition-colors opacity-0 group-hover:opacity-100"
+                title="Edit"
+              >
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>
+              </button>
+            )}
+          </div>
+        ) : (
         <div
           onClick={handleEdit}
           className={cn(
@@ -303,6 +353,7 @@ export function EditableField({
             )}
           </div>
         </div>
+        )
       ) : (
         <div>
           {type === 'textarea' || type === 'multiselect' ? (

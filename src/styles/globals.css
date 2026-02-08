@@ -92,6 +92,41 @@ body {
   color: #d1d5db;
 }
 
+/* Timeline marker — colored circle ring around date number */
+.timeline-calendar .timeline-marker-requestedDate abbr,
+.timeline-calendar .timeline-marker-firstV1ReviewDate abbr,
+.timeline-calendar .timeline-marker-finalDeliveryDate abbr,
+.timeline-calendar .timeline-marker-completedDate abbr {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 9999px;
+  border-width: 2px;
+  border-style: solid;
+}
+
+.timeline-calendar .timeline-marker-requestedDate abbr {
+  border-color: #3b82f6;       /* blue-500 */
+  background-color: #eff6ff;   /* blue-50 */
+}
+
+.timeline-calendar .timeline-marker-firstV1ReviewDate abbr {
+  border-color: #f59e0b;       /* amber-500 */
+  background-color: #fffbeb;   /* amber-50 */
+}
+
+.timeline-calendar .timeline-marker-finalDeliveryDate abbr {
+  border-color: #22c55e;       /* green-500 */
+  background-color: #f0fdf4;   /* green-50 */
+}
+
+.timeline-calendar .timeline-marker-completedDate abbr {
+  border-color: #a855f7;       /* purple-500 */
+  background-color: #faf5ff;   /* purple-50 */
+}
+
 /* Tiptap rich text editor */
 .ProseMirror:focus {
   outline: none;

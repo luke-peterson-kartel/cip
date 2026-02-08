@@ -248,12 +248,12 @@ export function ProjectsPage() {
                 </Link>
               </div>
 
-              {/* Asset Request Summary */}
+              {/* Deliverables Summary */}
               <div className="bg-gray-50 px-6 py-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <span className="text-sm text-gray-600">
-                      {project.assetRequests?.length || 0} asset requests
+                      {project.assetRequests?.length || 0} deliverables
                     </span>
                     {project.assetRequests && project.assetRequests.filter(ar => ar.status !== 'COMPLETED' && ar.status !== 'DENY').length > 0 && (
                       <Badge variant="info">

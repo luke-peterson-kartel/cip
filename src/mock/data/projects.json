@@ -21,6 +21,11 @@
           "url": "https://pinterest.com/bubba/brand-voice"
         }
       ],
+      "clientLead": "sarah.chen@bubba.com",
+      "clientTeam": [],
+      "accountManager": "mike.johnson@kartel.com",
+      "leadProducer": "sarah.chen@kartel.com",
+      "kartelTeam": [],
       "problem": "Bubba's brand voice is inconsistent across different channels and creators, leading to diluted brand identity.",
       "solution": "Develop a custom AI model trained on approved Bubba brand content to generate and validate brand-consistent messaging.",
       "goal": "Achieve 95% brand voice consistency score across all creative outputs within 6 months.",
@@ -99,6 +104,11 @@
       "submitDate": "2024-02-01T00:00:00Z",
       "dueDate": "2024-05-15T00:00:00Z",
       "submittedBy": "Mike Johnson",
+      "clientLead": "mike.johnson@bubba.com",
+      "clientTeam": [],
+      "accountManager": "lisa.wong@kartel.com",
+      "leadProducer": "sarah.chen@kartel.com",
+      "kartelTeam": [],
       "description": "Summer campaign focusing on outdoor adventure and sustainability themes for Bubba's new eco-friendly product line.",
       "googleDriveUrl": "https://drive.google.com/drive/folders/summer-campaign-2024",
       "airtableUrl": "https://airtable.com/app123/tbl456",
@@ -262,6 +272,36 @@
           "createdAt": "2024-02-01T09:00:00Z",
           "updatedAt": "2024-03-10T14:20:00Z",
           "createdBy": "user-002"
+        }
+      ],
+      "chatMessages": [
+        {
+          "id": "pchat-001",
+          "senderEmail": "jordan.kim@bubba.com",
+          "senderName": "Jordan Kim",
+          "message": "Hey team, can we prioritize @[asset-request:asset-002:Hero Video Ads - Summer]? Client meeting is next week.",
+          "timestamp": "2024-03-20T09:00:00Z"
+        },
+        {
+          "id": "pchat-002",
+          "senderEmail": "sarah.chen@kartel.com",
+          "senderName": "Sarah Chen",
+          "message": "On it! Also, @[asset-request:asset-003:Instagram Feed - Summer Collection] needs color grading feedback before we can proceed.",
+          "timestamp": "2024-03-20T09:15:00Z"
+        },
+        {
+          "id": "pchat-003",
+          "senderEmail": "mike.johnson@kartel.com",
+          "senderName": "Mike Johnson",
+          "message": "I'll handle the @[asset-request:asset-005:Print/Web Heroes] revisions today. Should have updated comp shots by EOD.",
+          "timestamp": "2024-03-20T10:30:00Z"
+        },
+        {
+          "id": "pchat-004",
+          "senderEmail": "emma.rodriguez@bubba.com",
+          "senderName": "Emma Rodriguez",
+          "message": "Thanks Mike! Let me know when those are ready and I'll review right away.",
+          "timestamp": "2024-03-20T11:00:00Z"
         }
       ],
       "createdAt": "2024-02-01T09:00:00Z",
@@ -452,6 +492,22 @@
           "createdAt": "2024-03-01T14:00:00Z",
           "updatedAt": "2024-03-09T11:00:00Z",
           "createdBy": "user-003"
+        }
+      ],
+      "chatMessages": [
+        {
+          "id": "pchat-010",
+          "senderEmail": "lisa.wong@bubba.com",
+          "senderName": "Lisa Wong",
+          "message": "@[asset-request:asset-006:Cooler Product Showcase] is approved and ready for distribution!",
+          "timestamp": "2024-03-19T16:00:00Z"
+        },
+        {
+          "id": "pchat-011",
+          "senderEmail": "sarah.chen@kartel.com",
+          "senderName": "Sarah Chen",
+          "message": "Great news! Still working on @[asset-request:asset-007:Drinkware Product Videos] — adjusting audio levels per Jordan's notes.",
+          "timestamp": "2024-03-19T16:30:00Z"
         }
       ],
       "createdAt": "2024-03-01T14:00:00Z",
