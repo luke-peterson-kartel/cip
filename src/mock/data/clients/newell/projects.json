@@ -1,0 +1,202 @@
+{
+  "items": [
+    {
+      "id": "proj-001",
+      "name": "Bubba Brand Voice AI System",
+      "projectType": "INTERNAL_BUILD",
+      "organizationId": "org-001",
+      "submitDate": "2024-01-15T00:00:00Z",
+      "dueDate": "2024-04-30T00:00:00Z",
+      "submittedBy": "Sarah Chen",
+      "description": "Build an AI-powered brand voice system to ensure consistent Bubba brand messaging across all creative outputs.",
+      "googleDriveUrl": "https://drive.google.com/drive/folders/bubba-brand-voice",
+      "collaborationCanvasUrl": "https://canvas.example.com/bubba-brand-voice",
+      "additionalLinks": [
+        {
+          "label": "Brand Guidelines",
+          "url": "https://www.figma.com/file/bubba-brand-guidelines"
+        },
+        {
+          "label": "Voice Examples",
+          "url": "https://pinterest.com/bubba/brand-voice"
+        }
+      ],
+      "clientLead": "sarah.chen@bubba.com",
+      "clientTeam": [],
+      "accountManager": "mike.johnson@kartel.com",
+      "leadProducer": "sarah.chen@kartel.com",
+      "kartelTeam": [],
+      "problem": "Bubba's brand voice is inconsistent across different channels and creators, leading to diluted brand identity.",
+      "solution": "Develop a custom AI model trained on approved Bubba brand content to generate and validate brand-consistent messaging.",
+      "goal": "Achieve 95% brand voice consistency score across all creative outputs within 6 months.",
+      "why": "Consistent brand voice strengthens brand recognition, builds trust with consumers, and increases marketing effectiveness by 40%.",
+      "technicalWorkflowScope": "Fine-tune LLM on Bubba brand corpus, build validation API, create Figma/Slack integrations, develop approval workflow",
+      "dataRequirements": "3+ years of approved marketing copy, social media posts, product descriptions, customer communications, brand guidelines",
+      "setupPhase": {
+        "dataCapture": {
+          "status": "COMPLETED",
+          "days": 3,
+          "completedDate": "2024-01-18T00:00:00Z"
+        },
+        "parsing": {
+          "status": "COMPLETED",
+          "days": 2,
+          "completedDate": "2024-01-20T00:00:00Z"
+        },
+        "captioning": {
+          "status": "COMPLETED",
+          "days": 5,
+          "completedDate": "2024-01-27T00:00:00Z"
+        },
+        "loraTraining": {
+          "status": "IN_PROGRESS",
+          "days": 6
+        },
+        "workflowBuild": {
+          "status": "NOT_STARTED",
+          "days": 3
+        },
+        "generation": {
+          "status": "NOT_STARTED",
+          "days": 2
+        }
+      },
+      "createdAt": "2024-01-15T10:00:00Z",
+      "updatedAt": "2024-02-20T14:30:00Z"
+    },
+    {
+      "id": "proj-002",
+      "name": "Summer Campaign 2024",
+      "projectType": "CREATIVE_BRIEF",
+      "organizationId": "org-001",
+      "submitDate": "2024-02-01T00:00:00Z",
+      "dueDate": "2024-05-15T00:00:00Z",
+      "submittedBy": "Mike Johnson",
+      "clientLead": "mike.johnson@bubba.com",
+      "clientTeam": [],
+      "accountManager": "lisa.wong@kartel.com",
+      "leadProducer": "sarah.chen@kartel.com",
+      "kartelTeam": [],
+      "description": "Summer campaign focusing on outdoor adventure and sustainability themes for Bubba's new eco-friendly product line.",
+      "googleDriveUrl": "https://drive.google.com/drive/folders/summer-campaign-2024",
+      "airtableUrl": "https://airtable.com/app123/tbl456",
+      "frameioUrl": "https://app.frame.io/reviews/abc123",
+      "figmaUrl": "https://www.figma.com/file/xyz789",
+      "additionalLinks": [
+        {
+          "label": "Mood Board",
+          "url": "https://pinterest.com/bubba/summer-2024-inspo"
+        },
+        {
+          "label": "Competitive Analysis",
+          "url": "https://docs.google.com/presentation/d/summer-comp-analysis"
+        }
+      ],
+      "briefContent": "<h3>Brief Type</h3><p>Full campaign - concepting, storyboard, keyframe approval, video production, final edit</p><h3>Target Audience</h3><p>Outdoor enthusiasts aged 25-45, environmentally conscious, active lifestyle</p><h3>Key Message</h3><p>Adventure responsibly with Bubba's sustainable gear that keeps up with your lifestyle</p><h3>Deliverables</h3><ul><li>3x 30-second video ads</li><li>12x social media assets (Instagram/TikTok)</li><li>6x still images for print/web</li><li>Campaign landing page design</li></ul>",
+      "chatMessages": [
+        {
+          "id": "pchat-001",
+          "senderEmail": "jordan.kim@bubba.com",
+          "senderName": "Jordan Kim",
+          "message": "Hey team, can we prioritize @[asset-request:asset-002:Hero Video Ads - Summer]? Client meeting is next week.",
+          "timestamp": "2024-03-20T09:00:00Z"
+        },
+        {
+          "id": "pchat-002",
+          "senderEmail": "sarah.chen@kartel.com",
+          "senderName": "Sarah Chen",
+          "message": "On it! Also, @[asset-request:asset-003:Instagram Feed - Summer Collection] needs color grading feedback before we can proceed.",
+          "timestamp": "2024-03-20T09:15:00Z"
+        },
+        {
+          "id": "pchat-003",
+          "senderEmail": "mike.johnson@kartel.com",
+          "senderName": "Mike Johnson",
+          "message": "I'll handle the @[asset-request:asset-005:Print/Web Heroes] revisions today. Should have updated comp shots by EOD.",
+          "timestamp": "2024-03-20T10:30:00Z"
+        },
+        {
+          "id": "pchat-004",
+          "senderEmail": "emma.rodriguez@bubba.com",
+          "senderName": "Emma Rodriguez",
+          "message": "Thanks Mike! Let me know when those are ready and I'll review right away.",
+          "timestamp": "2024-03-20T11:00:00Z"
+        }
+      ],
+      "createdAt": "2024-02-01T09:00:00Z",
+      "updatedAt": "2024-02-15T11:20:00Z"
+    },
+    {
+      "id": "proj-003",
+      "name": "Q2 Social Media Assets",
+      "projectType": "CREATIVE_BRIEF",
+      "organizationId": "org-001",
+      "submitDate": "2024-03-01T00:00:00Z",
+      "dueDate": "2024-03-25T00:00:00Z",
+      "submittedBy": "Lisa Wong",
+      "description": "Generate social media assets for Q2 product launches across multiple platforms and formats.",
+      "googleDriveUrl": "https://drive.google.com/drive/folders/q2-social-assets",
+      "additionalLinks": [
+        {
+          "label": "Product Photos",
+          "url": "https://drive.google.com/drive/folders/product-photos-q2"
+        },
+        {
+          "label": "Social Calendar",
+          "url": "https://docs.google.com/spreadsheets/d/social-calendar-q2"
+        }
+      ],
+      "briefContent": "<h3>Brief Type</h3><p>Asset generation - multi-platform social media campaign</p><h3>Target Audience</h3><p>Outdoor enthusiasts and lifestyle consumers aged 18-35 across Instagram, TikTok, Pinterest, and YouTube</p><h3>Key Message</h3><p>Premium drinkware and coolers built for adventure — show, don't tell</p><h3>Deliverables</h3><ul><li>12x Instagram statics</li><li>8x TikTok videos (15s)</li><li>6x YouTube Shorts (30s)</li><li>10x Pinterest pins</li><li>12x Meta carousel ads</li></ul>",
+      "csvData": null,
+      "chatMessages": [
+        {
+          "id": "pchat-010",
+          "senderEmail": "lisa.wong@bubba.com",
+          "senderName": "Lisa Wong",
+          "message": "@[asset-request:asset-006:Cooler Product Showcase] is approved and ready for distribution!",
+          "timestamp": "2024-03-19T16:00:00Z"
+        },
+        {
+          "id": "pchat-011",
+          "senderEmail": "sarah.chen@kartel.com",
+          "senderName": "Sarah Chen",
+          "message": "Great news! Still working on @[asset-request:asset-007:Drinkware Product Videos] — adjusting audio levels per Jordan's notes.",
+          "timestamp": "2024-03-19T16:30:00Z"
+        }
+      ],
+      "createdAt": "2024-03-01T14:00:00Z",
+      "updatedAt": "2024-03-10T16:45:00Z"
+    },
+    {
+      "id": "proj-004",
+      "name": "Sustainable Product Line Concepts",
+      "projectType": "CREATIVE_EXPLORATION",
+      "organizationId": "org-001",
+      "submitDate": "2024-03-15T00:00:00Z",
+      "dueDate": "2024-04-05T00:00:00Z",
+      "submittedBy": "Sarah Chen",
+      "description": "Exploratory concept development for new sustainable product line with focus on packaging design and brand positioning.",
+      "googleDriveUrl": "https://drive.google.com/drive/folders/sustainable-concepts",
+      "additionalLinks": [
+        {
+          "label": "Sustainability Research",
+          "url": "https://docs.google.com/document/d/sustainability-research"
+        },
+        {
+          "label": "Material Samples",
+          "url": "https://pinterest.com/bubba/sustainable-materials"
+        }
+      ],
+      "explorationFocus": "Packaging innovation, visual identity refresh, storytelling approach for sustainability narrative",
+      "collaborationType": "Rapid iteration sprints with weekly review cycles",
+      "creativeDirector": "Emma Rodriguez",
+      "preditor": "Jordan Kim",
+      "iterationCount": 3,
+      "createdAt": "2024-03-15T10:00:00Z",
+      "updatedAt": "2024-03-20T09:30:00Z"
+    }
+  ],
+  "pagination": {
+    "nextToken": null
+  }
+}

@@ -1,0 +1,250 @@
+{
+  "items": [
+    {
+      "id": "proj-ei-001",
+      "name": "EarnIn Performance Ads Engine",
+      "projectType": "INTERNAL_BUILD",
+      "organizationId": "org-earnin",
+      "submitDate": "2024-06-10T00:00:00Z",
+      "dueDate": "2024-12-31T00:00:00Z",
+      "submittedBy": "Anna Chen",
+      "description": "Build an AI-powered performance ad generation engine for EarnIn. High-volume creative production across Meta, Google, and TikTok — supporting daily test-and-optimize cycles with rapid variant generation, copy iteration, and format adaptation.",
+      "googleDriveUrl": "https://drive.google.com/drive/folders/earnin-perf-engine",
+      "collaborationCanvasUrl": "https://canvas.example.com/earnin-perf-ads",
+      "additionalLinks": [
+        {
+          "label": "Brand Asset Library",
+          "url": "https://drive.google.com/drive/folders/earnin-brand-assets"
+        },
+        {
+          "label": "Performance Benchmarks",
+          "url": "https://docs.google.com/spreadsheets/d/earnin-perf-benchmarks"
+        }
+      ],
+      "clientLead": "anna.chen@earnin.com",
+      "clientTeam": [],
+      "accountManager": "alex.turner@kartel.com",
+      "leadProducer": "nina.patel@kartel.com",
+      "kartelTeam": [],
+      "problem": "EarnIn produces hundreds of ad variants weekly across Meta, Google, and TikTok but the manual creation process can't keep pace with the daily testing and optimization cycle.",
+      "solution": "Build an AI-powered creative engine that generates performance ad variants at scale — static images, video clips, and search copy — trained on EarnIn's brand guidelines and top-performing historical ads.",
+      "goal": "Reduce ad variant production time from 3 days to same-day delivery, enabling true daily A/B testing across all paid channels.",
+      "why": "EarnIn's paid acquisition is their primary growth channel. Faster creative iteration means faster learning, lower CAC, and higher ROAS across $50M+ annual ad spend.",
+      "technicalWorkflowScope": "Train image generation model on EarnIn brand assets, build copy generation pipeline for search/display, create multi-format export system (Meta, Google Display, TikTok), develop A/B variant automation",
+      "dataRequirements": "2+ years of ad creative with performance data (CTR, CVR, CPA), brand guidelines, app screenshots, approved copy library, product feature descriptions",
+      "setupPhase": {
+        "dataCapture": {
+          "status": "COMPLETED",
+          "days": 3,
+          "completedDate": "2024-06-13T00:00:00Z"
+        },
+        "parsing": {
+          "status": "COMPLETED",
+          "days": 2,
+          "completedDate": "2024-06-15T00:00:00Z"
+        },
+        "captioning": {
+          "status": "COMPLETED",
+          "days": 5,
+          "completedDate": "2024-06-22T00:00:00Z"
+        },
+        "loraTraining": {
+          "status": "IN_PROGRESS",
+          "days": 6
+        },
+        "workflowBuild": {
+          "status": "NOT_STARTED",
+          "days": 3
+        },
+        "generation": {
+          "status": "NOT_STARTED",
+          "days": 2
+        }
+      },
+      "chatMessages": [
+        {
+          "id": "pchat-ei-001",
+          "senderEmail": "anna.chen@earnin.com",
+          "senderName": "Anna Chen",
+          "message": "Brand guidelines and app screenshot pack uploaded. Key thing — our yellow (#FFD700) is sacred. Every ad needs to lead with it.",
+          "timestamp": "2024-06-12T09:00:00Z"
+        },
+        {
+          "id": "pchat-ei-002",
+          "senderEmail": "nina.patel@kartel.com",
+          "senderName": "Nina Patel",
+          "message": "Got it — yellow-first approach across everything. Starting with @[asset-request:ar-ei-001:Meta Performance Ad Variants] since those feed your daily testing cycle. First batch of 15 variants by end of next week.",
+          "timestamp": "2024-06-12T09:30:00Z"
+        },
+        {
+          "id": "pchat-ei-003",
+          "senderEmail": "anna.chen@earnin.com",
+          "senderName": "Anna Chen",
+          "message": "Love the V3 Meta batch — the Cash Out urgency angle is strong. Let's also fast-track @[asset-request:ar-ei-005:Google Search Ad Copy Variants] since we need to feed the Google algorithm constantly.",
+          "timestamp": "2024-07-05T14:00:00Z"
+        },
+        {
+          "id": "pchat-ei-004",
+          "senderEmail": "nina.patel@kartel.com",
+          "senderName": "Nina Patel",
+          "message": "Search copy is already in QC — should have 40 headline/description combos ready for review tomorrow. Also, @[asset-request:ar-ei-002:Google Display Ad Set] needs your feedback on the 300x250 CTA contrast.",
+          "timestamp": "2024-07-05T15:15:00Z"
+        },
+        {
+          "id": "pchat-ei-005",
+          "senderEmail": "marcus.bell@earnin.com",
+          "senderName": "Marcus Bell",
+          "message": "Can we get @[asset-request:ar-ei-003:TikTok Performance Creatives] moving? Our TikTok spend is ramping up and we need native-feeling content, not repurposed Meta ads.",
+          "timestamp": "2024-07-08T10:00:00Z"
+        },
+        {
+          "id": "pchat-ei-006",
+          "senderEmail": "nina.patel@kartel.com",
+          "senderName": "Nina Patel",
+          "message": "Absolutely — building TikTok-first this time. Text overlays, fast cuts, screen recordings of the Cash Out flow. Nothing that feels like a traditional ad.",
+          "timestamp": "2024-07-08T11:00:00Z"
+        }
+      ],
+      "createdAt": "2024-06-10T10:00:00Z",
+      "updatedAt": "2024-08-15T14:30:00Z"
+    },
+    {
+      "id": "proj-ei-002",
+      "name": "Q1 Brand Awareness Campaign",
+      "projectType": "CREATIVE_BRIEF",
+      "organizationId": "org-earnin",
+      "submitDate": "2024-07-01T00:00:00Z",
+      "dueDate": "2024-10-15T00:00:00Z",
+      "submittedBy": "Marcus Bell",
+      "clientLead": "marcus.bell@earnin.com",
+      "clientTeam": [],
+      "accountManager": "alex.turner@kartel.com",
+      "leadProducer": "nina.patel@kartel.com",
+      "kartelTeam": [],
+      "description": "Full-funnel brand awareness campaign introducing EarnIn to new audiences. Includes brand TV spots for streaming and broadcast, Performance Growth TV with QR codes for CTV platforms (Roku, Hulu, YouTube TV), hero social content, and a 60-second YouTube brand anthem.",
+      "googleDriveUrl": "https://drive.google.com/drive/folders/earnin-brand-campaign",
+      "airtableUrl": "https://airtable.com/app-earnin-brand",
+      "frameioUrl": "https://app.frame.io/reviews/earnin-brand-tv",
+      "figmaUrl": "https://www.figma.com/file/earnin-brand-campaign",
+      "additionalLinks": [
+        {
+          "label": "Campaign Strategy Deck",
+          "url": "https://docs.google.com/presentation/d/earnin-brand-strategy"
+        },
+        {
+          "label": "Audience Research",
+          "url": "https://docs.google.com/document/d/earnin-audience-research"
+        }
+      ],
+      "briefContent": "<h3>Brief Type</h3><p>Full campaign — concepting, storyboard, keyframe approval, video production, final edit across TV and digital</p><h3>Target Audience</h3><p>Hourly workers aged 22-40 living paycheck to paycheck, gig economy workers, young professionals with variable income</p><h3>Key Message</h3><p>You worked today. Get paid today. — Financial flexibility when you need it most</p><h3>Deliverables</h3><ul><li>1x 30-second brand TV spot (broadcast + streaming)</li><li>1x 15-second Performance Growth TV spot (CTV/Roku/Hulu with QR code)</li><li>4x Instagram/TikTok hero brand videos</li><li>1x 60-second YouTube brand anthem</li><li>4x connected TV companion banners</li></ul>",
+      "chatMessages": [
+        {
+          "id": "pchat-ei-007",
+          "senderEmail": "marcus.bell@earnin.com",
+          "senderName": "Marcus Bell",
+          "message": "Strategy deck uploaded for the brand campaign. Big picture: we want people who've never heard of EarnIn to understand what we do in 15 seconds. The emotional hook is everything.",
+          "timestamp": "2024-07-05T10:00:00Z"
+        },
+        {
+          "id": "pchat-ei-008",
+          "senderEmail": "nina.patel@kartel.com",
+          "senderName": "Nina Patel",
+          "message": "Storyboards going up in Frame.io this week. For @[asset-request:ar-ei-006:Brand TV Spot - 30s] we're exploring three concepts: 'The Night Shift Nurse', 'The Rideshare Dad', and 'The College Student'.",
+          "timestamp": "2024-07-05T11:30:00Z"
+        },
+        {
+          "id": "pchat-ei-009",
+          "senderEmail": "marcus.bell@earnin.com",
+          "senderName": "Marcus Bell",
+          "message": "'Night Shift Nurse' is our favorite concept by far. That 2am phone check moment — everyone can feel that. Let's develop that one. Also need @[asset-request:ar-ei-007:Performance Growth TV - 15s] QR code to be prominent from the start.",
+          "timestamp": "2024-07-20T09:00:00Z"
+        },
+        {
+          "id": "pchat-ei-010",
+          "senderEmail": "james.wright@kartel.com",
+          "senderName": "James Wright",
+          "message": "Working on the QR placement now. For @[asset-request:ar-ei-009:YouTube Brand Anthem - 60s] — the V2 cut is incredible. The music shift at the 0:35 mark when she opens the app gives me chills every time.",
+          "timestamp": "2024-08-15T10:45:00Z"
+        },
+        {
+          "id": "pchat-ei-011",
+          "senderEmail": "anna.chen@earnin.com",
+          "senderName": "Anna Chen",
+          "message": "YouTube anthem is approved — ship it! The @[asset-request:ar-ei-010:Connected TV Companion Banners] need work though. QR code is too small and the app store badges are getting lost.",
+          "timestamp": "2024-08-28T14:00:00Z"
+        },
+        {
+          "id": "pchat-ei-012",
+          "senderEmail": "nina.patel@kartel.com",
+          "senderName": "Nina Patel",
+          "message": "Noted — redesigning the CTV companions with larger QR codes and a cleaner layout. Will prioritize the Roku format since that's your biggest CTV spend.",
+          "timestamp": "2024-08-28T15:30:00Z"
+        }
+      ],
+      "createdAt": "2024-07-01T09:00:00Z",
+      "updatedAt": "2024-09-10T11:20:00Z"
+    },
+    {
+      "id": "proj-ei-003",
+      "name": "Creator & Influencer Content Pipeline",
+      "projectType": "CREATIVE_BRIEF",
+      "organizationId": "org-earnin",
+      "submitDate": "2024-08-01T00:00:00Z",
+      "dueDate": "2024-11-15T00:00:00Z",
+      "submittedBy": "Priya Sharma",
+      "description": "Influencer UGC production, creator partnership co-branded content, and organic social assets across Reddit, Pinterest, YouTube, and TikTok. Focused on authentic testimonial-style content and platform-native organic posts that feel earned, not bought.",
+      "googleDriveUrl": "https://drive.google.com/drive/folders/earnin-creator-pipeline",
+      "additionalLinks": [
+        {
+          "label": "Creator Brief Templates",
+          "url": "https://drive.google.com/drive/folders/earnin-creator-briefs"
+        },
+        {
+          "label": "Influencer Roster",
+          "url": "https://docs.google.com/spreadsheets/d/earnin-influencer-roster"
+        }
+      ],
+      "clientLead": "priya.sharma@earnin.com",
+      "clientTeam": [],
+      "accountManager": "alex.turner@kartel.com",
+      "leadProducer": "james.wright@kartel.com",
+      "kartelTeam": [],
+      "briefContent": "<h3>Brief Type</h3><p>Influencer UGC + organic social — multi-platform creator content pipeline</p><h3>Target Audience</h3><p>Gen Z and millennials on TikTok, Reddit, Pinterest, and YouTube — people who distrust traditional ads and respond to authentic creator voices</p><h3>Key Message</h3><p>Real people, real financial wins — EarnIn gives you control over your money</p><h3>Deliverables</h3><ul><li>6x TikTok influencer UGC videos (15-30s)</li><li>4x Instagram Reels co-branded with partner brands</li><li>8x Reddit organic posts (static + short video)</li><li>5x Pinterest promoted pins</li><li>4x YouTube Shorts creator collabs (30s)</li></ul>",
+      "chatMessages": [
+        {
+          "id": "pchat-ei-013",
+          "senderEmail": "priya.sharma@earnin.com",
+          "senderName": "Priya Sharma",
+          "message": "Creator briefs and influencer roster uploaded. Key principle — every piece of content should feel like the creator genuinely uses EarnIn. No scripted testimonials.",
+          "timestamp": "2024-08-05T10:00:00Z"
+        },
+        {
+          "id": "pchat-ei-014",
+          "senderEmail": "james.wright@kartel.com",
+          "senderName": "James Wright",
+          "message": "Totally aligned. Starting with @[asset-request:ar-ei-011:Influencer UGC - TikTok] — the first creator @savvysaver already filmed her piece and it's gold. Also kicking off @[asset-request:ar-ei-013:Reddit Organic Posts] since Reddit users can smell inauthenticity from a mile away.",
+          "timestamp": "2024-08-05T11:00:00Z"
+        },
+        {
+          "id": "pchat-ei-015",
+          "senderEmail": "priya.sharma@earnin.com",
+          "senderName": "Priya Sharma",
+          "message": "@[asset-request:ar-ei-013:Reddit Organic Posts] are perfect — approved for posting. The educational angle works so well. Heads up though, we're pausing @[asset-request:ar-ei-014:Pinterest Promoted Pins] — our Pinterest audience doesn't align well with EarnIn's core demographic.",
+          "timestamp": "2024-09-16T15:00:00Z"
+        },
+        {
+          "id": "pchat-ei-016",
+          "senderEmail": "james.wright@kartel.com",
+          "senderName": "James Wright",
+          "message": "Makes sense on Pinterest. Redirecting that effort to @[asset-request:ar-ei-015:YouTube Shorts - Creator Collabs] — the '3 things I wish I knew about my paycheck' format is testing really well in focus groups.",
+          "timestamp": "2024-09-16T16:30:00Z"
+        }
+      ],
+      "createdAt": "2024-08-01T14:00:00Z",
+      "updatedAt": "2024-10-05T16:45:00Z"
+    }
+  ],
+  "pagination": {
+    "nextToken": null
+  }
+}

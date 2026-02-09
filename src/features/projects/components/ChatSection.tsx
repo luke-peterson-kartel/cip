@@ -89,9 +89,9 @@ export function ChatSection({
   }
 
   return (
-    <div className="flex flex-col border border-gray-200 rounded-lg overflow-hidden bg-white">
+    <div className="flex flex-col flex-1 border border-gray-200 rounded-lg overflow-hidden bg-white min-h-0">
       {/* Messages area */}
-      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-3 space-y-3 max-h-[300px] min-h-[120px] bg-gray-50">
+      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-3 space-y-3 min-h-[120px] bg-gray-50">
         {messages.length === 0 ? (
           <div className="flex items-center justify-center h-full py-6">
             <p className="text-xs text-gray-400">No messages yet. Start the conversation.</p>

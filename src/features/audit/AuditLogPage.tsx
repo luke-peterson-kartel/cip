@@ -2,8 +2,7 @@ import { useState } from 'react'
 import { PageHeader } from '@/components/shared'
 import { Card, Badge } from '@/components/ui'
 import type { AuditEvent } from '@/types'
-import auditData from '@/mock/data/audit-events.json'
-import usersData from '@/mock/data/users.json'
+import { useMockData } from '@/mock/useMockData'
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -28,14 +27,15 @@ function getActionBadgeVariant(action: string): 'default' | 'success' | 'warning
   }
 }
 
-function getUserName(userId: string): string {
-  const user = usersData.items.find((u) => u.id === userId)
-  return user?.name || 'Unknown User'
-}
-
 export function AuditLogPage() {
+  const { auditEvents: auditData, users: usersData } = useMockData()
   const [expandedEvent, setExpandedEvent] = useState<string | null>(null)
   const [filter, setFilter] = useState<{ action?: string; resourceType?: string }>({})
+
+  function getUserName(userId: string): string {
+    const user = usersData.items.find((u: { id: string; name: string }) => u.id === userId)
+    return user?.name || 'Unknown User'
+  }
 
   const events = (auditData.items as AuditEvent[]).filter((event) => {
     if (filter.action && event.action !== filter.action) return false

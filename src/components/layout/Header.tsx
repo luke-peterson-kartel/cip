@@ -15,7 +15,6 @@ function getBreadcrumbs(pathname: string): { name: string; href: string }[] {
     if (part === 'settings') name = 'Settings'
     if (part === 'organization') name = 'Organization'
     if (part === 'users') name = 'Users'
-    if (part === 'workspaces') name = 'Workspaces'
     if (part === 'uploads') name = 'Uploads'
     if (part === 'request-agent') name = 'Request Agent'
     if (part === 'conversations') name = 'Conversations'

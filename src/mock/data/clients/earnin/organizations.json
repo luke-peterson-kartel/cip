@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "id": "org-earnin",
+      "name": "EarnIn",
+      "brand": "EarnIn",
+      "slug": "earnin",
+      "hubspotId": "hs-earnin-001",
+      "createdAt": "2024-06-01T10:00:00Z",
+      "updatedAt": "2024-06-01T10:00:00Z"
+    }
+  ],
+  "pagination": {
+    "nextToken": null
+  }
+}

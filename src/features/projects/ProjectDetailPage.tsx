@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { Spinner, Card, CardContent, Badge } from '@/components/ui'
 import { getProject, getProjectUploads, updateProject } from '@/api/endpoints/projects'
 import { deleteUpload, updateUpload } from '@/api/endpoints/uploads'
-import { createAssetRequest, updateAssetRequest } from '@/api/endpoints/asset-requests'
+import { getAssetRequests, createAssetRequest, updateAssetRequest } from '@/api/endpoints/asset-requests'
 import { UploadsPanel } from './components/UploadsPanel'
 import { AssetRequestsTable } from './components/AssetRequestsTable'
 import { DeliverablesTab } from './components/DeliverablesTab'
@@ -11,7 +11,7 @@ import { ProjectChatTab } from './components/ProjectChatTab'
 import { AssetRequestDetailModal } from './components/AssetRequestDetailModal'
 import { EditableField } from '@/components/forms/EditableField'
 import { EditableRichText } from '@/components/forms/EditableRichText'
-import type { Project, Upload } from '@/types'
+import type { Project, Upload, AssetRequest } from '@/types'
 import { cn } from '@/lib/cn'
 
 function formatFileSize(bytes: number): string {
@@ -307,6 +307,7 @@ export function ProjectDetailPage() {
   const { projectId } = useParams<{ projectId: string }>()
   const [project, setProject] = useState<Project | null>(null)
   const [uploads, setUploads] = useState<Upload[]>([])
+  const [assetRequests, setAssetRequests] = useState<AssetRequest[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isLoadingUploads, setIsLoadingUploads] = useState(true)
   const [rightTab, setRightTab] = useState<'chat' | 'uploads' | 'deliverables'>('chat')
@@ -340,6 +341,19 @@ export function ProjectDetailPage() {
       }
     }
     loadUploads()
+  }, [projectId])
+
+  useEffect(() => {
+    async function loadAssetRequests() {
+      if (!projectId) return
+      try {
+        const response = await getAssetRequests(projectId)
+        setAssetRequests(response.items)
+      } catch (error) {
+        console.error('Failed to load asset requests:', error)
+      }
+    }
+    loadAssetRequests()
   }, [projectId])
 
   const handleUpload = async (files: File[]) => {
@@ -377,14 +391,9 @@ export function ProjectDetailPage() {
     if (!project) return
     try {
       const newRequest = await createAssetRequest(project.id, {})
-      setProject(prev => {
-        if (!prev) return prev
-        // Filter out if mock already pushed (same array ref), then always append
-        const existing = (prev.assetRequests || []).filter(r => r.id !== newRequest.id)
-        return {
-          ...prev,
-          assetRequests: [...existing, newRequest],
-        }
+      setAssetRequests(prev => {
+        const existing = prev.filter(r => r.id !== newRequest.id)
+        return [...existing, newRequest]
       })
       return newRequest
     } catch (error) {
@@ -393,18 +402,9 @@ export function ProjectDetailPage() {
   }
 
   const handleAssetRequestUpdate = async (id: string, field: string, value: any) => {
-    if (!project?.assetRequests) return
     try {
       const updated = await updateAssetRequest(id, { [field]: value })
-      setProject(prev => {
-        if (!prev?.assetRequests) return prev
-        return {
-          ...prev,
-          assetRequests: prev.assetRequests.map(req =>
-            req.id === id ? updated : req
-          ),
-        }
-      })
+      setAssetRequests(prev => prev.map(req => req.id === id ? updated : req))
     } catch (error) {
       console.error('Failed to update asset request:', error)
       throw error
@@ -434,7 +434,7 @@ export function ProjectDetailPage() {
     return <div className="py-12 text-center text-gray-500">Project not found</div>
   }
 
-  const hasAssetRequests = project.assetRequests && project.assetRequests.length > 0
+  const hasAssetRequests = assetRequests.length > 0
 
   const rightTabs: Array<{ key: 'chat' | 'uploads' | 'deliverables'; label: string }> = [
     { key: 'chat', label: 'Chat' },
@@ -445,9 +445,10 @@ export function ProjectDetailPage() {
   ]
 
   return (
-    <div className="space-y-6">
-      {/* Editable Page Header */}
-      <div className="mb-6">
+    <>
+    <div className="lg:grid lg:grid-cols-12 gap-6">
+      {/* Left Column — header + table + project details */}
+      <div className="lg:col-span-7 space-y-6">
         <EditableField
           label=""
           value={project.name}
@@ -456,29 +457,21 @@ export function ProjectDetailPage() {
           required
           className="[&_span]:text-2xl [&_span]:font-semibold [&_span]:text-gray-900 [&_input]:text-2xl [&_input]:font-semibold"
         />
-      </div>
-
-      {/* Deliverables Table - Full Width */}
-      <AssetRequestsTable
-        projectId={project.id}
-        projectName={project.name}
-        assetRequests={project.assetRequests || []}
-        onUpdate={handleAssetRequestUpdate}
-        onCreate={handleCreateAssetRequest}
-      />
-
-      {/* 2-Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column - Project Overview */}
-        <div className="lg:col-span-7 space-y-6">
+        <AssetRequestsTable
+            projectId={project.id}
+            projectName={project.name}
+            assetRequests={assetRequests}
+            onUpdate={handleAssetRequestUpdate}
+            onCreate={handleCreateAssetRequest}
+          />
           <ProjectOverview project={project} onUpdate={handleProjectUpdate} />
         </div>
 
-        {/* Right Column - Tabbed Panel */}
+        {/* Right Column — sticky chat/uploads panel */}
         <div className="lg:col-span-5">
-          <div className="sticky top-4">
-            <Card>
-              <CardContent className="p-0">
+          <div className="sticky top-0 h-[calc(100vh-5.5rem)] flex flex-col">
+            <Card className="flex flex-col flex-1 min-h-0">
+              <CardContent className="p-0 flex flex-col flex-1 min-h-0">
                 {/* Tab Bar */}
                 <div className="border-b border-gray-200 px-6">
                   <nav className="-mb-px flex space-x-6">
@@ -500,7 +493,7 @@ export function ProjectDetailPage() {
                 </div>
 
                 {/* Tab Content */}
-                <div className="p-6">
+                <div className="p-6 flex-1 flex flex-col min-h-0">
                   {rightTab === 'uploads' && (
                     isLoadingUploads ? (
                       <div className="flex items-center justify-center py-12">
@@ -522,7 +515,7 @@ export function ProjectDetailPage() {
                     <DeliverablesTab
                       projectId={projectId!}
                       projectName={project.name}
-                      assetRequests={project.assetRequests || []}
+                      assetRequests={assetRequests}
                       uploads={uploads}
                       loadingUploads={isLoadingUploads}
                       onAssetRequestUpdate={handleAssetRequestUpdate}
@@ -533,6 +526,7 @@ export function ProjectDetailPage() {
                     <ProjectChatTab
                       projectId={projectId!}
                       project={project}
+                      assetRequests={assetRequests}
                       onOpenAssetRequest={(id) => setChatMentionAssetId(id)}
                     />
                   )}
@@ -544,17 +538,17 @@ export function ProjectDetailPage() {
       </div>
 
       {/* Asset Request Modal from chat mention click */}
-      {chatMentionAssetId && project.assetRequests && (
+      {chatMentionAssetId && (
         <AssetRequestDetailModal
           isOpen={!!chatMentionAssetId}
           onClose={() => setChatMentionAssetId(null)}
-          assetRequest={project.assetRequests.find(ar => ar.id === chatMentionAssetId)!}
+          assetRequest={assetRequests.find(ar => ar.id === chatMentionAssetId)!}
           onUpdate={async (field, value) => {
             await handleAssetRequestUpdate(chatMentionAssetId, field, value)
           }}
           projectName={project.name}
         />
       )}
-    </div>
+    </>
   )
 }

@@ -13,21 +13,21 @@ export interface AssetRequestsTableProps {
   onDelete?: (id: string) => Promise<void>
 }
 
-const statusOptions: AssetRequestStatus[] = ['PENDING', 'APPROVE', 'DENY', 'IMPROVE', 'ITERATE', 'COMPLETED']
+const statusOptions: AssetRequestStatus[] = ['PENDING', 'APPROVED', 'DENIED', 'NEEDS_IMPROVEMENT', 'NEEDS_ITERATION', 'COMPLETED']
 const priorityOptions: AssetPriority[] = ['HIGH', 'MEDIUM', 'LOW']
 
 function getStatusConfig(status: AssetRequestStatus): { label: string; variant: 'default' | 'info' | 'success' | 'warning' | 'error' } {
   switch (status) {
     case 'PENDING':
       return { label: 'Pending', variant: 'default' }
-    case 'APPROVE':
-      return { label: 'Approve', variant: 'success' }
-    case 'DENY':
-      return { label: 'Deny', variant: 'error' }
-    case 'IMPROVE':
-      return { label: 'Improve', variant: 'warning' }
-    case 'ITERATE':
-      return { label: 'Iterate', variant: 'info' }
+    case 'APPROVED':
+      return { label: 'Approved', variant: 'success' }
+    case 'DENIED':
+      return { label: 'Denied', variant: 'error' }
+    case 'NEEDS_IMPROVEMENT':
+      return { label: 'Needs Improvement', variant: 'warning' }
+    case 'NEEDS_ITERATION':
+      return { label: 'Needs Iteration', variant: 'info' }
     case 'COMPLETED':
       return { label: 'Completed', variant: 'success' }
     default:
@@ -48,8 +48,8 @@ function getPriorityConfig(priority: AssetPriority): { label: string; variant: '
   }
 }
 
-function getWorkflowStageLabel(stage: string): string {
-  switch (stage) {
+function getProductionStepLabel(step: string): string {
+  switch (step) {
     case 'QC_LIBRARY':
       return 'QC from Library'
     case 'GEN_REFINE':
@@ -61,14 +61,14 @@ function getWorkflowStageLabel(stage: string): string {
     case 'QC_DISTRO':
       return 'QC/Distro Notes'
     default:
-      return stage
+      return step
   }
 }
 
-function getWorkflowStageProgress(stage: string): number {
-  const stages = ['QC_LIBRARY', 'GEN_REFINE', 'QC_EDIT', 'CLIENT_REVIEW', 'QC_DISTRO']
-  const index = stages.indexOf(stage)
-  return index >= 0 ? ((index + 1) / stages.length) * 100 : 0
+function getProductionStepProgress(step: string): number {
+  const steps = ['QC_LIBRARY', 'GEN_REFINE', 'QC_EDIT', 'CLIENT_REVIEW', 'QC_DISTRO']
+  const index = steps.indexOf(step)
+  return index >= 0 ? ((index + 1) / steps.length) * 100 : 0
 }
 
 function formatDate(dateString?: string): string {

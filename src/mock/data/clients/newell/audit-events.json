@@ -6,8 +6,8 @@
       "userId": "user-001",
       "organizationId": "org-001",
       "action": "UPDATE",
-      "resourceType": "workspace",
-      "resourceId": "ws-002",
+      "resourceType": "project",
+      "resourceId": "proj-002",
       "details": {
         "field": "requestAgentPrompt",
         "previousValue": "...",
@@ -23,7 +23,7 @@
       "resourceType": "conversation",
       "resourceId": "conv-002",
       "details": {
-        "workspaceId": "ws-002"
+        "projectId": "proj-002"
       }
     },
     {
@@ -58,8 +58,8 @@
       "userId": "user-001",
       "organizationId": "org-001",
       "action": "CREATE",
-      "resourceType": "workspace",
-      "resourceId": "ws-003",
+      "resourceType": "project",
+      "resourceId": "proj-003",
       "details": {
         "name": "Brand Guidelines Refresh"
       }

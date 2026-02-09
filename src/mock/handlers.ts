@@ -1,15 +1,9 @@
-import organizationsData from './data/organizations.json'
-import usersData from './data/users.json'
-import workspacesData from './data/workspaces.json'
-import projectsData from './data/projects.json'
-import uploadsData from './data/uploads.json'
-import conversationsData from './data/conversations.json'
-import auditEventsData from './data/audit-events.json'
+import { getClientData } from './data'
+import { useMockClientStore } from '@/store/mockClientStore'
 
 import type {
   Organization,
   User,
-  Workspace,
   Project,
   Upload,
   Conversation,
@@ -50,6 +44,16 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
   const method = options.method || 'GET'
   const path = endpoint.split('?')[0]
 
+  const clientId = useMockClientStore.getState().clientId
+  const data = getClientData(clientId)
+  const organizationsData = data.organizations
+  const usersData = data.users
+  const projectsData = data.projects
+  const uploadsData = data.uploads
+  const conversationsData = data.conversations
+  const assetRequestsData = data.assetRequests
+  const auditEventsData = data.auditEvents
+
   // GET /users/me
   if (method === 'GET' && path === '/users/me') {
     return (usersData as { currentUser: User }).currentUser as T
@@ -73,89 +77,6 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
   params = matchPath('/organizations/:organizationId/users', path)
   if (method === 'GET' && params) {
     return usersData as T
-  }
-
-  // GET /organizations/:id/workspaces
-  params = matchPath('/organizations/:organizationId/workspaces', path)
-  if (method === 'GET' && params) {
-    return workspacesData as T
-  }
-
-  // POST /organizations/:id/workspaces
-  if (method === 'POST' && params) {
-    const body = JSON.parse(options.body as string)
-    const newWorkspace: Workspace = {
-      id: `ws-${Date.now()}`,
-      organizationId: params.organizationId,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      ...body,
-    }
-    return newWorkspace as T
-  }
-
-  // GET /workspaces/:id
-  params = matchPath('/workspaces/:workspaceId', path)
-  if (method === 'GET' && params) {
-    const workspace = (workspacesData as PaginatedResponse<Workspace>).items.find(
-      w => w.id === params!.workspaceId
-    )
-    return workspace as T
-  }
-
-  // PATCH /workspaces/:id
-  if (method === 'PATCH' && params) {
-    const workspace = (workspacesData as PaginatedResponse<Workspace>).items.find(
-      w => w.id === params!.workspaceId
-    )
-    if (workspace && options.body) {
-      const updates = JSON.parse(options.body as string)
-      return { ...workspace, ...updates, updatedAt: new Date().toISOString() } as T
-    }
-  }
-
-  // GET /workspaces/:id/uploads
-  params = matchPath('/workspaces/:workspaceId/uploads', path)
-  if (method === 'GET' && params) {
-    const uploads = (uploadsData as PaginatedResponse<Upload>).items.filter(
-      u => u.workspaceId === params!.workspaceId
-    )
-    return { items: uploads, pagination: { nextToken: null } } as T
-  }
-
-  // GET /workspaces/:id/request-agent/conversations
-  params = matchPath('/workspaces/:workspaceId/request-agent/conversations', path)
-  if (method === 'GET' && params) {
-    const conversations = (conversationsData as PaginatedResponse<Conversation>).items.filter(
-      c => c.workspaceId === params!.workspaceId
-    )
-    return { items: conversations, pagination: { nextToken: null } } as T
-  }
-
-  // POST /workspaces/:id/request-agent/conversations
-  if (method === 'POST' && params) {
-    const newConversation: Conversation = {
-      id: `conv-${Date.now()}`,
-      workspaceId: params.workspaceId,
-      status: 'ACTIVE',
-      messages: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }
-    return newConversation as T
-  }
-
-  // GET /workspaces/:id/audit-events
-  params = matchPath('/workspaces/:workspaceId/audit-events', path)
-  if (method === 'GET' && params) {
-    const workspaceUploads = (uploadsData as PaginatedResponse<Upload>).items
-      .filter(u => u.workspaceId === params!.workspaceId)
-      .map(u => u.id)
-    const events = (auditEventsData as PaginatedResponse<AuditEvent>).items.filter(
-      e => e.resourceId === params!.workspaceId ||
-           workspaceUploads.includes(e.resourceId)
-    )
-    return { items: events, pagination: { nextToken: null } } as T
   }
 
   // ============ PROJECT ENDPOINTS ============
@@ -190,12 +111,13 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
 
   // PATCH /projects/:id
   if (method === 'PATCH' && params) {
-    const project = (projectsData as PaginatedResponse<Project>).items.find(
-      p => p.id === params!.projectId
-    )
-    if (project && options.body) {
+    const items = (projectsData as PaginatedResponse<Project>).items
+    const idx = items.findIndex(p => p.id === params!.projectId)
+    if (idx >= 0 && options.body) {
       const updates = JSON.parse(options.body as string)
-      return { ...project, ...updates, updatedAt: new Date().toISOString() } as T
+      const updated = { ...items[idx], ...updates, updatedAt: new Date().toISOString() }
+      items[idx] = updated
+      return updated as T
     }
   }
 
@@ -203,7 +125,7 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
   params = matchPath('/projects/:projectId/uploads', path)
   if (method === 'GET' && params) {
     const uploads = (uploadsData as PaginatedResponse<Upload>).items.filter(
-      u => u.workspaceId === params!.projectId || u.projectId === params!.projectId
+      u => u.projectId === params!.projectId
     )
     return { items: uploads, pagination: { nextToken: null } } as T
   }
@@ -233,7 +155,7 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
   params = matchPath('/projects/:projectId/request-agent/conversations', path)
   if (method === 'GET' && params) {
     const conversations = (conversationsData as PaginatedResponse<Conversation>).items.filter(
-      c => c.workspaceId === params!.projectId
+      c => c.projectId === params!.projectId
     )
     return { items: conversations, pagination: { nextToken: null } } as T
   }
@@ -242,7 +164,7 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
   if (method === 'POST' && params) {
     const newConversation: Conversation = {
       id: `conv-${Date.now()}`,
-      workspaceId: params.projectId,
+      projectId: params.projectId,
       status: 'ACTIVE',
       messages: [],
       createdAt: new Date().toISOString(),
@@ -291,11 +213,10 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
   // GET /projects/:id/asset-requests
   params = matchPath('/projects/:projectId/asset-requests', path)
   if (method === 'GET' && params) {
-    const project = (projectsData as PaginatedResponse<Project>).items.find(
-      p => p.id === params!.projectId
+    const items = (assetRequestsData as PaginatedResponse<AssetRequest>).items.filter(
+      ar => ar.projectId === params!.projectId
     )
-    const assetRequests = project?.assetRequests || []
-    return { items: assetRequests, pagination: { nextToken: null } } as T
+    return { items, pagination: { nextToken: null } } as T
   }
 
   // POST /projects/:id/asset-requests
@@ -309,7 +230,7 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
       description: '',
       targetCount: 0,
       status: 'PENDING',
-      workflowStage: 'QC_LIBRARY',
+      productionStep: 'QC_LIBRARY',
       priority: 'MEDIUM',
       version: 1,
       requestedDate: new Date().toISOString(),
@@ -318,47 +239,37 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
       createdBy: 'current-user',
       ...body,
     }
-    // Persist to mock data so PATCH/GET can find it later
-    const project = (projectsData as PaginatedResponse<Project>).items.find(
-      p => p.id === params!.projectId
-    )
-    if (project) {
-      if (!project.assetRequests) project.assetRequests = []
-      project.assetRequests.push(newAssetRequest)
-    }
+    ;(assetRequestsData as PaginatedResponse<AssetRequest>).items.push(newAssetRequest)
     return newAssetRequest as T
   }
 
   // GET /asset-requests/:id
   params = matchPath('/asset-requests/:assetRequestId', path)
   if (method === 'GET' && params) {
-    for (const project of (projectsData as PaginatedResponse<Project>).items) {
-      const found = project.assetRequests?.find(
-        ar => ar.id === params!.assetRequestId
-      )
-      if (found) return found as T
-    }
-    return undefined as T
+    const found = (assetRequestsData as PaginatedResponse<AssetRequest>).items.find(
+      ar => ar.id === params!.assetRequestId
+    )
+    return found as T
   }
 
   // PATCH /asset-requests/:id
   if (method === 'PATCH' && params) {
-    for (const project of (projectsData as PaginatedResponse<Project>).items) {
-      const idx = project.assetRequests?.findIndex(
-        ar => ar.id === params!.assetRequestId
-      ) ?? -1
-      if (idx >= 0 && options.body) {
-        const updates = JSON.parse(options.body as string)
-        const updated = { ...project.assetRequests![idx], ...updates, updatedAt: new Date().toISOString() }
-        project.assetRequests![idx] = updated
-        return updated as T
-      }
+    const items = (assetRequestsData as PaginatedResponse<AssetRequest>).items
+    const idx = items.findIndex(ar => ar.id === params!.assetRequestId)
+    if (idx >= 0 && options.body) {
+      const updates = JSON.parse(options.body as string)
+      const updated = { ...items[idx], ...updates, updatedAt: new Date().toISOString() }
+      items[idx] = updated
+      return updated as T
     }
     return undefined as T
   }
 
   // DELETE /asset-requests/:id
   if (method === 'DELETE' && params) {
+    const items = (assetRequestsData as PaginatedResponse<AssetRequest>).items
+    const idx = items.findIndex(ar => ar.id === params!.assetRequestId)
+    if (idx >= 0) items.splice(idx, 1)
     return {} as T
   }
 

@@ -3,10 +3,8 @@ import { Link } from 'react-router-dom'
 import { PageHeader } from '@/components/shared'
 import { Card, CardContent, Badge, Spinner } from '@/components/ui'
 import { useAuthStore } from '@/store/authStore'
-import { getWorkspaces } from '@/api/endpoints/workspaces'
-import type { Workspace, AssetRequest, AssetRequestStatus, AuditEvent, Project } from '@/types'
-import projectsData from '@/mock/data/projects.json'
-import auditData from '@/mock/data/audit-events.json'
+import type { AssetRequest, AssetRequestStatus, AuditEvent, Project } from '@/types'
+import { useMockData } from '@/mock/useMockData'
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -21,14 +19,14 @@ function getAssetRequestStatusConfig(status: AssetRequestStatus): { label: strin
   switch (status) {
     case 'PENDING':
       return { label: 'Pending', variant: 'warning' }
-    case 'APPROVE':
+    case 'APPROVED':
       return { label: 'Approved', variant: 'success' }
-    case 'DENY':
+    case 'DENIED':
       return { label: 'Denied', variant: 'error' }
-    case 'IMPROVE':
-      return { label: 'Improve', variant: 'info' }
-    case 'ITERATE':
-      return { label: 'Iterate', variant: 'info' }
+    case 'NEEDS_IMPROVEMENT':
+      return { label: 'Needs Improvement', variant: 'info' }
+    case 'NEEDS_ITERATION':
+      return { label: 'Needs Iteration', variant: 'info' }
     case 'COMPLETED':
       return { label: 'Completed', variant: 'success' }
     default:
@@ -38,38 +36,26 @@ function getAssetRequestStatusConfig(status: AssetRequestStatus): { label: strin
 
 export function DashboardPage() {
   const { organization } = useAuthStore()
-  const [workspaces, setWorkspaces] = useState<Workspace[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const { projects: projectsData, assetRequests: assetRequestsData, auditEvents: auditData } = useMockData()
 
-  // Flatten asset requests from all projects
+  const projects = (projectsData.items as Project[])
+
+  // Build project name lookup and enrich asset requests
+  const projectNameMap = new Map(projects.map(p => [p.id, p.name]))
   const allAssetRequests: (AssetRequest & { projectName: string; projectId: string })[] =
-    (projectsData.items as Project[]).flatMap(project =>
-      (project.assetRequests || []).map(ar => ({
-        ...(ar as AssetRequest),
-        projectName: project.name,
-        projectId: project.id,
-      }))
-    )
+    (assetRequestsData.items as AssetRequest[]).map(ar => ({
+      ...ar,
+      projectName: projectNameMap.get(ar.projectId) || 'Unknown Project',
+    }))
   const recentAssetRequests = allAssetRequests
     .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
     .slice(0, 5)
   const recentActivity = (auditData.items as AuditEvent[]).slice(0, 5)
 
   useEffect(() => {
-    async function loadData() {
-      if (!organization) return
-
-      try {
-        const response = await getWorkspaces(organization.id)
-        setWorkspaces(response.items)
-      } catch (error) {
-        console.error('Failed to load workspaces:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    loadData()
+    // Simulated loading — in production, fetch projects from API
+    setIsLoading(false)
   }, [organization])
 
   if (isLoading) {
@@ -93,8 +79,8 @@ export function DashboardPage() {
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardContent className="py-5">
-            <p className="text-sm font-medium text-gray-500">Workspaces</p>
-            <p className="mt-1 text-3xl font-semibold text-gray-900">{workspaces.length}</p>
+            <p className="text-sm font-medium text-gray-500">Projects</p>
+            <p className="mt-1 text-3xl font-semibold text-gray-900">{projects.length}</p>
           </CardContent>
         </Card>
         <Card>

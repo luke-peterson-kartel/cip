@@ -14,7 +14,7 @@ function formatTime(dateString: string): string {
 }
 
 export function ConversationPage() {
-  const { workspaceId, conversationId } = useParams<{ workspaceId: string; conversationId: string }>()
+  const { projectId, conversationId } = useParams<{ projectId: string; conversationId: string }>()
   const { user } = useAuthStore()
   const [conversation, setConversation] = useState<Conversation | null>(null)
   const [messages, setMessages] = useState<ConversationMessage[]>([])
@@ -93,7 +93,7 @@ export function ConversationPage() {
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link
-            to={`/workspaces/${workspaceId}/request-agent`}
+            to={`/projects/${projectId}`}
             className="text-gray-400 hover:text-gray-600"
           >
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

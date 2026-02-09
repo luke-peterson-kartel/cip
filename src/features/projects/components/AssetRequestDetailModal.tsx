@@ -5,7 +5,7 @@ import { TimelineCalendarView } from '@/components/calendar/TimelineCalendarView
 import { ProductionProgressBar } from './ProductionProgressBar'
 import { ChatSection } from './ChatSection'
 import { DeliverablesSection } from './DeliverablesSection'
-import type { AssetRequest, AssetWorkflowStage, ChatMessage, Upload, DeliverableReviewStatus } from '@/types'
+import type { AssetRequest, ProductionStep, ChatMessage, Upload, DeliverableReviewStatus } from '@/types'
 import { PLATFORM_OPTIONS } from '@/types'
 import { useAuthStore } from '@/store/authStore'
 import { apiClient } from '@/api/client'
@@ -25,10 +25,10 @@ export interface AssetRequestDetailModalProps {
 
 const statusOptions = [
   { label: 'Pending', value: 'PENDING' },
-  { label: 'Approve', value: 'APPROVE' },
-  { label: 'Deny', value: 'DENY' },
-  { label: 'Improve', value: 'IMPROVE' },
-  { label: 'Iterate', value: 'ITERATE' },
+  { label: 'Approved', value: 'APPROVED' },
+  { label: 'Denied', value: 'DENIED' },
+  { label: 'Needs Improvement', value: 'NEEDS_IMPROVEMENT' },
+  { label: 'Needs Iteration', value: 'NEEDS_ITERATION' },
   { label: 'Completed', value: 'COMPLETED' },
 ]
 
@@ -38,11 +38,11 @@ const priorityOptions = [
   { label: 'Low', value: 'LOW' },
 ]
 
-const WORKFLOW_STAGE_KEYS: AssetWorkflowStage[] = [
+const PRODUCTION_STEP_KEYS: ProductionStep[] = [
   'QC_LIBRARY', 'GEN_REFINE', 'QC_EDIT', 'CLIENT_REVIEW', 'QC_DISTRO',
 ]
 
-const DEFAULT_STAGE_LABELS = ['Step 1', 'Step 2', 'Step 3', 'Step 4', 'Step 5']
+const DEFAULT_STEP_LABELS = ['Step 1', 'Step 2', 'Step 3', 'Step 4', 'Step 5']
 
 const creativeTypeOptions = [
   { label: 'Static', value: 'Static' },
@@ -71,12 +71,12 @@ const STANDARD_DIMENSIONS = [
 const STANDARD_DURATIONS = [6, 9, 15, 30, 45, 60]
 
 const STATUS_COLORS: Record<string, { bg: string; text: string; ring: string }> = {
-  PENDING:   { bg: 'bg-gray-100',   text: 'text-gray-700',   ring: 'ring-gray-300' },
-  APPROVE:   { bg: 'bg-green-100',  text: 'text-green-700',  ring: 'ring-green-300' },
-  DENY:      { bg: 'bg-red-100',    text: 'text-red-700',    ring: 'ring-red-300' },
-  IMPROVE:   { bg: 'bg-amber-100',  text: 'text-amber-700',  ring: 'ring-amber-300' },
-  ITERATE:   { bg: 'bg-blue-100',   text: 'text-blue-700',   ring: 'ring-blue-300' },
-  COMPLETED: { bg: 'bg-green-100',  text: 'text-green-700',  ring: 'ring-green-300' },
+  PENDING:            { bg: 'bg-gray-100',   text: 'text-gray-700',   ring: 'ring-gray-300' },
+  APPROVED:           { bg: 'bg-green-100',  text: 'text-green-700',  ring: 'ring-green-300' },
+  DENIED:             { bg: 'bg-red-100',    text: 'text-red-700',    ring: 'ring-red-300' },
+  NEEDS_IMPROVEMENT:  { bg: 'bg-amber-100',  text: 'text-amber-700',  ring: 'ring-amber-300' },
+  NEEDS_ITERATION:    { bg: 'bg-blue-100',   text: 'text-blue-700',   ring: 'ring-blue-300' },
+  COMPLETED:          { bg: 'bg-green-100',  text: 'text-green-700',  ring: 'ring-green-300' },
 }
 
 const PRIORITY_COLORS: Record<string, { bg: string; text: string; ring: string }> = {
@@ -157,18 +157,18 @@ function PillSelect({
   )
 }
 
-function WorkflowProgressBar({
-  currentStage,
-  onStageChange,
-  stageLabels,
+function ProductionStepsBar({
+  currentStep,
+  onStepChange,
+  stepLabels,
   onLabelsChange,
 }: {
-  currentStage: AssetWorkflowStage
-  onStageChange: (stage: AssetWorkflowStage) => void
-  stageLabels: string[]
+  currentStep: ProductionStep
+  onStepChange: (step: ProductionStep) => void
+  stepLabels: string[]
   onLabelsChange: (labels: string[]) => void
 }) {
-  const currentIndex = WORKFLOW_STAGE_KEYS.indexOf(currentStage)
+  const currentIndex = PRODUCTION_STEP_KEYS.indexOf(currentStep)
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [editValue, setEditValue] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
@@ -183,8 +183,8 @@ function WorkflowProgressBar({
   const commitEdit = () => {
     if (editingIndex === null) return
     const trimmed = editValue.trim()
-    if (trimmed && trimmed !== stageLabels[editingIndex]) {
-      const updated = [...stageLabels]
+    if (trimmed && trimmed !== stepLabels[editingIndex]) {
+      const updated = [...stepLabels]
       updated[editingIndex] = trimmed
       onLabelsChange(updated)
     }
@@ -194,31 +194,31 @@ function WorkflowProgressBar({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
-        <span>Workflow Progress</span>
-        <span>{currentIndex + 1} of {WORKFLOW_STAGE_KEYS.length}</span>
+        <span>Production Steps</span>
+        <span>{currentIndex + 1} of {PRODUCTION_STEP_KEYS.length}</span>
       </div>
       <div className="flex gap-1">
-        {WORKFLOW_STAGE_KEYS.map((stageKey, index) => {
+        {PRODUCTION_STEP_KEYS.map((stageKey, index) => {
           const isActive = index === currentIndex
           const isCompleted = index < currentIndex
           const isFuture = index > currentIndex
           return (
             <button
               key={stageKey}
-              onClick={() => onStageChange(stageKey)}
+              onClick={() => onStepChange(stageKey)}
               className={cn(
                 "flex-1 h-2 rounded-full transition-all hover:opacity-80",
                 isCompleted && "bg-green-500",
                 isActive && "bg-blue-500",
                 isFuture && "bg-gray-200"
               )}
-              title={stageLabels[index]}
+              title={stepLabels[index]}
             />
           )
         })}
       </div>
       <div className="flex justify-between text-xs">
-        {WORKFLOW_STAGE_KEYS.map((stageKey, index) => (
+        {PRODUCTION_STEP_KEYS.map((stageKey, index) => (
           editingIndex === index ? (
             <input
               key={stageKey}
@@ -235,10 +235,10 @@ function WorkflowProgressBar({
           ) : (
             <button
               key={stageKey}
-              onClick={() => onStageChange(stageKey)}
+              onClick={() => onStepChange(stageKey)}
               onDoubleClick={() => {
                 setEditingIndex(index)
-                setEditValue(stageLabels[index])
+                setEditValue(stepLabels[index])
               }}
               className={cn(
                 "flex-1 text-center transition-colors hover:text-blue-600 min-w-0 truncate",
@@ -246,7 +246,7 @@ function WorkflowProgressBar({
               )}
               title="Double-click to rename"
             >
-              {stageLabels[index]}
+              {stepLabels[index]}
             </button>
           )
         ))}
@@ -530,11 +530,11 @@ export function AssetRequestDetailModal({
           {/* ── PROGRESS BARS ── */}
           <div className="rounded-lg border border-gray-200 bg-white p-5">
             <div className="space-y-3">
-              <WorkflowProgressBar
-                currentStage={assetRequest.workflowStage}
-                onStageChange={(stage) => handleUpdate('workflowStage', stage)}
-                stageLabels={assetRequest.workflowStageLabels ?? DEFAULT_STAGE_LABELS}
-                onLabelsChange={(labels) => handleUpdate('workflowStageLabels', labels)}
+              <ProductionStepsBar
+                currentStep={assetRequest.productionStep}
+                onStepChange={(step) => handleUpdate('productionStep', step)}
+                stepLabels={assetRequest.productionStepLabels ?? DEFAULT_STEP_LABELS}
+                onLabelsChange={(labels) => handleUpdate('productionStepLabels', labels)}
               />
               {assetRequest.creativeType?.toLowerCase().includes('longform') && assetRequest.productionStage && (
                 <ProductionProgressBar
@@ -616,9 +616,9 @@ export function AssetRequestDetailModal({
             </div>
 
             {/* RIGHT COLUMN (2/5) — Chat only */}
-            <div className="col-span-2">
-              <div className="rounded-lg border border-gray-200 bg-white p-5">
-                <div className="flex items-center justify-between border-b border-gray-200 pb-3 mb-4">
+            <div className="col-span-2 flex flex-col">
+              <div className="rounded-lg border border-gray-200 bg-white p-5 flex flex-col flex-1 min-h-0">
+                <div className="flex items-center justify-between border-b border-gray-200 pb-3 mb-4 shrink-0">
                   <h4 className="text-lg font-semibold text-gray-900">Chat</h4>
                   <span className="text-xs text-gray-400">{(assetRequest.messages || []).length} messages</span>
                 </div>

@@ -1,0 +1,52 @@
+{
+  "items": [
+    {
+      "id": "conv-ei-001",
+      "projectId": "proj-ei-001",
+      "status": "COMPLETED",
+      "messages": [
+        {
+          "userId": "user-ei-001",
+          "content": "We need to ramp up our Meta ad variant production — currently we're bottlenecked at 10-15 new variants per week and need to get to 50+",
+          "createdAt": "2024-06-12T08:30:00Z"
+        },
+        {
+          "content": "I can help you scale your Meta ad variant production significantly! To build the right creative engine, I need to understand your current setup:\n\n1. What are your top-performing ad formats? (static images, carousels, video?)\n2. Which product features drive the best conversion — Cash Out, Balance Shield, or Early Pay?\n3. Do you have a library of approved brand assets and copy I can train on?",
+          "createdAt": "2024-06-12T08:30:15Z"
+        },
+        {
+          "userId": "user-ei-001",
+          "content": "Static images perform best for us on Meta. Cash Out is our hero feature — 'get paid today' messaging drives the most installs. We have 2 years of ad performance data and our brand guidelines PDF is uploaded.",
+          "createdAt": "2024-06-12T08:35:00Z"
+        },
+        {
+          "content": "Excellent! Based on your data, I'll build a creative engine focused on:\n\n- High-volume static image variants for Meta (1080x1080)\n- Cash Out urgency messaging as the primary angle\n- Balance Shield and Early Pay as secondary angles\n- Multiple copy/visual combinations for daily A/B testing\n\nI've created the asset request for 50 Meta Performance Ad Variants. First batch of 15 will be ready for review next week. You can track progress on the project page.",
+          "createdAt": "2024-06-12T08:35:30Z"
+        }
+      ],
+      "createdAt": "2024-06-12T08:30:00Z",
+      "updatedAt": "2024-06-12T08:35:30Z"
+    },
+    {
+      "id": "conv-ei-002",
+      "projectId": "proj-ei-002",
+      "status": "ACTIVE",
+      "messages": [
+        {
+          "userId": "user-ei-002",
+          "content": "We're launching our first brand TV campaign — need help concepting a 30-second spot that introduces EarnIn to people who've never heard of us",
+          "createdAt": "2024-07-05T10:00:00Z"
+        },
+        {
+          "content": "A brand TV debut is exciting! To create something truly impactful, I want to understand your vision:\n\n1. What emotion should viewers feel after watching — empowerment, relief, hope?\n2. Do you want to show the app directly, or keep it more lifestyle/story-driven?\n3. Any existing TV spots from competitors you admire or want to differentiate from?",
+          "createdAt": "2024-07-05T10:00:20Z"
+        }
+      ],
+      "createdAt": "2024-07-05T10:00:00Z",
+      "updatedAt": "2024-07-05T10:00:20Z"
+    }
+  ],
+  "pagination": {
+    "nextToken": null
+  }
+}

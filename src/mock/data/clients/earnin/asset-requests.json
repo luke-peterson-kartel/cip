@@ -1,0 +1,605 @@
+{
+  "items": [
+    {
+      "id": "ar-ei-001",
+      "projectId": "proj-ei-001",
+      "title": "Meta Performance Ad Variants",
+      "platform": "Meta",
+      "creativeType": "Static Performance Ads",
+      "description": "High-volume static ad variants for Meta (Facebook/Instagram) featuring Cash Out, Balance Shield, and Early Pay product benefits. Multiple copy/visual combos for daily A/B testing.",
+      "targetCount": 50,
+      "dimensions": "1x1",
+      "status": "APPROVED",
+      "productionStep": "CLIENT_REVIEW",
+      "priority": "HIGH",
+      "version": 3,
+      "clientAssignedEmail": "anna.chen@earnin.com",
+      "kartelAssignedEmail": "nina.patel@kartel.com",
+      "requestedDate": "2024-06-10T00:00:00Z",
+      "firstV1ReviewDate": "2024-06-25T00:00:00Z",
+      "finalDeliveryDate": "2024-07-15T00:00:00Z",
+      "messages": [
+        {
+          "id": "msg-ei-001",
+          "senderEmail": "nina.patel@kartel.com",
+          "senderName": "Nina Patel",
+          "message": "First batch of 15 Meta ad variants ready. Three angles: Cash Out urgency ('Get paid before Friday'), Balance Shield peace of mind ('Never overdraft again'), and Early Pay convenience ('Your paycheck, 2 days early').",
+          "timestamp": "2024-06-20T09:00:00Z"
+        },
+        {
+          "id": "msg-ei-002",
+          "senderEmail": "anna.chen@earnin.com",
+          "senderName": "Anna Chen",
+          "message": "Cash Out urgency batch is the strongest — CTR on similar copy has been 2.3x our baseline. Balance Shield needs punchier headlines. Can you A/B test with shorter copy?",
+          "timestamp": "2024-06-28T14:00:00Z"
+        },
+        {
+          "id": "msg-ei-003",
+          "senderEmail": "nina.patel@kartel.com",
+          "senderName": "Nina Patel",
+          "message": "V2 with shorter Balance Shield copy uploaded — also added 10 new variants mixing the urgency angle with app screenshot overlays. V3 batch has 50 total variants ready for testing.",
+          "timestamp": "2024-07-05T10:00:00Z"
+        },
+        {
+          "id": "msg-ei-004",
+          "senderEmail": "anna.chen@earnin.com",
+          "senderName": "Anna Chen",
+          "message": "V3 is exactly what we need for our daily test cycle. Approved — let's keep this pipeline running weekly.",
+          "timestamp": "2024-07-10T15:30:00Z"
+        }
+      ],
+      "createdAt": "2024-06-10T10:00:00Z",
+      "updatedAt": "2024-07-12T14:30:00Z",
+      "createdBy": "user-ei-001"
+    },
+    {
+      "id": "ar-ei-002",
+      "projectId": "proj-ei-001",
+      "title": "Google Display Ad Set",
+      "platform": "Google",
+      "creativeType": "Google Display Ads",
+      "description": "Responsive display ad set across standard IAB sizes (300x250, 728x90, 160x600, 320x50) promoting EarnIn app download with dynamic product messaging.",
+      "targetCount": 24,
+      "dimensions": "various",
+      "status": "NEEDS_ITERATION",
+      "productionStep": "GEN_REFINE",
+      "priority": "HIGH",
+      "version": 2,
+      "clientAssignedEmail": "anna.chen@earnin.com",
+      "kartelAssignedEmail": "nina.patel@kartel.com",
+      "requestedDate": "2024-06-10T00:00:00Z",
+      "firstV1ReviewDate": "2024-07-01T00:00:00Z",
+      "finalDeliveryDate": "2024-07-20T00:00:00Z",
+      "messages": [
+        {
+          "id": "msg-ei-005",
+          "senderEmail": "nina.patel@kartel.com",
+          "senderName": "Nina Patel",
+          "message": "Google Display V1 — 24 ads across 4 IAB sizes. Each size has 6 variants covering Cash Out, Balance Shield, Early Pay, general brand, app rating, and social proof angles.",
+          "timestamp": "2024-07-02T09:00:00Z"
+        },
+        {
+          "id": "msg-ei-006",
+          "senderEmail": "anna.chen@earnin.com",
+          "senderName": "Anna Chen",
+          "message": "The 300x250 CTA button blends into the background — needs way more contrast. Also the app rating stars are unreadable at smaller sizes. The 728x90 leaderboards look great though.",
+          "timestamp": "2024-07-06T10:30:00Z"
+        },
+        {
+          "id": "msg-ei-007",
+          "senderEmail": "nina.patel@kartel.com",
+          "senderName": "Nina Patel",
+          "message": "Redesigning the 300x250 and 160x600 with higher-contrast CTAs and larger star ratings. The 728x90 and 320x50 formats are cleared for launch.",
+          "timestamp": "2024-07-06T14:00:00Z"
+        }
+      ],
+      "createdAt": "2024-06-10T10:00:00Z",
+      "updatedAt": "2024-07-08T11:00:00Z",
+      "createdBy": "user-ei-001"
+    },
+    {
+      "id": "ar-ei-003",
+      "projectId": "proj-ei-001",
+      "title": "TikTok Performance Creatives",
+      "platform": "TikTok",
+      "creativeType": "TikTok Performance Videos",
+      "description": "15-second vertical video ads for TikTok feed — fast-paced, text-overlay driven, showing Cash Out flow and instant money access. Native TikTok aesthetic.",
+      "targetCount": 20,
+      "dimensions": "9x16",
+      "duration": 15,
+      "status": "PENDING",
+      "productionStep": "GEN_REFINE",
+      "priority": "MEDIUM",
+      "version": 1,
+      "clientAssignedEmail": "marcus.bell@earnin.com",
+      "kartelAssignedEmail": "nina.patel@kartel.com",
+      "requestedDate": "2024-06-10T00:00:00Z",
+      "firstV1ReviewDate": "2024-07-10T00:00:00Z",
+      "finalDeliveryDate": "2024-07-25T00:00:00Z",
+      "messages": [],
+      "createdAt": "2024-06-10T10:00:00Z",
+      "updatedAt": "2024-06-28T09:30:00Z",
+      "createdBy": "user-ei-001"
+    },
+    {
+      "id": "ar-ei-004",
+      "projectId": "proj-ei-001",
+      "title": "YouTube Pre-Roll Ads",
+      "platform": "YouTube",
+      "creativeType": "YouTube Pre-Roll Ads",
+      "description": "15-second and 30-second non-skippable pre-roll ads for YouTube. Direct response with app download CTA. Multiple value prop angles.",
+      "targetCount": 8,
+      "dimensions": "16x9",
+      "duration": 15,
+      "status": "PENDING",
+      "productionStep": "QC_LIBRARY",
+      "priority": "MEDIUM",
+      "version": 1,
+      "clientAssignedEmail": "marcus.bell@earnin.com",
+      "kartelAssignedEmail": "james.wright@kartel.com",
+      "requestedDate": "2024-06-10T00:00:00Z",
+      "firstV1ReviewDate": "2024-07-15T00:00:00Z",
+      "finalDeliveryDate": "2024-08-01T00:00:00Z",
+      "messages": [],
+      "createdAt": "2024-06-10T10:00:00Z",
+      "updatedAt": "2024-06-20T16:00:00Z",
+      "createdBy": "user-ei-001"
+    },
+    {
+      "id": "ar-ei-005",
+      "projectId": "proj-ei-001",
+      "title": "Google Search Ad Copy Variants",
+      "platform": "Google",
+      "creativeType": "Search Ad Copy",
+      "description": "Text-based search ad copy variants for Google Search campaigns. Headlines, descriptions, and sitelink extensions across Cash Out, Balance Shield, Early Pay, and general brand terms.",
+      "targetCount": 40,
+      "dimensions": "text",
+      "status": "COMPLETED",
+      "productionStep": "QC_DISTRO",
+      "priority": "HIGH",
+      "version": 2,
+      "clientAssignedEmail": "anna.chen@earnin.com",
+      "kartelAssignedEmail": "nina.patel@kartel.com",
+      "requestedDate": "2024-06-10T00:00:00Z",
+      "firstV1ReviewDate": "2024-06-20T00:00:00Z",
+      "finalDeliveryDate": "2024-07-05T00:00:00Z",
+      "completedDate": "2024-07-03T16:00:00Z",
+      "messages": [
+        {
+          "id": "msg-ei-008",
+          "senderEmail": "nina.patel@kartel.com",
+          "senderName": "Nina Patel",
+          "message": "40 search ad copy variants ready. Organized by product line: 12 Cash Out, 10 Balance Shield, 8 Early Pay, 10 general brand. Each includes 3 headline options and 2 description variants.",
+          "timestamp": "2024-06-22T09:00:00Z"
+        },
+        {
+          "id": "msg-ei-009",
+          "senderEmail": "anna.chen@earnin.com",
+          "senderName": "Anna Chen",
+          "message": "These are solid. The 'No hidden fees' angle in the general brand set is performing well in our current campaigns. Can you write 5 more variations on that theme?",
+          "timestamp": "2024-06-28T11:00:00Z"
+        },
+        {
+          "id": "msg-ei-010",
+          "senderEmail": "nina.patel@kartel.com",
+          "senderName": "Nina Patel",
+          "message": "Added 5 more 'no hidden fees' variants plus 3 'trusted by 3M+ workers' social proof variants. All 48 approved and ready for Google Ads upload.",
+          "timestamp": "2024-07-01T14:00:00Z"
+        }
+      ],
+      "createdAt": "2024-06-10T10:00:00Z",
+      "updatedAt": "2024-07-03T16:00:00Z",
+      "createdBy": "user-ei-001"
+    },
+    {
+      "id": "ar-ei-006",
+      "projectId": "proj-ei-002",
+      "title": "Brand TV Spot - 30s",
+      "platform": "OLV/YouTube/OTT",
+      "creativeType": "Brand TV Spot",
+      "description": "30-second brand TV spot for broadcast and streaming. Cinematic storytelling showing real-life moments where EarnIn gives people financial control — payday stress, unexpected bills, gig worker flexibility.",
+      "targetCount": 1,
+      "dimensions": "16x9",
+      "duration": 30,
+      "status": "APPROVED",
+      "productionStep": "CLIENT_REVIEW",
+      "productionStage": "FINE_CUT",
+      "priority": "HIGH",
+      "version": 2,
+      "clientAssignedEmail": "marcus.bell@earnin.com",
+      "kartelAssignedEmail": "nina.patel@kartel.com",
+      "requestedDate": "2024-07-01T00:00:00Z",
+      "firstV1ReviewDate": "2024-08-01T00:00:00Z",
+      "finalDeliveryDate": "2024-09-15T00:00:00Z",
+      "messages": [
+        {
+          "id": "msg-ei-011",
+          "senderEmail": "nina.patel@kartel.com",
+          "senderName": "Nina Patel",
+          "message": "Storyboards for three concepts uploaded to Frame.io: 'The Night Shift Nurse' (emotional, 2am paycheck moment), 'The Rideshare Dad' (gig economy angle), 'The College Student' (Gen Z financial stress).",
+          "timestamp": "2024-07-20T09:00:00Z"
+        },
+        {
+          "id": "msg-ei-012",
+          "senderEmail": "marcus.bell@earnin.com",
+          "senderName": "Marcus Bell",
+          "message": "Night Shift Nurse is our winner — the 2am moment where she checks her phone and sees her earnings are available is incredibly powerful. Let's go to production on that one.",
+          "timestamp": "2024-08-05T14:00:00Z"
+        },
+        {
+          "id": "msg-ei-013",
+          "senderEmail": "nina.patel@kartel.com",
+          "senderName": "Nina Patel",
+          "message": "Fine cut uploaded. Added the warm golden light when she opens the app — subtle but it shifts the entire mood. Audio is almost final, just fine-tuning the VO mix.",
+          "timestamp": "2024-08-22T11:00:00Z"
+        },
+        {
+          "id": "msg-ei-014",
+          "senderEmail": "marcus.bell@earnin.com",
+          "senderName": "Marcus Bell",
+          "message": "This is the one. The golden light moment is chef's kiss. Approved for broadcast. Minor note: can the end card hold 1 second longer on the app store badges?",
+          "timestamp": "2024-08-28T14:30:00Z"
+        }
+      ],
+      "createdAt": "2024-07-01T09:00:00Z",
+      "updatedAt": "2024-09-01T15:45:00Z",
+      "createdBy": "user-ei-002"
+    },
+    {
+      "id": "ar-ei-007",
+      "projectId": "proj-ei-002",
+      "title": "Performance Growth TV - 15s",
+      "platform": "OLV/YouTube/OTT",
+      "creativeType": "CTV Performance Spot",
+      "description": "15-second Performance Growth TV spot for CTV platforms (Roku, Hulu, YouTube TV). Includes QR code overlay for direct app download. Fast-paced, benefit-driven, with clear CTA.",
+      "targetCount": 1,
+      "dimensions": "16x9",
+      "duration": 15,
+      "status": "NEEDS_IMPROVEMENT",
+      "productionStep": "GEN_REFINE",
+      "priority": "HIGH",
+      "version": 2,
+      "clientAssignedEmail": "marcus.bell@earnin.com",
+      "kartelAssignedEmail": "james.wright@kartel.com",
+      "requestedDate": "2024-07-01T00:00:00Z",
+      "firstV1ReviewDate": "2024-08-15T00:00:00Z",
+      "finalDeliveryDate": "2024-09-20T00:00:00Z",
+      "messages": [
+        {
+          "id": "msg-ei-015",
+          "senderEmail": "james.wright@kartel.com",
+          "senderName": "James Wright",
+          "message": "Performance Growth TV V1 — 15-second spot with QR code for Roku/Hulu/YouTube TV. Opens with the Cash Out value prop, QR appears at second 8.",
+          "timestamp": "2024-08-18T09:00:00Z"
+        },
+        {
+          "id": "msg-ei-016",
+          "senderEmail": "marcus.bell@earnin.com",
+          "senderName": "Marcus Bell",
+          "message": "QR code needs to appear by second 5 — viewers bounce fast on CTV. Also the 'Scan to Download' text is too small for living room viewing distance. Think 10-foot UI.",
+          "timestamp": "2024-08-23T16:00:00Z"
+        },
+        {
+          "id": "msg-ei-017",
+          "senderEmail": "james.wright@kartel.com",
+          "senderName": "James Wright",
+          "message": "Restructuring the spot — QR at second 3 with larger text, value prop condensed to the first 2 seconds. Will also add a pulsing animation to draw the eye to the QR code.",
+          "timestamp": "2024-08-24T09:30:00Z"
+        }
+      ],
+      "createdAt": "2024-07-01T09:00:00Z",
+      "updatedAt": "2024-08-25T11:30:00Z",
+      "createdBy": "user-ei-002"
+    },
+    {
+      "id": "ar-ei-008",
+      "projectId": "proj-ei-002",
+      "title": "Instagram/TikTok Hero Brand Content",
+      "platform": "Meta",
+      "creativeType": "Hero Social Videos",
+      "description": "Vertical format hero brand videos for Instagram Reels and TikTok. Emotional storytelling vignettes showing EarnIn users in real-life moments — not product demos but brand feeling.",
+      "targetCount": 4,
+      "dimensions": "9x16",
+      "duration": 15,
+      "status": "PENDING",
+      "productionStep": "GEN_REFINE",
+      "priority": "MEDIUM",
+      "version": 1,
+      "clientAssignedEmail": "priya.sharma@earnin.com",
+      "kartelAssignedEmail": "nina.patel@kartel.com",
+      "requestedDate": "2024-07-01T00:00:00Z",
+      "firstV1ReviewDate": "2024-08-20T00:00:00Z",
+      "finalDeliveryDate": "2024-09-10T00:00:00Z",
+      "messages": [],
+      "createdAt": "2024-07-01T09:00:00Z",
+      "updatedAt": "2024-07-20T14:00:00Z",
+      "createdBy": "user-ei-002"
+    },
+    {
+      "id": "ar-ei-009",
+      "projectId": "proj-ei-002",
+      "title": "YouTube Brand Anthem - 60s",
+      "platform": "YouTube",
+      "creativeType": "YouTube Brand Film",
+      "description": "60-second brand anthem for YouTube pre-roll and channel placement. Full narrative arc: the stress of waiting for payday, discovering EarnIn, the relief of financial control. Cinematic quality.",
+      "targetCount": 1,
+      "dimensions": "16x9",
+      "duration": 60,
+      "status": "APPROVED",
+      "productionStep": "QC_DISTRO",
+      "productionStage": "FINAL",
+      "priority": "HIGH",
+      "version": 3,
+      "clientAssignedEmail": "marcus.bell@earnin.com",
+      "kartelAssignedEmail": "nina.patel@kartel.com",
+      "requestedDate": "2024-07-01T00:00:00Z",
+      "firstV1ReviewDate": "2024-07-20T00:00:00Z",
+      "finalDeliveryDate": "2024-08-30T00:00:00Z",
+      "messages": [
+        {
+          "id": "msg-ei-018",
+          "senderEmail": "nina.patel@kartel.com",
+          "senderName": "Nina Patel",
+          "message": "YouTube anthem V1 — 60 seconds. Narrative: alarm clock at 4:45am, night shift nurse getting ready, checking bills on the bus, EarnIn notification, relief and smile. Ends with 'You worked today. Get paid today.'",
+          "timestamp": "2024-07-25T10:00:00Z"
+        },
+        {
+          "id": "msg-ei-019",
+          "senderEmail": "marcus.bell@earnin.com",
+          "senderName": "Marcus Bell",
+          "message": "Story structure is great but the middle section (0:20-0:35) drags a bit. Can we tighten the bill-checking montage and add the music swell earlier?",
+          "timestamp": "2024-08-05T11:00:00Z"
+        },
+        {
+          "id": "msg-ei-020",
+          "senderEmail": "nina.patel@kartel.com",
+          "senderName": "Nina Patel",
+          "message": "V2 uploaded — tightened the montage by 8 seconds and moved the music pivot to 0:28. Added a subtle phone screen glow effect when she opens the app. V3 is the final with color grade polish.",
+          "timestamp": "2024-08-20T14:00:00Z"
+        },
+        {
+          "id": "msg-ei-021",
+          "senderEmail": "marcus.bell@earnin.com",
+          "senderName": "Marcus Bell",
+          "message": "V3 is perfect. The phone glow and the music swell hitting at the exact moment she sees her balance — absolutely nailed it. Approved for launch.",
+          "timestamp": "2024-08-26T09:30:00Z"
+        }
+      ],
+      "createdAt": "2024-07-01T09:00:00Z",
+      "updatedAt": "2024-08-28T16:20:00Z",
+      "createdBy": "user-ei-002"
+    },
+    {
+      "id": "ar-ei-010",
+      "projectId": "proj-ei-002",
+      "title": "Connected TV Companion Banners",
+      "platform": "OLV/YouTube/OTT",
+      "creativeType": "CTV Display Banners",
+      "description": "Companion display banners for connected TV ad placements. Shown alongside or after TV spots on Roku, Hulu, and YouTube TV. Includes QR code and app store badges.",
+      "targetCount": 4,
+      "dimensions": "various",
+      "status": "NEEDS_ITERATION",
+      "productionStep": "CLIENT_REVIEW",
+      "priority": "LOW",
+      "version": 2,
+      "clientAssignedEmail": "anna.chen@earnin.com",
+      "kartelAssignedEmail": "nina.patel@kartel.com",
+      "requestedDate": "2024-07-01T00:00:00Z",
+      "firstV1ReviewDate": "2024-08-25T00:00:00Z",
+      "finalDeliveryDate": "2024-09-15T00:00:00Z",
+      "messages": [],
+      "createdAt": "2024-07-01T09:00:00Z",
+      "updatedAt": "2024-09-02T10:15:00Z",
+      "createdBy": "user-ei-002"
+    },
+    {
+      "id": "ar-ei-011",
+      "projectId": "proj-ei-003",
+      "title": "Influencer UGC - TikTok",
+      "platform": "TikTok",
+      "creativeType": "Influencer UGC Videos",
+      "description": "TikTok UGC videos from 6 influencers showing authentic EarnIn usage stories. Each creator films their own 'payday moment' — checking their Cash Out, paying a bill early, or avoiding an overdraft. Raw, unpolished aesthetic.",
+      "targetCount": 6,
+      "dimensions": "9x16",
+      "duration": 15,
+      "status": "APPROVED",
+      "productionStep": "QC_DISTRO",
+      "priority": "HIGH",
+      "version": 2,
+      "clientAssignedEmail": "priya.sharma@earnin.com",
+      "kartelAssignedEmail": "james.wright@kartel.com",
+      "requestedDate": "2024-08-01T00:00:00Z",
+      "firstV1ReviewDate": "2024-08-20T00:00:00Z",
+      "finalDeliveryDate": "2024-09-15T00:00:00Z",
+      "messages": [
+        {
+          "id": "msg-ei-022",
+          "senderEmail": "james.wright@kartel.com",
+          "senderName": "James Wright",
+          "message": "First 3 TikTok UGC videos in from creators: @savvysaver (payday moment), @budgetboss (overdraft avoidance story), @giglifemike (gig worker Cash Out). All raw and authentic.",
+          "timestamp": "2024-08-22T10:00:00Z"
+        },
+        {
+          "id": "msg-ei-023",
+          "senderEmail": "priya.sharma@earnin.com",
+          "senderName": "Priya Sharma",
+          "message": "@savvysaver's piece is incredible — you can tell she actually uses the app. @budgetboss is great too. @giglifemike needs a reshoot though — feels too scripted. Can he redo it more naturally?",
+          "timestamp": "2024-09-05T14:00:00Z"
+        },
+        {
+          "id": "msg-ei-024",
+          "senderEmail": "james.wright@kartel.com",
+          "senderName": "James Wright",
+          "message": "Mike's doing a reshoot this weekend — told him to just screen record his actual Cash Out and talk over it. Also got the remaining 3 creators' videos in. All 6 should be locked by next week.",
+          "timestamp": "2024-09-08T10:30:00Z"
+        }
+      ],
+      "createdAt": "2024-08-01T14:00:00Z",
+      "updatedAt": "2024-09-12T14:30:00Z",
+      "createdBy": "user-ei-003"
+    },
+    {
+      "id": "ar-ei-012",
+      "projectId": "proj-ei-003",
+      "title": "Creator Partnership - Instagram Reels",
+      "platform": "Meta",
+      "creativeType": "Co-Branded Instagram Reels",
+      "description": "Instagram Reels co-branded with partner brands (DoorDash, Uber, Instacart). Creators show how they use EarnIn alongside gig work — earning and accessing pay in real time.",
+      "targetCount": 4,
+      "dimensions": "9x16",
+      "duration": 30,
+      "status": "PENDING",
+      "productionStep": "GEN_REFINE",
+      "priority": "MEDIUM",
+      "version": 1,
+      "clientAssignedEmail": "priya.sharma@earnin.com",
+      "kartelAssignedEmail": "nina.patel@kartel.com",
+      "requestedDate": "2024-08-01T00:00:00Z",
+      "firstV1ReviewDate": "2024-09-01T00:00:00Z",
+      "finalDeliveryDate": "2024-09-30T00:00:00Z",
+      "messages": [],
+      "createdAt": "2024-08-01T14:00:00Z",
+      "updatedAt": "2024-08-25T11:00:00Z",
+      "createdBy": "user-ei-003"
+    },
+    {
+      "id": "ar-ei-013",
+      "projectId": "proj-ei-003",
+      "title": "Reddit Organic Posts",
+      "platform": "Reddit",
+      "creativeType": "Reddit Organic Content",
+      "description": "Platform-native Reddit posts for r/personalfinance, r/povertyfinance, and r/gig_economy. Mix of static infographics and short video clips. Educational tone — financial tips with subtle EarnIn integration.",
+      "targetCount": 8,
+      "dimensions": "various",
+      "status": "COMPLETED",
+      "productionStep": "QC_DISTRO",
+      "priority": "MEDIUM",
+      "version": 2,
+      "clientAssignedEmail": "priya.sharma@earnin.com",
+      "kartelAssignedEmail": "james.wright@kartel.com",
+      "requestedDate": "2024-08-01T00:00:00Z",
+      "firstV1ReviewDate": "2024-08-25T00:00:00Z",
+      "finalDeliveryDate": "2024-09-20T00:00:00Z",
+      "completedDate": "2024-09-18T16:30:00Z",
+      "messages": [
+        {
+          "id": "msg-ei-025",
+          "senderEmail": "james.wright@kartel.com",
+          "senderName": "James Wright",
+          "message": "Reddit content V1: 8 posts — 5 static infographics (budgeting tips, overdraft stats, paycheck facts, side hustle money tips, financial wellness checklist) and 3 short video clips.",
+          "timestamp": "2024-08-28T09:00:00Z"
+        },
+        {
+          "id": "msg-ei-026",
+          "senderEmail": "priya.sharma@earnin.com",
+          "senderName": "Priya Sharma",
+          "message": "These nail the Reddit tone — educational and genuinely helpful. The 'overdraft stats' infographic might be too on-the-nose for r/personalfinance though. Can we make the EarnIn callout even more subtle?",
+          "timestamp": "2024-09-10T10:00:00Z"
+        },
+        {
+          "id": "msg-ei-027",
+          "senderEmail": "james.wright@kartel.com",
+          "senderName": "James Wright",
+          "message": "Moved the EarnIn mention to a small footer instead of the main graphic on the overdraft post. Also softened the CTA on all posts to 'learn more' instead of 'download now'. V2 ready for posting.",
+          "timestamp": "2024-09-15T14:00:00Z"
+        },
+        {
+          "id": "msg-ei-028",
+          "senderEmail": "priya.sharma@earnin.com",
+          "senderName": "Priya Sharma",
+          "message": "Perfect. These will land well. Approved for distribution across all target subreddits.",
+          "timestamp": "2024-09-16T14:00:00Z"
+        }
+      ],
+      "createdAt": "2024-08-01T14:00:00Z",
+      "updatedAt": "2024-09-18T16:30:00Z",
+      "createdBy": "user-ei-003"
+    },
+    {
+      "id": "ar-ei-014",
+      "projectId": "proj-ei-003",
+      "title": "Pinterest Promoted Pins",
+      "platform": "Pinterest",
+      "creativeType": "Pinterest Promoted Pins",
+      "description": "Vertical format promoted pins for Pinterest targeting financial wellness, budgeting tips, and side hustle boards. Clean design with EarnIn app screenshots and benefit callouts.",
+      "targetCount": 5,
+      "dimensions": "2x3",
+      "status": "DENIED",
+      "productionStep": "CLIENT_REVIEW",
+      "priority": "LOW",
+      "version": 1,
+      "clientAssignedEmail": "anna.chen@earnin.com",
+      "kartelAssignedEmail": "nina.patel@kartel.com",
+      "requestedDate": "2024-08-01T00:00:00Z",
+      "firstV1ReviewDate": "2024-09-05T00:00:00Z",
+      "messages": [
+        {
+          "id": "msg-ei-029",
+          "senderEmail": "nina.patel@kartel.com",
+          "senderName": "Nina Patel",
+          "message": "Pinterest pins V1: 5 designs — budgeting tips, payday countdown, financial freedom checklist, EarnIn features overview, and side hustle savings tracker.",
+          "timestamp": "2024-09-03T09:00:00Z"
+        },
+        {
+          "id": "msg-ei-030",
+          "senderEmail": "anna.chen@earnin.com",
+          "senderName": "Anna Chen",
+          "message": "Putting Pinterest on hold. Our analytics show the Pinterest audience skews older and higher-income than our core user. Redirecting budget to YouTube Shorts and TikTok where our CAC is much better.",
+          "timestamp": "2024-09-06T10:00:00Z"
+        }
+      ],
+      "createdAt": "2024-08-01T14:00:00Z",
+      "updatedAt": "2024-09-06T10:00:00Z",
+      "createdBy": "user-ei-003"
+    },
+    {
+      "id": "ar-ei-015",
+      "projectId": "proj-ei-003",
+      "title": "YouTube Shorts - Creator Collabs",
+      "platform": "YouTube",
+      "creativeType": "YouTube Shorts - Creator Collabs",
+      "description": "30-second YouTube Shorts featuring creator collaborations. Financial tip format — '3 things I wish I knew about my paycheck' style content with natural EarnIn mentions.",
+      "targetCount": 4,
+      "dimensions": "9x16",
+      "duration": 30,
+      "status": "NEEDS_IMPROVEMENT",
+      "productionStep": "GEN_REFINE",
+      "priority": "HIGH",
+      "version": 2,
+      "clientAssignedEmail": "priya.sharma@earnin.com",
+      "kartelAssignedEmail": "james.wright@kartel.com",
+      "requestedDate": "2024-08-01T00:00:00Z",
+      "firstV1ReviewDate": "2024-08-30T00:00:00Z",
+      "finalDeliveryDate": "2024-09-25T00:00:00Z",
+      "messages": [
+        {
+          "id": "msg-ei-031",
+          "senderEmail": "james.wright@kartel.com",
+          "senderName": "James Wright",
+          "message": "YouTube Shorts V1 — 4 creator collabs: '3 Paycheck Hacks You Need', 'Why I Stopped Overdrafting', 'Gig Worker Money Tips', and 'The App That Changed My Finances'. Each 28-32 seconds.",
+          "timestamp": "2024-09-01T09:00:00Z"
+        },
+        {
+          "id": "msg-ei-032",
+          "senderEmail": "priya.sharma@earnin.com",
+          "senderName": "Priya Sharma",
+          "message": "'Paycheck Hacks' and 'Gig Worker Money Tips' are great. 'Why I Stopped Overdrafting' title feels too advertorial — can we reframe as '3 Things Banks Won't Tell You About Overdrafts'? And 'Changed My Finances' needs more specific details, not vague praise.",
+          "timestamp": "2024-09-02T14:00:00Z"
+        },
+        {
+          "id": "msg-ei-033",
+          "senderEmail": "james.wright@kartel.com",
+          "senderName": "James Wright",
+          "message": "Love the reframe. Reshooting with the new angles — the overdraft one will be much stronger with a myth-busting approach. Getting revised cuts from creators by end of this week.",
+          "timestamp": "2024-09-03T10:00:00Z"
+        }
+      ],
+      "createdAt": "2024-08-01T14:00:00Z",
+      "updatedAt": "2024-09-02T14:20:00Z",
+      "createdBy": "user-ei-003"
+    }
+  ],
+  "pagination": {
+    "nextToken": null
+  }
+}

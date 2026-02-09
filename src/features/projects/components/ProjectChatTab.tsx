@@ -5,15 +5,16 @@ import { MessageRenderer } from './MessageRenderer'
 import { MentionChatInput } from './MentionChatInput'
 import { getProjectChatMessages, sendProjectChatMessage } from '@/api/endpoints/projects'
 import { useAuthStore } from '@/store/authStore'
-import type { Project, ChatMessage } from '@/types'
+import type { Project, ChatMessage, AssetRequest } from '@/types'
 
 interface ProjectChatTabProps {
   projectId: string
   project: Project
+  assetRequests: AssetRequest[]
   onOpenAssetRequest: (assetRequestId: string) => void
 }
 
-export function ProjectChatTab({ projectId, project, onOpenAssetRequest }: ProjectChatTabProps) {
+export function ProjectChatTab({ projectId, project, assetRequests, onOpenAssetRequest }: ProjectChatTabProps) {
   const { user } = useAuthStore()
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -58,17 +59,19 @@ export function ProjectChatTab({ projectId, project, onOpenAssetRequest }: Proje
   }
 
   return (
-    <ChatSection
-      messages={messages}
-      currentUserEmail={user?.email || ''}
-      onSendMessage={handleSend}
-      renderMessage={renderMessage}
-      inputComponent={
-        <MentionChatInput
-          assetRequests={project.assetRequests || []}
-          onSendMessage={handleSend}
-        />
-      }
-    />
+    <div className="flex flex-col flex-1 min-h-0">
+      <ChatSection
+        messages={messages}
+        currentUserEmail={user?.email || ''}
+        onSendMessage={handleSend}
+        renderMessage={renderMessage}
+        inputComponent={
+          <MentionChatInput
+            assetRequests={assetRequests}
+            onSendMessage={handleSend}
+          />
+        }
+      />
+    </div>
   )
 }

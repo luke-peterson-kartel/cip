@@ -4,7 +4,8 @@ import { PageHeader } from '@/components/shared'
 import { Button, Spinner, Modal, Input, Badge, Card } from '@/components/ui'
 import { useAuthStore } from '@/store/authStore'
 import { getProjects, createProject } from '@/api/endpoints/projects'
-import type { Project, ProjectCreate, ProjectType } from '@/types'
+import type { Project, ProjectCreate, ProjectType, AssetRequest } from '@/types'
+import { useMockData } from '@/mock/useMockData'
 import { ProjectTypeFields } from '@/components/forms/ProjectTypeFields'
 import { CSVUploadField } from '@/components/forms/CSVUploadField'
 import { RichTextEditor } from '@/components/forms/RichTextEditor'
@@ -37,6 +38,7 @@ function formatDate(dateString: string): string {
 
 export function ProjectsPage() {
   const { organization } = useAuthStore()
+  const { assetRequests: assetRequestsData } = useMockData()
   const [projects, setProjects] = useState<Project[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -52,6 +54,15 @@ export function ProjectsPage() {
   })
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
   const [isCreating, setIsCreating] = useState(false)
+
+  // Build per-project asset request counts from standalone collection
+  const allAssetRequests = assetRequestsData.items as AssetRequest[]
+  const assetRequestsByProject = new Map<string, AssetRequest[]>()
+  for (const ar of allAssetRequests) {
+    const list = assetRequestsByProject.get(ar.projectId) || []
+    list.push(ar)
+    assetRequestsByProject.set(ar.projectId, list)
+  }
 
   useEffect(() => {
     async function loadProjects() {
@@ -253,13 +264,14 @@ export function ProjectsPage() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <span className="text-sm text-gray-600">
-                      {project.assetRequests?.length || 0} deliverables
+                      {assetRequestsByProject.get(project.id)?.length || 0} deliverables
                     </span>
-                    {project.assetRequests && project.assetRequests.filter(ar => ar.status !== 'COMPLETED' && ar.status !== 'DENY').length > 0 && (
-                      <Badge variant="info">
-                        {project.assetRequests.filter(ar => ar.status !== 'COMPLETED' && ar.status !== 'DENY').length} active
-                      </Badge>
-                    )}
+                    {(() => {
+                      const active = (assetRequestsByProject.get(project.id) || []).filter(ar => ar.status !== 'COMPLETED' && ar.status !== 'DENIED')
+                      return active.length > 0 ? (
+                        <Badge variant="info">{active.length} active</Badge>
+                      ) : null
+                    })()}
                   </div>
                   <Link
                     to={`/projects/${project.id}`}

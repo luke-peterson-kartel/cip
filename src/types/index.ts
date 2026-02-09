@@ -2,8 +2,8 @@
 export type UserRole = 'VIEWER' | 'EDITOR' | 'ADMIN' | 'STAFF'
 export type ConversationStatus = 'ACTIVE' | 'COMPLETED' | 'ABANDONED'
 export type ProjectType = 'INTERNAL_BUILD' | 'CREATIVE_BRIEF' | 'CREATIVE_EXPLORATION'
-export type AssetRequestStatus = 'PENDING' | 'APPROVE' | 'DENY' | 'IMPROVE' | 'ITERATE' | 'COMPLETED'
-export type AssetWorkflowStage = 'QC_LIBRARY' | 'GEN_REFINE' | 'QC_EDIT' | 'CLIENT_REVIEW' | 'QC_DISTRO'
+export type AssetRequestStatus = 'PENDING' | 'APPROVED' | 'DENIED' | 'NEEDS_IMPROVEMENT' | 'NEEDS_ITERATION' | 'COMPLETED'
+export type ProductionStep = 'QC_LIBRARY' | 'GEN_REFINE' | 'QC_EDIT' | 'CLIENT_REVIEW' | 'QC_DISTRO'
 export type AssetProductionStage = 'ANIMATIC' | 'ROUGH_CUT' | 'FINE_CUT' | 'LAST_LOOKS' | 'FINAL'
 export type AssetPriority = 'HIGH' | 'MEDIUM' | 'LOW'
 export type DeliverableReviewStatus = 'PENDING_REVIEW' | 'APPROVED' | 'NEEDS_CHANGES'
@@ -27,17 +27,6 @@ export interface User {
   organizationId: string
   role: UserRole
   googleSubjectId?: string
-  createdAt: string
-  updatedAt: string
-}
-
-export interface Workspace {
-  id: string
-  name: string
-  organizationId: string
-  dataCoreUrl?: string
-  trainingCoreUrls?: string[]
-  requestAgentPrompt?: string
   createdAt: string
   updatedAt: string
 }
@@ -80,7 +69,7 @@ export interface AssetRequest {
 
   // Workflow tracking
   status: AssetRequestStatus
-  workflowStage: AssetWorkflowStage
+  productionStep: ProductionStep
   productionStage?: AssetProductionStage // for video assets
 
   // Dates
@@ -96,7 +85,7 @@ export interface AssetRequest {
   // Additional tracking
   priority: AssetPriority
   version: number // iteration count
-  workflowStageLabels?: string[] // custom per-deliverable step names (5 entries)
+  productionStepLabels?: string[] // custom per-deliverable step names (5 entries)
   messages?: ChatMessage[]
 
   // Metadata
@@ -134,7 +123,7 @@ export interface TeamMember {
   title?: string
 }
 
-// Project (replaces Workspace with type-specific fields)
+// Project
 export interface Project {
   id: string
   name: string
@@ -184,8 +173,7 @@ export interface Project {
 
   requestAgentPrompt?: string
 
-  // Asset tracking
-  assetRequests?: AssetRequest[]
+  // Project tracking
   setupPhase?: ProjectSetupPhase
   chatMessages?: ChatMessage[]
 
@@ -210,8 +198,7 @@ export interface Upload {
   mimeType: string
   size: number // in bytes
   uri: string // presigned URL or path
-  workspaceId?: string // DEPRECATED: Use projectId instead
-  projectId?: string // new field for project association
+  projectId?: string
   organizationId: string
   assetRequestId?: string // link to asset request
   uploadedBy?: string // user email or ID
@@ -232,7 +219,7 @@ export interface ConversationMessage {
 
 export interface Conversation {
   id: string
-  workspaceId: string
+  projectId: string
   status: ConversationStatus
   messages?: ConversationMessage[]
   createdAt: string
@@ -309,20 +296,6 @@ export interface UserUpdate {
   role?: UserRole
 }
 
-export interface WorkspaceCreate {
-  name: string
-  dataCoreUrl?: string
-  trainingCoreUrls?: string[]
-  requestAgentPrompt?: string
-}
-
-export interface WorkspaceUpdate {
-  name?: string
-  dataCoreUrl?: string
-  trainingCoreUrls?: string[]
-  requestAgentPrompt?: string
-}
-
 export interface ProjectCreate {
   name: string
   projectType: ProjectType
@@ -384,6 +357,11 @@ export interface ProjectUpdate {
   preditor?: string
   iterationCount?: number
   requestAgentPrompt?: string
+  clientLead?: string
+  clientTeam?: TeamMember[]
+  accountManager?: string
+  leadProducer?: string
+  kartelTeam?: TeamMember[]
 }
 
 export interface UploadCreate {

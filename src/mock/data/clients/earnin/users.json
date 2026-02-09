@@ -1,0 +1,43 @@
+{
+  "items": [
+    {
+      "id": "user-ei-001",
+      "email": "anna.chen@earnin.com",
+      "name": "Anna Chen",
+      "organizationId": "org-earnin",
+      "role": "ADMIN",
+      "createdAt": "2024-06-01T10:00:00Z",
+      "updatedAt": "2024-06-01T10:00:00Z"
+    },
+    {
+      "id": "user-ei-002",
+      "email": "marcus.bell@earnin.com",
+      "name": "Marcus Bell",
+      "organizationId": "org-earnin",
+      "role": "EDITOR",
+      "createdAt": "2024-06-01T10:00:00Z",
+      "updatedAt": "2024-06-01T10:00:00Z"
+    },
+    {
+      "id": "user-ei-003",
+      "email": "priya.sharma@earnin.com",
+      "name": "Priya Sharma",
+      "organizationId": "org-earnin",
+      "role": "EDITOR",
+      "createdAt": "2024-06-01T10:00:00Z",
+      "updatedAt": "2024-06-01T10:00:00Z"
+    }
+  ],
+  "pagination": {
+    "nextToken": null
+  },
+  "currentUser": {
+    "id": "user-ei-001",
+    "email": "anna.chen@earnin.com",
+    "name": "Anna Chen",
+    "organizationId": "org-earnin",
+    "role": "ADMIN",
+    "createdAt": "2024-06-01T10:00:00Z",
+    "updatedAt": "2024-06-01T10:00:00Z"
+  }
+}
