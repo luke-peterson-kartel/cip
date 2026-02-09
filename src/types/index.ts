@@ -14,6 +14,7 @@ export interface Organization {
   id: string
   name: string
   brand?: string
+  logo?: string
   slug: string
   hubspotId?: string
   createdAt: string

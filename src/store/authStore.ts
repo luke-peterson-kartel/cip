@@ -10,6 +10,7 @@ interface AuthState {
   login: () => Promise<void>
   logout: () => void
   fetchCurrentUser: () => Promise<void>
+  updateOrganization: (updates: Partial<Organization>) => void
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -47,6 +48,12 @@ export const useAuthStore = create<AuthState>((set) => ({
       isAuthenticated: false,
       isLoading: false,
     })
+  },
+
+  updateOrganization: (updates) => {
+    set((state) => ({
+      organization: state.organization ? { ...state.organization, ...updates } : null,
+    }))
   },
 
   fetchCurrentUser: async () => {

@@ -73,6 +73,18 @@ export function mockHandler<T>(endpoint: string, options: RequestInit = {}): T {
     return org as T
   }
 
+  // PATCH /organizations/:id
+  if (method === 'PATCH' && params) {
+    const org = (organizationsData as PaginatedResponse<Organization>).items.find(
+      o => o.id === params!.organizationId
+    )
+    if (org && options.body) {
+      const updates = JSON.parse(options.body as string)
+      Object.assign(org, updates, { updatedAt: new Date().toISOString() })
+      return org as T
+    }
+  }
+
   // GET /organizations/:id/users
   params = matchPath('/organizations/:organizationId/users', path)
   if (method === 'GET' && params) {

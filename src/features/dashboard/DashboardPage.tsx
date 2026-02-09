@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { PageHeader } from '@/components/shared'
 import { Card, CardContent, Badge, Spinner } from '@/components/ui'
 import { useAuthStore } from '@/store/authStore'
 import type { AssetRequest, AssetRequestStatus, AuditEvent, Project } from '@/types'
@@ -70,10 +69,21 @@ export function DashboardPage() {
 
   return (
     <div>
-      <PageHeader
-        title="Dashboard"
-        description={`Welcome back! Here's what's happening with ${organization?.brand || organization?.name || 'your brand'}.`}
-      />
+      <div className="mb-6 flex items-center gap-4">
+        {organization?.logo && (
+          <img
+            src={organization.logo}
+            alt={organization.name}
+            className="h-14 w-14 rounded-lg border border-gray-200 object-cover"
+          />
+        )}
+        <div>
+          <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Welcome back! Here's what's happening with {organization?.brand || organization?.name || 'your brand'}.
+          </p>
+        </div>
+      </div>
 
       {/* Stats */}
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

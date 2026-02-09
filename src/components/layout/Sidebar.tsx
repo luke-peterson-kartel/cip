@@ -7,6 +7,7 @@ import { Avatar, Modal } from '@/components/ui'
 import { getProject, updateProject } from '@/api/endpoints/projects'
 import type { Project, TeamMember } from '@/types'
 import type { ClientId } from '@/mock/data'
+import kartelLogo from '@/assets/kartel-logo-black.png'
 
 const navigation = [
   {
@@ -89,7 +90,7 @@ function EditableLeadField({
 
   return (
     <div className="flex items-baseline gap-1.5 min-w-0">
-      <span className="text-[10px] font-medium text-gray-400 uppercase shrink-0">{label}:</span>
+      <span className="text-[10px] font-medium text-gray-500 uppercase shrink-0">{label}:</span>
       {editing ? (
         <input
           ref={inputRef}
@@ -97,15 +98,15 @@ function EditableLeadField({
           onChange={(e) => setDraft(e.target.value)}
           onBlur={commit}
           onKeyDown={(e) => { if (e.key === 'Enter') commit(); if (e.key === 'Escape') { setDraft(value); setEditing(false) } }}
-          className="flex-1 min-w-0 bg-transparent text-xs text-gray-700 border-b border-primary-300 outline-none py-0"
+          className="flex-1 min-w-0 bg-transparent text-xs text-white border-b border-accent-400 outline-none py-0"
         />
       ) : (
         <button
           onClick={() => setEditing(true)}
-          className="flex-1 min-w-0 text-left text-xs text-gray-700 truncate hover:text-primary-600 transition-colors"
+          className="flex-1 min-w-0 text-left text-xs text-gray-300 truncate hover:text-accent-400 transition-colors"
           title={value || 'Click to set'}
         >
-          {value || <span className="italic text-gray-400">Not set</span>}
+          {value || <span className="italic text-gray-500">Not set</span>}
         </button>
       )}
     </div>
@@ -115,10 +116,10 @@ function EditableLeadField({
 function MemberRow({ member, onRemove }: { member: TeamMember; onRemove: () => void }) {
   return (
     <div className="group flex items-center gap-1 py-0.5 pr-1">
-      <p className="flex-1 min-w-0 text-xs text-gray-700 truncate">{member.email}</p>
+      <p className="flex-1 min-w-0 text-xs text-gray-300 truncate">{member.email}</p>
       <button
         onClick={onRemove}
-        className="opacity-0 group-hover:opacity-100 shrink-0 rounded p-0.5 hover:bg-red-100 transition-opacity"
+        className="opacity-0 group-hover:opacity-100 shrink-0 rounded p-0.5 hover:bg-red-900/50 transition-opacity"
         title="Remove"
       >
         <svg className="h-3 w-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,7 +151,7 @@ function AddMemberInline({ onAdd }: { onAdd: (email: string) => void }) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-1 text-[10px] text-gray-400 hover:text-primary-600 transition-colors py-0.5"
+        className="flex items-center gap-1 text-[10px] text-gray-500 hover:text-accent-400 transition-colors py-0.5"
       >
         <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -169,7 +170,7 @@ function AddMemberInline({ onAdd }: { onAdd: (email: string) => void }) {
         onBlur={submit}
         onKeyDown={(e) => { if (e.key === 'Enter') submit(); if (e.key === 'Escape') { setEmail(''); setOpen(false) } }}
         placeholder="email@example.com"
-        className="flex-1 min-w-0 text-xs bg-transparent border-b border-primary-300 outline-none py-0 placeholder:text-gray-300"
+        className="flex-1 min-w-0 text-xs text-white bg-transparent border-b border-accent-400 outline-none py-0 placeholder:text-gray-600"
       />
     </div>
   )
@@ -275,7 +276,7 @@ function ScheduleMeetingModal({ isOpen, onClose, project }: { isOpen: boolean; o
     onClose()
   }
 
-  const inputClass = 'w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500'
+  const inputClass = 'w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900'
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Schedule Meeting" size="sm">
@@ -315,7 +316,7 @@ function ScheduleMeetingModal({ isOpen, onClose, project }: { isOpen: boolean; o
                     type="checkbox"
                     checked={selected.has(email)}
                     onChange={() => toggle(email)}
-                    className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                    className="rounded border-gray-300 text-accent-600 focus:ring-accent-500"
                   />
                   <span className="text-sm text-gray-700 truncate">{email}</span>
                 </label>
@@ -378,13 +379,13 @@ function SidebarTeamPanel({ project, onRefresh }: { project: Project; onRefresh:
   }
 
   return (
-    <div className="border-t border-gray-200 bg-primary-50/50">
-      <div className="border-l-2 border-primary-500 px-3 py-3 space-y-3">
-        <p className="text-[10px] font-semibold uppercase tracking-wider text-primary-600">Project Team</p>
+    <div className="border-t border-gray-700 bg-gray-900">
+      <div className="border-l-2 border-accent-500 px-3 py-3 space-y-3">
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-white">Project Team</p>
 
         {/* Client */}
         <div className="space-y-1">
-          <p className="text-[10px] font-semibold uppercase text-gray-500">Client</p>
+          <p className="text-[10px] font-semibold uppercase text-gray-400">Client</p>
           <EditableLeadField
             label="Lead"
             value={project.clientLead || ''}
@@ -398,7 +399,7 @@ function SidebarTeamPanel({ project, onRefresh }: { project: Project; onRefresh:
 
         {/* Kartel */}
         <div className="space-y-1">
-          <p className="text-[10px] font-semibold uppercase text-gray-500">Kartel</p>
+          <p className="text-[10px] font-semibold uppercase text-gray-400">Kartel</p>
           <EditableLeadField
             label="AM"
             value={project.accountManager || ''}
@@ -418,7 +419,7 @@ function SidebarTeamPanel({ project, onRefresh }: { project: Project; onRefresh:
         {/* Schedule Meeting */}
         <button
           onClick={() => setShowMeeting(true)}
-          className="flex w-full items-center justify-center gap-1.5 rounded-md border border-gray-300 px-2 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+          className="flex w-full items-center justify-center gap-1.5 rounded-md border border-gray-600 px-2 py-1.5 text-xs font-medium text-gray-300 hover:bg-gray-800 hover:text-accent-400 transition-colors"
         >
           <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -473,12 +474,9 @@ export function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
       'lg:static lg:translate-x-0'
     )}>
       {/* Logo */}
-      <div className="border-b border-gray-200 px-6 py-4">
-        <div className="flex items-center">
-          <span className="text-xl font-bold text-primary-600">Kartel</span>
-          <span className="text-xl text-gray-400">.ai</span>
-        </div>
-        <p className="mt-0.5 text-xs text-gray-400">Creative Intelligence Platform</p>
+      <div className="border-b border-gray-200 px-5 py-4">
+        <img src={kartelLogo} alt="Kartel" className="h-5 w-auto" />
+        <p className="mt-1 text-[10px] font-medium tracking-wider uppercase text-gray-400">Creative Intelligence Platform</p>
       </div>
 
       {/* Company/Brand */}
@@ -512,8 +510,8 @@ export function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
                   className={cn(
                     'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
                     isActive
-                      ? 'bg-primary-50 text-primary-700'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? 'bg-gray-900 text-white'
+                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                   )}
                 >
                   {item.icon}
@@ -567,7 +565,7 @@ export function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
         <select
           value={useMockClientStore.getState().clientId}
           onChange={(e) => useMockClientStore.getState().setClientId(e.target.value as ClientId)}
-          className="w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-700 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          className="w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-700 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
         >
           <option value="newell">Newell (Bubba)</option>
           <option value="earnin">EarnIn</option>
