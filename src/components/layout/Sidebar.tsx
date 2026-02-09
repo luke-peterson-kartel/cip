@@ -434,7 +434,7 @@ function SidebarTeamPanel({ project, onRefresh }: { project: Project; onRefresh:
 
 // --- Main Sidebar ---
 
-export function Sidebar() {
+export function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const location = useLocation()
   const { user, organization } = useAuthStore()
   const isAdmin = user?.role === 'ADMIN' || user?.role === 'STAFF'
@@ -461,8 +461,17 @@ export function Sidebar() {
     }
   }, [projectId])
 
+  // Close sidebar on route change (mobile)
+  useEffect(() => {
+    onClose()
+  }, [location.pathname])
+
   return (
-    <aside className="flex h-screen w-64 flex-col border-r border-gray-200 bg-white">
+    <aside className={cn(
+      'fixed inset-y-0 left-0 z-40 flex h-screen w-64 flex-col border-r border-gray-200 bg-white transition-transform duration-200',
+      isOpen ? 'translate-x-0' : '-translate-x-full',
+      'lg:static lg:translate-x-0'
+    )}>
       {/* Logo */}
       <div className="border-b border-gray-200 px-6 py-4">
         <div className="flex items-center">

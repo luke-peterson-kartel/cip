@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Sidebar } from './Sidebar'
 import { Header } from './Header'
@@ -7,6 +7,7 @@ import { Spinner } from '@/components/ui'
 
 export function AppLayout() {
   const { isLoading, isAuthenticated, login } = useAuthStore()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     // Auto-login with mock data on mount
@@ -25,10 +26,17 @@ export function AppLayout() {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
       <div className="flex flex-1 flex-col overflow-hidden">
-        <Header />
-        <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
+        <Header onMenuToggle={() => setSidebarOpen(prev => !prev)} />
+        <main className="flex-1 overflow-y-auto bg-gray-50 p-4 lg:p-6">
           <Outlet />
         </main>
       </div>
